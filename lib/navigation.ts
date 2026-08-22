@@ -14,6 +14,8 @@ export const primaryNav = [
 export const institutionalNav = [
   { label: 'About', href: '/about' },
   { label: 'Methodology', href: '/methodology' },
+  { label: 'Track Record', href: '/track-record' },
+  { label: 'Impact Map', href: '/impact-map' },
   { label: 'Corrections', href: '/corrections' },
   { label: 'Disclosures', href: '/disclosures' },
   { label: 'Privacy', href: '/privacy' },
