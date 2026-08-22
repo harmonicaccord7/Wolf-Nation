@@ -1,0 +1,108 @@
+/* KAPORAL INTELLIGENCE — contrast/readability layer
+   This file intentionally loads after globals.css so accessibility fixes
+   can evolve without destabilizing the main visual system. */
+
+:root{
+  --ki-dark:#050c13;
+  --ki-dark-2:#091722;
+  --ki-text-on-dark:#f7f3e9;
+  --ki-muted-on-dark:#c2ced7;
+  --ki-subtle-on-dark:#9dafbd;
+  --ki-input-bg:#f7f4ed;
+  --ki-input-text:#101820;
+  --ki-input-placeholder:#66727c;
+  --ki-focus:#8edee9;
+}
+
+.brandLogo{
+  width:46px;
+  height:51px;
+  object-fit:cover;
+  display:block;
+  flex:0 0 auto;
+  border-radius:11px;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+
+.footerBrand .brandLogo{width:54px;height:60px}
+
+/* Explicit dark-surface text contrast */
+.hero,.marketRail,.impact,.optionsLab,footer,.sideStory.dark,.featuredDesk{
+  color:var(--ki-text-on-dark);
+}
+
+.hero p,.impact p,.optionsLab p,.sideStory.dark p,.featuredDesk p,
+footer p,footer span,footer small{
+  color:var(--ki-muted-on-dark);
+}
+
+footer{
+  background:linear-gradient(180deg,#07131f 0%,var(--ki-dark) 100%);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+
+footer .brand strong{color:#fff}
+footer .brand small{color:#d7bd79}
+footer .footerPitch b{color:#fff}
+footer .footerPitch span{color:#d0d8de}
+footer .footerLinks a{color:#edf2f5;text-decoration-color:rgba(217,183,106,.55)}
+footer .footerLinks a:hover{color:#f1d99a}
+footer .footerLegal{color:#aebbc5}
+
+.newsletterBlock{width:100%;max-width:560px}
+.newsletterForm{display:flex;gap:10px;align-items:stretch;width:100%}
+.newsletterForm input{
+  min-width:0;
+  flex:1 1 280px;
+  min-height:46px;
+  padding:12px 15px;
+  border:1px solid rgba(217,183,106,.56);
+  border-radius:12px;
+  background:var(--ki-input-bg);
+  color:var(--ki-input-text);
+  caret-color:#9b742f;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+}
+.newsletterForm input::placeholder{color:var(--ki-input-placeholder);opacity:1}
+.newsletterForm input:hover{border-color:#e5ca84}
+.newsletterForm input:focus{
+  outline:3px solid rgba(142,222,233,.25);
+  outline-offset:2px;
+  border-color:var(--ki-focus);
+  background:#fff;
+}
+.newsletterForm .goldButton{min-width:118px;color:#16202a}
+.newsletterForm .goldButton:disabled{opacity:.7;cursor:wait}
+.newsletterStatus{display:block;margin-top:9px;color:#dce7ed!important;line-height:1.45}
+
+/* Preserve readable secondary labels on dark analytical surfaces. */
+.marketRail small,.marketRail .demoNote,
+.impactNode small,.impactNode span,.impactBranches small,.impactBranches span,
+.optionsLab small,.optionsLab .tinyDisclaimer,.optionsLab .chartTop,
+.hero .trustGrid,.hero .storyMeta,.hero .chartLabel{
+  color:var(--ki-subtle-on-dark);
+}
+
+.disclaimer{color:#c7d2da}
+.disclaimer b{color:#f2dc9b}
+.disclaimer a{color:#fff}
+.disclaimer a:focus-visible,
+.header a:focus-visible,
+footer a:focus-visible,
+button:focus-visible{
+  outline:3px solid rgba(142,222,233,.5);
+  outline-offset:3px;
+}
+
+/* Improve contrast of controls when used on dark backgrounds. */
+.hero .glassButton,.impact .glassButton,.optionsLab .glassButton{
+  color:#fff;
+  border-color:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.09);
+}
+
+@media (max-width:720px){
+  .brandLogo{width:40px;height:44px;border-radius:9px}
+  .newsletterForm{flex-direction:column}
+  .newsletterForm .goldButton{width:100%}
+}
