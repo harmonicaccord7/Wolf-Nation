@@ -12,6 +12,7 @@ export const primaryNav = [
 ] as const
 
 export const institutionalNav = [
+  { label: 'Track Record', href: '/track-record' },
   { label: 'About', href: '/about' },
   { label: 'Methodology', href: '/methodology' },
   { label: 'Corrections', href: '/corrections' },
