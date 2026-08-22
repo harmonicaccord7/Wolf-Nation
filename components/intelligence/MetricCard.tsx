@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { MetricSeries } from '../../lib/data/intelligence'
 import { formatIntelligenceValue, formatObservationDate } from '../../lib/format-intelligence'
 import { Sparkline } from './Sparkline'
@@ -10,6 +11,6 @@ export function MetricCard({metric}:{metric:MetricSeries}){
     <Sparkline points={metric.history}/>
     <p>{metric.description}</p>
     <div className="metricProvenance"><span>{metric.latest?.provider??'Provider observation unavailable'}</span><time>{formatObservationDate(metric.latest?.observedAt,metric.frequency)}</time></div>
-    {metric.sourceUrl&&<a className="sourceLink" href={metric.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a>}
+    <div className="metricLinks"><Link href={`/data/${metric.code.toLowerCase()}`}>Open history →</Link>{metric.sourceUrl&&<a className="sourceLink" href={metric.sourceUrl} target="_blank" rel="noreferrer">Provider ↗</a>}</div>
   </article>
 }
