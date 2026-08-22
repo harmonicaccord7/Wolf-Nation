@@ -16,6 +16,7 @@ export const institutionalNav = [
   { label: 'Methodology', href: '/methodology' },
   { label: 'Track Record', href: '/track-record' },
   { label: 'Impact Map', href: '/impact-map' },
+  { label: 'System Status', href: '/status' },
   { label: 'Corrections', href: '/corrections' },
   { label: 'Disclosures', href: '/disclosures' },
   { label: 'Privacy', href: '/privacy' },
