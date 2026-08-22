@@ -12,7 +12,8 @@ export async function getHomeContent() {
 
 export async function getStudioOverview() {
   const supabase = await createClient()
-  const { data: { claims } } = await supabase.auth.getClaims()
+  const { data } = await supabase.auth.getClaims()
+  const claims = data?.claims
   if (!claims?.sub) return { authorized:false as const }
   const { data: profile } = await supabase.from('profiles').select('role,display_name').eq('id',claims.sub).maybeSingle()
   if (!profile || !['researcher','editor','admin'].includes(profile.role)) return { authorized:false as const }
