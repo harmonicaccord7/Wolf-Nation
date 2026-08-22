@@ -6,7 +6,7 @@ export default function AuthPage(){
     <section>
       <Link className="authBrand" href="/" aria-label="KAPORAL INTELLIGENCE home">
         <span className="brandLogoFrame authLogoFrame" aria-hidden="true">
-          <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png?v=20260822c" alt="" />
+          <img className="brandLogo" src="/brand/kaporal-intelligence-logo.svg?v=20260822-svg1" alt="" />
         </span>
         <span>KAPORAL INTELLIGENCE</span>
       </Link>

@@ -12,7 +12,7 @@ export function Header(){
     <header className="header shell">
       <Link className="brand" href="/" aria-label="KAPORAL INTELLIGENCE home">
         <span className="brandLogoFrame" aria-hidden="true">
-          <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png?v=20260822c" alt="" />
+          <img className="brandLogo" src="/brand/kaporal-intelligence-logo.svg?v=20260822-svg1" alt="" />
         </span>
         <span><strong>KAPORAL</strong><small>INTELLIGENCE</small></span>
       </Link>
