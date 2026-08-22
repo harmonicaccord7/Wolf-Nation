@@ -5,6 +5,7 @@ import './contrast-fixes.css';
 import './nav-pills.css';
 import './intelligence.css';
 import './research-os.css';
+import './product.css';
 
 export const metadata: Metadata = {
   metadataBase:new URL('https://www.kaporalintelligence.com'),
