@@ -55,12 +55,29 @@ export async function getArticleWorkspace(id:string){
   const {supabase,profile}=identity
   const {data:article}=await supabase.from('articles').select('id,headline,slug,dek,body,status,confidence,reader_level,story_candidate_id,updated_at,published_at').eq('id',id).maybeSingle()
   if(!article) return {authorized:true as const,profile,notFound:true as const}
-  const [{data:reviews},{data:sources},{data:claims},{data:predictions},{data:runs}]=await Promise.all([
+
+  const evidenceSources=article.story_candidate_id
+    ? supabase.from('story_sources').select('note,source:sources(id,url,title,publisher,source_type,published_at,reliability_score)').eq('story_candidate_id',article.story_candidate_id)
+    : supabase.from('article_sources').select('claim,note,source:sources(id,url,title,publisher,source_type,published_at,reliability_score)').eq('article_id',id)
+  const evidenceClaims=article.story_candidate_id
+    ? supabase.from('story_claims').select('id,claim_text,claim_type,confidence,verification_status,created_at').eq('story_candidate_id',article.story_candidate_id)
+    : supabase.from('claims').select('id,claim_text,claim_type,confidence,verification_status,created_at').eq('article_id',id)
+
+  const [{data:reviews},sourceResult,claimResult,{data:predictions},{data:runs},{data:impactMap}]=await Promise.all([
     supabase.from('review_tasks').select('id,reviewer_role,decision,notes,required_changes,completed_at,created_at').eq('article_id',id).order('created_at',{ascending:false}),
-    supabase.from('article_sources').select('claim,note,source:sources(id,url,title,publisher,source_type,published_at,reliability_score)').eq('article_id',id),
-    supabase.from('claims').select('id,claim_text,claim_type,confidence,verification_status,created_at').eq('article_id',id),
-    supabase.from('predictions').select('id,statement,probability,target_metric,target_condition,horizon_start,horizon_end,invalidation_condition,status,published_at').eq('article_id',id),
-    supabase.from('research_runs').select('id,agent_name,run_type,status,model,output_summary,started_at,completed_at,error').eq('article_id',id).order('started_at',{ascending:false}).limit(30)
+    evidenceSources,
+    evidenceClaims,
+    supabase.from('predictions').select('id,statement,probability,target_metric,target_condition,horizon_start,horizon_end,invalidation_condition,status,published_at').eq('article_id',id).order('published_at',{ascending:false}),
+    supabase.from('research_runs').select('id,agent_name,run_type,status,model,output_summary,started_at,completed_at,error').eq('article_id',id).order('started_at',{ascending:false}).limit(30),
+    supabase.from('impact_maps').select('id,title,summary,version,created_at').eq('article_id',id).order('version',{ascending:false}).limit(1).maybeSingle()
   ])
-  return {authorized:true as const,profile,article,reviews:reviews??[],sources:sources??[],claims:claims??[],predictions:predictions??[],runs:runs??[]}
+  let impactNodes:any[]=[];let impactEdges:any[]=[]
+  if(impactMap){
+    const [{data:nodes},{data:edges}]=await Promise.all([
+      supabase.from('impact_nodes').select('id,label,node_type,horizon,probability,severity,direction,x,y,metadata').eq('impact_map_id',impactMap.id).order('created_at',{ascending:true}),
+      supabase.from('impact_edges').select('id,from_node_id,to_node_id,mechanism,strength,lag_label').eq('impact_map_id',impactMap.id)
+    ])
+    impactNodes=nodes??[];impactEdges=edges??[]
+  }
+  return {authorized:true as const,profile,article,reviews:reviews??[],sources:sourceResult.data??[],claims:claimResult.data??[],predictions:predictions??[],runs:runs??[],impactMap,impactNodes,impactEdges}
 }
