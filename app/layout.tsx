@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
 import './contrast-fixes.css';
+import './nav-pills.css';
 
 export const metadata: Metadata = {
   title: 'KAPORAL INTELLIGENCE — Global Intelligence for Markets & Business',
