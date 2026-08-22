@@ -1,6 +1,5 @@
-/* KAPORAL INTELLIGENCE — contrast/readability layer
-   This file intentionally loads after globals.css so accessibility fixes
-   can evolve without destabilizing the main visual system. */
+/* KAPORAL INTELLIGENCE — contrast/readability + production visual corrections.
+   Loaded after globals.css so this layer can safely override the base visual system. */
 
 :root{
   --ki-dark:#050c13;
@@ -12,21 +11,34 @@
   --ki-input-text:#101820;
   --ki-input-placeholder:#66727c;
   --ki-focus:#8edee9;
+  --ki-gold-on-light:#8c6418;
 }
 
-.brandLogo{
-  width:46px;
-  height:51px;
-  object-fit:cover;
-  display:block;
+/* Official KAPORAL brand mark.
+   The source artwork intentionally contains generous black padding; the frame crops and zooms it
+   so the approved crown / K / wreath mark is actually legible at navigation size. */
+.brandLogoFrame{
+  width:68px;
+  height:76px;
+  display:grid;
+  place-items:center;
   flex:0 0 auto;
-  border-radius:11px;
-  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  overflow:hidden;
+  border-radius:17px;
+  background:#070707;
+  box-shadow:0 10px 28px rgba(5,12,19,.2), inset 0 0 0 1px rgba(217,183,106,.22);
 }
-.footerBrand .brandLogo{width:54px;height:60px}
-
+.brandLogo{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  transform:scale(1.95);
+  transform-origin:center center;
+}
+.footerLogoFrame{width:74px;height:82px}
+.authLogoFrame{width:80px;height:88px}
 .authBrand{display:inline-flex;align-items:center;gap:14px;color:#fff;font-weight:800}
-.authLogo{width:68px;height:75px;object-fit:cover;border-radius:14px;box-shadow:0 14px 34px rgba(0,0,0,.28)}
 
 /* Explicit dark-surface text contrast */
 .hero,.marketRail,.impact,.optionsLab,footer,.sideStory.dark,.featuredDesk{
@@ -36,6 +48,78 @@
 footer p,footer span,footer small{
   color:var(--ki-muted-on-dark);
 }
+
+/* Strong, readable labels on pale editorial backgrounds. */
+.controlRoom .eyebrow,
+.editorial .eyebrow,
+.desks .eyebrow,
+.methodology .eyebrow,
+.africaSection .eyebrow{
+  color:var(--ki-gold-on-light);
+  text-shadow:0 1px 0 rgba(255,255,255,.65);
+}
+.controlRoom .sectionTitle>p,
+.editorial .sectionTitle>p,
+.desks .sectionTitle>p,
+.methodology .sectionTitle>p,
+.africaSection .sectionTitle>p{
+  color:#536674;
+}
+
+/* All Intelligence Desk cards use one coherent premium newsroom treatment. */
+.desk,.featuredDesk{
+  background:linear-gradient(180deg,#102c43 0%,#0b2337 48%,#071827 100%) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 18px 42px rgba(5,17,29,.13);
+}
+.desk h3,.featuredDesk h3{color:#fbf4e5}
+.desk p,.featuredDesk p{color:#c0cbd4 !important}
+.desk .deskNum,.featuredDesk .deskNum{color:#e0bd6c}
+.desk a,.featuredDesk a{color:#fff}
+
+/* Trust architecture: darker at bottom, progressively whiter toward the top,
+   while preserving the gold top rule. */
+.methodFlow>div{
+  border-top:2px solid #c9a85d !important;
+  background:linear-gradient(to top,#d7d0c2 0%,#e7e2d8 38%,#f4f1eb 70%,#fffdf9 100%) !important;
+  box-shadow:0 8px 24px rgba(20,30,37,.055);
+}
+.methodFlow>div small{color:#986c1e !important}
+.methodFlow>div b{color:#071522 !important}
+
+/* Africa intelligence — recognizable mainland + Madagascar, not a decorative polygon. */
+.africaVisual{
+  background:radial-gradient(circle at 45% 42%,#155a47 0%,#0a362c 46%,#061f1a 100%) !important;
+}
+.africaShape{display:none !important}
+.africaMap{
+  position:absolute;
+  inset:7% 13% 7% 13%;
+  width:74%;
+  height:86%;
+  z-index:1;
+  overflow:visible;
+  filter:drop-shadow(0 20px 30px rgba(0,0,0,.2));
+}
+.africaMainland{
+  fill:url(#none);
+  fill:#b9a96d;
+  stroke:rgba(243,220,156,.32);
+  stroke-width:4;
+  stroke-linejoin:round;
+}
+.madagascar{
+  fill:#b9a96d;
+  stroke:rgba(243,220,156,.32);
+  stroke-width:3;
+}
+.africaWord{
+  fill:rgba(255,245,208,.27);
+  font:700 64px Georgia,serif;
+  letter-spacing:.18em;
+}
+.afStat{z-index:2}
 
 footer{
   background:linear-gradient(180deg,#07131f 0%,var(--ki-dark) 100%);
@@ -104,7 +188,6 @@ button:focus-visible{
   outline-offset:3px;
 }
 
-/* Improve contrast of controls when used on dark backgrounds. */
 .hero .glassButton,.impact .glassButton,.optionsLab .glassButton{
   color:#fff;
   border-color:rgba(255,255,255,.28);
@@ -112,8 +195,10 @@ button:focus-visible{
 }
 
 @media (max-width:720px){
-  .brandLogo{width:40px;height:44px;border-radius:9px}
-  .authLogo{width:54px;height:60px}
+  .brandLogoFrame{width:56px;height:62px;border-radius:14px}
+  .footerLogoFrame{width:62px;height:68px}
+  .authLogoFrame{width:64px;height:70px}
   .newsletterForm{flex-direction:column}
   .newsletterForm .goldButton{width:100%}
+  .africaMap{inset:10% 8% 10% 8%;width:84%;height:80%}
 }
