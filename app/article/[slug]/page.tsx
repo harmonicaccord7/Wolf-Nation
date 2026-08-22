@@ -1,12 +1,25 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '../../../lib/supabase/server'
 import { ArticleBody } from '../../../components/ArticleBody'
 import { BookmarkButton } from '../../../components/BookmarkButton'
 
+async function getPublicArticle(slug:string){
+ const supabase=await createClient()
+ const {data}=await supabase.from('articles').select('id,slug,headline,dek,body,confidence,reader_level,published_at,updated_at,disclaimer_variant,story_candidate_id,status').eq('slug',slug).eq('status','published').not('published_at','is',null).lte('published_at',new Date().toISOString()).maybeSingle()
+ return data
+}
+
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
+ const {slug}=await params,article=await getPublicArticle(slug)
+ if(!article)return {title:'Investigation not found'}
+ const canonical=`https://www.kaporalintelligence.com/article/${article.slug}`
+ return {title:article.headline,description:article.dek??'Published KAPORAL INTELLIGENCE investigation.',alternates:{canonical},openGraph:{type:'article',url:canonical,title:article.headline,description:article.dek??undefined,publishedTime:article.published_at??undefined,modifiedTime:article.updated_at??undefined,siteName:'KAPORAL INTELLIGENCE'},twitter:{card:'summary_large_image',title:article.headline,description:article.dek??undefined}}
+}
+
 export default async function ArticlePage({params}:{params:Promise<{slug:string}>}){
- const {slug}=await params; const supabase=await createClient()
- const {data:article}=await supabase.from('articles').select('id,headline,dek,body,confidence,reader_level,published_at,updated_at,disclaimer_variant,story_candidate_id,status').eq('slug',slug).eq('status','published').not('published_at','is',null).lte('published_at',new Date().toISOString()).maybeSingle()
+ const {slug}=await params; const supabase=await createClient(); const article=await getPublicArticle(slug)
  if(!article) notFound()
  const [{data:articleClaims},{data:articleLinks},{data:predictions},{data:corrections},{data:map}]=await Promise.all([
    supabase.from('claims').select('id,claim_text,claim_type,confidence,verification_status').eq('article_id',article.id),
@@ -27,7 +40,13 @@ export default async function ArticlePage({params}:{params:Promise<{slug:string}
  const links=storyLinks.length?storyLinks:(articleLinks??[])
  let nodes:any[]=[]; let edges:any[]=[]
  if(map){ const [nr,er]=await Promise.all([supabase.from('impact_nodes').select('id,label,node_type,horizon,probability,severity,direction,x,y').eq('impact_map_id',map.id),supabase.from('impact_edges').select('from_node_id,to_node_id,mechanism,strength,lag_label').eq('impact_map_id',map.id)]);nodes=nr.data??[];edges=er.data??[] }
- return <main className="investigation"><header className="investigationNav"><Link href="/">← KAPORAL INTELLIGENCE</Link><span>Independent research & education · Not financial advice</span><BookmarkButton articleId={article.id}/></header><article>
+ const canonical=`https://www.kaporalintelligence.com/article/${article.slug}`
+ const schema={
+  '@context':'https://schema.org','@type':'AnalysisNewsArticle',headline:article.headline,description:article.dek??undefined,datePublished:article.published_at,dateModified:article.updated_at??article.published_at,mainEntityOfPage:canonical,
+  publisher:{'@type':'Organization',name:'KAPORAL INTELLIGENCE',url:'https://www.kaporalintelligence.com'},author:{'@type':'Organization',name:'KAPORAL INTELLIGENCE Research Desk'},isAccessibleForFree:true
+ }
+ const breadcrumb={'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:'https://www.kaporalintelligence.com/'},{'@type':'ListItem',position:2,name:'Research',item:'https://www.kaporalintelligence.com/research'},{'@type':'ListItem',position:3,name:article.headline,item:canonical}]}
+ return <main className="investigation"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schema).replace(/</g,'\\u003c')}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(breadcrumb).replace(/</g,'\\u003c')}}/><header className="investigationNav"><Link href="/">← KAPORAL INTELLIGENCE</Link><span>Independent research & education · Not financial advice</span><BookmarkButton articleId={article.id}/></header><article>
    <section className="investigationHero"><div className="investigationMeta"><span>INVESTIGATION</span><span>{article.reader_level}</span><span>{article.confidence?`${article.confidence} confidence`:'confidence pending'}</span></div><h1>{article.headline}</h1>{article.dek&&<p>{article.dek}</p>}<div className="evidenceBar"><span>FACTS</span><span>DATA</span><span>INFERENCE</span><span>CONTRARIAN REVIEW</span><span>UNCERTAINTY</span></div></section>
    <section className="investigationLayout"><div className="investigationMain"><ArticleBody body={article.body}/>
      {map&&<section className="articleSection"><p className="eyebrow">KAPORAL IMPACT MAP</p><h2>{map.title}</h2>{map.summary&&<p>{map.summary}</p>}<div className="miniImpactGraph">{nodes.length?nodes.map(n=><div key={n.id} className={`miniNode ${n.direction??''}`}><small>{n.horizon??n.node_type}</small><b>{n.label}</b><span>{n.probability==null?'probability pending':`${n.probability}% probability`}</span></div>):<p>Impact graph is being built.</p>}</div>{edges.length>0&&<small className="graphFoot">{edges.length} causal links documented in the model.</small>}</section>}
