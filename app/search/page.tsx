@@ -1,0 +1,6 @@
+import Link from 'next/link'
+import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
+import { searchPublishedResearch } from '../../lib/data/intelligence'
+export const metadata={title:'Search | KAPORAL INTELLIGENCE'}
+export default async function SearchPage({searchParams}:{searchParams:Promise<{q?:string}>}){const{q=''}=await searchParams;const results=q?await searchPublishedResearch(q):[];return <main className="searchPage"><Header/><section className="searchHero"><div className="shell"><span className="eyebrow">SEARCH KAPORAL</span><h1>Search published research.</h1><form className="searchForm" action="/search"><input name="q" defaultValue={q} placeholder="Search investigations, topics and themes" aria-label="Search query"/><button className="goldButton" type="submit">Search</button></form></div></section><section className="shell searchResults"><h2>{q?`Results for “${q}”`:'Enter a research topic'}</h2>{q&&results.length===0?<div className="searchEmpty">No approved publication matches this query yet. Search never returns unpublished newsroom material.</div>:<div className="researchCardGrid">{results.map(a=><Link className="researchCard" href={`/article/${a.slug}`} key={a.id}><small>{a.confidence??a.readerLevel}</small><h3>{a.headline}</h3><p>{a.dek}</p></Link>)}</div>}</section><Footer/></main>}
