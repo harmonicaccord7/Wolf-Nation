@@ -4,7 +4,9 @@ export function Footer(){
   return <footer>
     <div className="shell footerGrid">
       <div className="brand footerBrand">
-        <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png" alt="KAPORAL INTELLIGENCE" />
+        <span className="brandLogoFrame footerLogoFrame" aria-hidden="true">
+          <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png?v=20260822c" alt="" />
+        </span>
         <span><strong>KAPORAL</strong><small>INTELLIGENCE</small></span>
       </div>
       <div className="footerPitch"><b>The KAPORAL Market Letter</b><span>Two serious briefings. No noise.</span></div>
