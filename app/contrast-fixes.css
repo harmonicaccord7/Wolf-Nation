@@ -14,30 +14,30 @@
   --ki-gold-on-light:#8c6418;
 }
 
-/* Official KAPORAL brand mark.
-   The source artwork intentionally contains generous black padding; the frame crops and zooms it
-   so the approved crown / K / wreath mark is actually legible at navigation size. */
+/* Official KAPORAL SVG master.
+   Render the vector exactly as authored: no crop, zoom, filter or opacity treatment. */
 .brandLogoFrame{
-  width:68px;
-  height:76px;
+  width:58px;
+  height:64px;
   display:grid;
   place-items:center;
   flex:0 0 auto;
   overflow:hidden;
-  border-radius:17px;
-  background:#070707;
-  box-shadow:0 10px 28px rgba(5,12,19,.2), inset 0 0 0 1px rgba(217,183,106,.22);
+  border-radius:12px;
+  background:transparent;
+  box-shadow:0 9px 24px rgba(5,12,19,.16);
 }
 .brandLogo{
   width:100%;
   height:100%;
   display:block;
-  object-fit:cover;
-  transform:scale(1.95);
-  transform-origin:center center;
+  object-fit:contain;
+  transform:none;
+  filter:none;
+  opacity:1;
 }
-.footerLogoFrame{width:74px;height:82px}
-.authLogoFrame{width:80px;height:88px}
+.footerLogoFrame{width:70px;height:77px}
+.authLogoFrame{width:84px;height:93px}
 .authBrand{display:inline-flex;align-items:center;gap:14px;color:#fff;font-weight:800}
 
 /* Explicit dark-surface text contrast */
@@ -103,7 +103,6 @@ footer p,footer span,footer small{
   filter:drop-shadow(0 20px 30px rgba(0,0,0,.2));
 }
 .africaMainland{
-  fill:url(#none);
   fill:#b9a96d;
   stroke:rgba(243,220,156,.32);
   stroke-width:4;
@@ -195,9 +194,9 @@ button:focus-visible{
 }
 
 @media (max-width:720px){
-  .brandLogoFrame{width:56px;height:62px;border-radius:14px}
-  .footerLogoFrame{width:62px;height:68px}
-  .authLogoFrame{width:64px;height:70px}
+  .brandLogoFrame{width:50px;height:55px;border-radius:10px}
+  .footerLogoFrame{width:60px;height:66px}
+  .authLogoFrame{width:68px;height:75px}
   .newsletterForm{flex-direction:column}
   .newsletterForm .goldButton{width:100%}
   .africaMap{inset:10% 8% 10% 8%;width:84%;height:80%}
