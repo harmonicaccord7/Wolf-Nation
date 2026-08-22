@@ -1,0 +1,84 @@
+/* KAPORAL INTELLIGENCE — premium oval navigation pills */
+.header{
+  gap:16px;
+}
+
+.header nav{
+  display:flex;
+  flex:1 1 auto;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+  padding:6px 2px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+}
+
+.header nav::-webkit-scrollbar{display:none}
+
+.header nav a{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  min-height:35px;
+  padding:8px 11px;
+  border:1px solid rgba(18,61,91,.52);
+  border-radius:999px;
+  background:linear-gradient(145deg,#173a58 0%,#0d2a43 46%,#071a2c 100%);
+  color:#eef7fb;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.015em;
+  white-space:nowrap;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 5px 14px rgba(6,17,29,.12);
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease,
+    box-shadow .2s ease;
+}
+
+.header nav a::after{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 42%);
+  opacity:.7;
+}
+
+.header nav a:hover,
+.header nav a:focus-visible{
+  color:#fff9e9;
+  border-color:rgba(217,183,106,.82);
+  background:linear-gradient(145deg,#245a80 0%,#123c5d 43%,#09243b 100%);
+  transform:translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 8px 20px rgba(8,44,70,.24),
+    0 0 0 2px rgba(127,214,229,.12),
+    0 0 20px rgba(217,183,106,.16);
+}
+
+.header nav a:active{
+  transform:translateY(0) scale(.98);
+  background:linear-gradient(145deg,#0e304c,#071a2c);
+}
+
+@media (max-width:1280px) and (min-width:1101px){
+  .header{gap:10px}
+  .header nav{gap:4px}
+  .header nav a{padding:7px 9px;font-size:9px;min-height:32px}
+}
+
+@media (max-width:1100px){
+  .header nav{display:none}
+}
