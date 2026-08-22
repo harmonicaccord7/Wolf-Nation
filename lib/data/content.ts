@@ -74,7 +74,7 @@ export async function getArticleWorkspace(id:string){
   let impactNodes:any[]=[];let impactEdges:any[]=[]
   if(impactMap){
     const [{data:nodes},{data:edges}]=await Promise.all([
-      supabase.from('impact_nodes').select('id,label,node_type,horizon,probability,severity,direction,x,y,metadata').eq('impact_map_id',impactMap.id).order('created_at',{ascending:true}),
+      supabase.from('impact_nodes').select('id,label,node_type,horizon,probability,severity,direction,x,y,metadata').eq('impact_map_id',impactMap.id),
       supabase.from('impact_edges').select('id,from_node_id,to_node_id,mechanism,strength,lag_label').eq('impact_map_id',impactMap.id)
     ])
     impactNodes=nodes??[];impactEdges=edges??[]
