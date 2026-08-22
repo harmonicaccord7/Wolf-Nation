@@ -3,7 +3,7 @@ import { createClient } from '../lib/supabase/server'
 
 export default async function sitemap():Promise<MetadataRoute.Sitemap>{
  const base='https://www.kaporalintelligence.com'
- const staticRoutes=['','/markets','/bitcoin','/crypto','/macro','/options','/africa','/business','/technology','/learn','/research','/about','/methodology','/disclosures','/corrections','/privacy','/terms']
+ const staticRoutes=['','/markets','/bitcoin','/crypto','/macro','/options','/africa','/business','/technology','/learn','/research','/track-record','/impact-map','/about','/methodology','/disclosures','/corrections','/privacy','/terms']
  const supabase=await createClient()
  const {data:articles}=await supabase.from('articles').select('slug,updated_at,published_at').eq('status','published').lte('published_at',new Date().toISOString()).order('published_at',{ascending:false}).limit(1000)
  return [
