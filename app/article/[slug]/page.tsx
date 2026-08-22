@@ -2,10 +2,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '../../../lib/supabase/server'
 import { ArticleBody } from '../../../components/ArticleBody'
+import { BookmarkButton } from '../../../components/BookmarkButton'
 
 export default async function ArticlePage({params}:{params:Promise<{slug:string}>}){
  const {slug}=await params; const supabase=await createClient()
- const {data:article}=await supabase.from('articles').select('id,headline,dek,body,confidence,reader_level,published_at,updated_at,disclaimer_variant,story_candidate_id').eq('slug',slug).maybeSingle()
+ const {data:article}=await supabase.from('articles').select('id,headline,dek,body,confidence,reader_level,published_at,updated_at,disclaimer_variant,story_candidate_id,status').eq('slug',slug).eq('status','published').not('published_at','is',null).lte('published_at',new Date().toISOString()).maybeSingle()
  if(!article) notFound()
  const [{data:articleClaims},{data:articleLinks},{data:predictions},{data:corrections},{data:map}]=await Promise.all([
    supabase.from('claims').select('id,claim_text,claim_type,confidence,verification_status').eq('article_id',article.id),
@@ -26,7 +27,7 @@ export default async function ArticlePage({params}:{params:Promise<{slug:string}
  const links=storyLinks.length?storyLinks:(articleLinks??[])
  let nodes:any[]=[]; let edges:any[]=[]
  if(map){ const [nr,er]=await Promise.all([supabase.from('impact_nodes').select('id,label,node_type,horizon,probability,severity,direction,x,y').eq('impact_map_id',map.id),supabase.from('impact_edges').select('from_node_id,to_node_id,mechanism,strength,lag_label').eq('impact_map_id',map.id)]);nodes=nr.data??[];edges=er.data??[] }
- return <main className="investigation"><header className="investigationNav"><Link href="/">← KAPORAL INTELLIGENCE</Link><span>Independent research & education · Not financial advice</span></header><article>
+ return <main className="investigation"><header className="investigationNav"><Link href="/">← KAPORAL INTELLIGENCE</Link><span>Independent research & education · Not financial advice</span><BookmarkButton articleId={article.id}/></header><article>
    <section className="investigationHero"><div className="investigationMeta"><span>INVESTIGATION</span><span>{article.reader_level}</span><span>{article.confidence?`${article.confidence} confidence`:'confidence pending'}</span></div><h1>{article.headline}</h1>{article.dek&&<p>{article.dek}</p>}<div className="evidenceBar"><span>FACTS</span><span>DATA</span><span>INFERENCE</span><span>CONTRARIAN REVIEW</span><span>UNCERTAINTY</span></div></section>
    <section className="investigationLayout"><div className="investigationMain"><ArticleBody body={article.body}/>
      {map&&<section className="articleSection"><p className="eyebrow">KAPORAL IMPACT MAP</p><h2>{map.title}</h2>{map.summary&&<p>{map.summary}</p>}<div className="miniImpactGraph">{nodes.length?nodes.map(n=><div key={n.id} className={`miniNode ${n.direction??''}`}><small>{n.horizon??n.node_type}</small><b>{n.label}</b><span>{n.probability==null?'probability pending':`${n.probability}% probability`}</span></div>):<p>Impact graph is being built.</p>}</div>{edges.length>0&&<small className="graphFoot">{edges.length} causal links documented in the model.</small>}</section>}
