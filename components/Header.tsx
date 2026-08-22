@@ -11,7 +11,9 @@ export function Header(){
     </div>
     <header className="header shell">
       <Link className="brand" href="/" aria-label="KAPORAL INTELLIGENCE home">
-        <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png" alt="KAPORAL INTELLIGENCE" />
+        <span className="brandLogoFrame" aria-hidden="true">
+          <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png?v=20260822c" alt="" />
+        </span>
         <span><strong>KAPORAL</strong><small>INTELLIGENCE</small></span>
       </Link>
       <nav>{nav.map(n=><a key={n} href={`#${n.toLowerCase()}`}>{n}</a>)}</nav>
