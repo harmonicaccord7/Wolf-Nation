@@ -1,2 +1,16 @@
 import { NewsletterForm } from './NewsletterForm'
-export function Footer(){return <footer><div className="shell footerGrid"><div className="brand"><span className="brandSeal">K</span><span><strong>KAPORAL</strong><small>INTELLIGENCE</small></span></div><div className="footerPitch"><b>The KAPORAL Market Letter</b><span>Two serious briefings. No noise.</span></div><NewsletterForm/><div className="footerLinks"><a href="#">Corrections</a><a href="#">Disclosures</a><a href="#">Privacy</a><a href="#">Terms</a></div><small>© 2026 KAPORAL INTELLIGENCE · Independent research & education. Market data is source-labelled when live.</small></div></footer>}
+
+export function Footer(){
+  return <footer>
+    <div className="shell footerGrid">
+      <div className="brand footerBrand">
+        <img className="brandLogo" src="/brand/kaporal-intelligence-logo.png" alt="KAPORAL INTELLIGENCE" />
+        <span><strong>KAPORAL</strong><small>INTELLIGENCE</small></span>
+      </div>
+      <div className="footerPitch"><b>The KAPORAL Market Letter</b><span>Two serious briefings. No noise.</span></div>
+      <NewsletterForm/>
+      <div className="footerLinks"><a href="#">Corrections</a><a href="#">Disclosures</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+      <small className="footerLegal">© 2026 KAPORAL INTELLIGENCE · Independent research & education. Market data is source-labelled when live.</small>
+    </div>
+  </footer>
+}
