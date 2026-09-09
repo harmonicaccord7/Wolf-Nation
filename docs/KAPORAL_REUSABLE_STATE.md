@@ -19,11 +19,11 @@ This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering
 - Incoming support: ImprovMX -> `kaporalintelligence@gmail.com`
 - Human reply workflow: Thunderbird + Resend SMTP
 - Newsletter sender target: `KAPORAL Market Letter <intelligence@kaporalintelligence.com>`
-- Account/auth sender target: `KAPORAL Accounts <accounts@kaporalintelligence.com>`
+- Account/auth sender target: `KAPORAL Intelligence Accounts <accounts@kaporalintelligence.com>`
 
 ## Reusable production functions
 - `newsletter`: newsletter double opt-in/confirm/unsubscribe. Dynamic state; never cache.
-- `support-contact`: private support intake + optional email delivery. Dynamic state; never cache.
+- `support-contact`: private support intake + email delivery. Dynamic state; never cache.
 - `etf-flow-estimator`: KAPORAL primary-source ETF estimator.
 
 ## ETF engine
@@ -48,53 +48,46 @@ Coverage is partial. Missing issuer observations remain missing; do not impute o
 - Related tables: `signal_predictions`, `signal_outcomes`, `backtest_runs`
 - Public profit guarantees are prohibited. Validate using timestamped forward calls and walk-forward/out-of-sample backtests with costs/slippage and no look-ahead.
 
-## Current launch blockers / state
+## Current operational state
 ### Newsletter
-A production Edge Function diagnostic on 2026-09-09 returned `resend_api_key_missing`. This means the newsletter code is active but the `RESEND_API_KEY` is not currently available to that Supabase Edge Function runtime. Add the secret in Supabase Edge Function secrets, then re-run double-opt-in QA. The QA subscriber used to diagnose this was deleted afterward.
+- `RESEND_API_KEY` is restored in Supabase Edge Function secrets.
+- Production delivery probe returned `delivery: sent`.
+- Final double-opt-in confirmation/unsubscribe acceptance is still pending.
+- Launch hardening changes confirmation from GET/page-load to a deliberate POST/button so mail scanners cannot silently confirm an address.
 
-### Supabase Auth email
-Observed confirmation links returned to `localhost:3000`, proving Supabase Auth URL configuration is stale. Required hosted configuration:
-- Site URL: `https://www.kaporalintelligence.com`
-- Allowed redirect URL: `https://www.kaporalintelligence.com/auth/confirm**` (or exact route variants supported by the dashboard)
-- Production application uses `/auth/confirm`.
-- Configure custom SMTP through Resend so messages originate from KAPORAL rather than Supabase's default sender.
-
-Recommended Supabase Auth SMTP values:
-- Host: `smtp.resend.com`
-- Port: `465` with SSL/TLS, or `587` with STARTTLS if required by the dashboard
-- Username: `resend`
-- Sender email: `accounts@kaporalintelligence.com`
-- Sender name: `KAPORAL Accounts`
-- Password: dedicated Resend API key stored only in Supabase; never commit it.
-
-Recommended signup email template for SSR/PKCE:
-```html
-<h2>Confirm your KAPORAL account</h2>
-<p>Follow the link below to confirm your email address and finish signing up.</p>
-<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/account">Confirm email address</a></p>
-<p>If you did not request this account, no action is required.</p>
-```
-Keep auth email transactional and minimal; do not turn it into a marketing email.
+### Supabase Auth
+- Site URL is `https://www.kaporalintelligence.com`.
+- Allowed production redirect includes `https://www.kaporalintelligence.com/auth/confirm`.
+- Custom SMTP through Resend is enabled with KAPORAL account identity.
+- A live resend test returned HTTP 200 and updated `confirmation_sent_at`.
+- User completed the newest production confirmation successfully on 2026-09-09. Auth acceptance is PASS.
 
 ### Contact
-A synthetic production call successfully inserted a private `contact_messages` row, proving the storage/routing path works. The synthetic QA row was deleted immediately after verification. Email forwarding from the Edge Function still depends on the same missing Resend key and should be retested after the secret is restored.
+- Synthetic production storage test passed.
+- Resend email-delivery test returned `delivery: sent`.
+- Synthetic QA rows were deleted after verification. Contact backend acceptance is PASS.
 
 ## Cache / token efficiency
 - Do not purge stable public/static assets without a concrete stale-cache symptom.
-- State-changing auth/newsletter/contact routes should use `Cache-Control: no-store`.
-- New deployments naturally fingerprint Next.js static assets; do not repeatedly regenerate them to 'clear cache'.
+- `/auth/**`, `/account/**`, `/studio/**`, `/newsletter/**` and `/api/**` should bypass caches with `no-store`.
+- New deployments fingerprint Next.js static assets; do not repeatedly regenerate them to clear cache.
 - Remove QA database rows after tests.
-- Reuse the issuer source URLs and stored ETF snapshots; do not repurchase equivalent ETF-flow data unless the free engine cannot meet a defined requirement.
-- Prefer direct file fetches when a path is known; avoid broad repository searches for already documented locations.
+- Reuse stored issuer observations and ETF snapshots instead of repurchasing equivalent data.
+- Prefer direct file fetches when a path is known; avoid rediscovering documented paths and identifiers.
+- Never store live credentials or one-time confirmation tokens in this file.
+
+## Security / release QA
+- Next.js `16.3.2` was flagged by npm audit as critical after the Aug 2026 security release. Final launch branch upgrades to `16.3.4` and CI now runs `npm audit --omit=dev --audit-level=high`.
+- Reusable route/link QA lives at `scripts/launch-qa.mjs` and is run by CI as `npm run qa:launch`.
+- Private and transactional routes are excluded from robots crawling.
 
 ## Launch QA checklist
-- [ ] Newsletter: Resend secret restored; subscribe -> delivered -> confirm -> confirmed -> unsubscribe.
-- [ ] Auth: Site URL no longer localhost; branded SMTP; create account -> confirm on laptop + iPhone -> session/account.
-- [x] Contact storage path inserts successfully; synthetic QA data removed.
-- [ ] Contact email delivery retested after Resend secret restoration.
+- [ ] Newsletter: subscribe -> delivered -> deliberate confirm -> confirmed -> unsubscribe.
+- [x] Auth: production URL + branded SMTP + fresh confirmation -> account/session.
+- [x] Contact storage path + email delivery; synthetic QA data removed.
 - [x] ETF database values/provenance verified.
 - [ ] ETF public visual verified on production desktop + narrow phone.
-- [ ] Public route/link sweep after final deployment.
-- [x] `robots.ts` references canonical site and sitemap; `/auth` and `/studio` excluded from indexing.
-- [ ] Production `sitemap.xml` HTTP verification and Search Console/Bing submission.
+- [ ] Automated public route/link sweep passes on final branch and production build.
+- [x] `robots.ts` references canonical site and sitemap; private/transactional surfaces excluded.
+- [ ] Production `sitemap.xml` HTTP verification and Google Search Console/Bing submission.
 - [ ] Final mobile acceptance on narrow iPhone-class viewport and Android/Chrome-class viewport.
