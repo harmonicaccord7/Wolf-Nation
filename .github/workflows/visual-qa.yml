@@ -1,0 +1,48 @@
+name: Visual QA
+
+on:
+  push:
+    branches: ['visual-qa/**']
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run qa:launch
+      - run: npm run build
+      - name: Start KAPORAL locally
+        run: |
+          npm start > /tmp/kaporal-next.log 2>&1 &
+          echo $! > /tmp/kaporal-next.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/kaporal-next.log
+          exit 1
+      - name: Install browser
+        run: npx -y playwright@1.55.0 install --with-deps chromium
+      - name: Capture desktop and mobile launch surfaces
+        run: |
+          mkdir -p qa-screenshots
+          npx -y playwright@1.55.0 screenshot --browser chromium --full-page --viewport-size="1440,1000" http://127.0.0.1:3000/ qa-screenshots/home-desktop.png
+          npx -y playwright@1.55.0 screenshot --browser chromium --full-page --viewport-size="390,844" http://127.0.0.1:3000/ qa-screenshots/home-mobile-390.png
+          npx -y playwright@1.55.0 screenshot --browser chromium --full-page --viewport-size="1440,1000" http://127.0.0.1:3000/bitcoin qa-screenshots/bitcoin-desktop.png
+          npx -y playwright@1.55.0 screenshot --browser chromium --full-page --viewport-size="390,844" http://127.0.0.1:3000/bitcoin qa-screenshots/bitcoin-mobile-390.png
+          npx -y playwright@1.55.0 screenshot --browser chromium --full-page --viewport-size="430,932" http://127.0.0.1:3000/contact qa-screenshots/contact-mobile-430.png
+          npx -y playwright@1.55.0 screenshot --browser chromium --full-page --viewport-size="390,844" http://127.0.0.1:3000/auth qa-screenshots/auth-mobile-390.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kaporal-launch-visual-qa
+          path: qa-screenshots
+          retention-days: 7
