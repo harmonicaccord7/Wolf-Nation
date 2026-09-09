@@ -6,6 +6,7 @@ import type { DeskSlug } from '../../lib/data/desk-config'
 import { formatCryptoPrice, formatIntelligenceValue, formatObservationDate } from '../../lib/format-intelligence'
 import { MetricCard } from './MetricCard'
 import { OptionsLab } from './OptionsLab'
+import { BitcoinEtfFlowPanel } from './BitcoinEtfFlowPanel'
 import { BusinessFramework,LearnPath,TechnologyFramework } from './DeskGuides'
 
 export async function DeskPage({slug}:{slug:DeskSlug}){
@@ -21,6 +22,8 @@ export async function DeskPage({slug}:{slug:DeskSlug}){
     <section className="deskHero"><div className="shell deskHeroGrid"><div><span className="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p>{config.summary}</p><div className="deskHeroActions"><Link className="goldButton" href="/methodology">Research methodology</Link><Link className="glassButton" href="/disclosures">Risk & disclosures</Link></div></div><aside><small>THE QUESTION</small><strong>{config.question}</strong><span>{freshest?`Latest stored observation: ${formatObservationDate(freshest,'market')}`:'This desk is connected; no provider observation is available yet.'}</span></aside></div></section>
 
     {crypto.length>0&&<section className="shell liveSection"><div className="liveSectionHead"><div><span className="eyebrow">LIVE SPOT LAYER</span><h2>Digital-asset snapshot</h2></div><p>Stored server-side with provider and capture time.</p></div><div className="cryptoMetricGrid">{crypto.map(a=><article className="cryptoLiveCard" key={a.symbol}><small>{a.symbol} · {a.provider}</small><strong>{formatCryptoPrice(a.price)}</strong><span className={(a.change24h??0)>=0?'positive':'negative'}>{a.change24h==null?'24h change unavailable':`${a.change24h>=0?'+':''}${a.change24h.toFixed(2)}% / 24h`}</span><time>{formatObservationDate(a.capturedAt,'market')}</time></article>)}</div></section>}
+
+    {slug==='bitcoin'&&<BitcoinEtfFlowPanel metrics={metrics}/>}
 
     {slug==='africa'?<section className="shell liveSection"><div className="liveSectionHead"><div><span className="eyebrow">AFRICA MACRO MATRIX</span><h2>Country-by-country evidence</h2></div><p>Latest available official indicators are not all published at the same frequency or date. Every observation keeps its source date.</p></div><div className="africaCountryGrid">{[...africaGroups.entries()].map(([code,group])=><article className="africaCountryCard" key={code}><div className="countryCardHead"><strong>{group[0]?.label.split(' — ')[0]??code}</strong><span>{code}</span></div>{group.map(m=><div className="countryMetric" key={m.code}><span>{m.label.split(' — ')[1]??m.label}</span><b>{formatIntelligenceValue(m.latest?.value,m.unit)}</b><small>{m.latest?.provider??'Unavailable'} · {formatObservationDate(m.latest?.observedAt,m.frequency)}</small><Link href={`/data/${m.code.toLowerCase()}`}>History →</Link></div>)}</article>)}</div></section>:metrics.length>0?<section className="shell liveSection"><div className="liveSectionHead"><div><span className="eyebrow">LIVE INTELLIGENCE LAYER</span><h2>Verified data, not decorative numbers.</h2></div><p>{config.sourceNote}</p></div><div className="liveMetricGrid">{metrics.map(m=><MetricCard key={m.code} metric={m}/>)}</div></section>:null}
 
