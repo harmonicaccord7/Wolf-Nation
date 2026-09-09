@@ -5,17 +5,24 @@ import { FormEvent, useMemo, useState } from 'react'
 import { createClient } from '../lib/supabase/client'
 
 type Mode='signin'|'signup'
-
 type AuthErrorLike={message?:string;status?:number;code?:string}
 
 const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const SIGNUP_COOLDOWN_MS=60_000
+const CANONICAL_SITE='https://www.kaporalintelligence.com'
+
+function authConfirmationUrl(){
+  if(typeof window!=='undefined'&&(location.hostname==='localhost'||location.hostname==='127.0.0.1')) return `${location.origin}/auth/confirm?next=%2Faccount`
+  const configured=(process.env.NEXT_PUBLIC_SITE_URL||CANONICAL_SITE).replace(/\/$/,'')
+  const safe=/localhost|127\.0\.0\.1/i.test(configured)?CANONICAL_SITE:configured
+  return `${safe}/auth/confirm?next=%2Faccount`
+}
 
 function friendlyAuthError(error:AuthErrorLike){
   const message=String(error?.message??'').toLowerCase()
   if(error?.status===429||message.includes('rate limit')||message.includes('too many')) return {message:'Too many authentication emails were requested in a short period. Wait a few minutes before trying again. If this keeps happening, contact support.',rateLimited:true}
   if(message.includes('invalid login credentials')) return {message:'The email or password is incorrect.',rateLimited:false}
-  if(message.includes('email not confirmed')) return {message:'Your email address still needs to be confirmed. Open the confirmation email before signing in.',rateLimited:false}
+  if(message.includes('email not confirmed')) return {message:'Your email address still needs to be confirmed. Open the newest KAPORAL confirmation email and complete the confirmation step.',rateLimited:false}
   if(message.includes('user already registered')||message.includes('already been registered')) return {message:'An account already exists for this email. Try signing in instead.',rateLimited:false}
   return {message:error?.message||'Authentication failed. Please try again.',rateLimited:false}
 }
@@ -58,20 +65,20 @@ export function AuthForm(){
     setBusy(true)
     try{
       if(mode==='signup'){
-        const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:`${location.origin}/auth?confirmed=1`}})
+        const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:authConfirmationUrl()}})
         if(error) throw error
         localStorage.setItem(`kaporal-signup-cooldown:${email}`,String(Date.now()))
         if(data.user&&data.session){
-          await supabase.from('profiles').insert({id:data.user.id,display_name:email.split('@')[0],role:'reader'}).then(()=>{})
+          await supabase.from('profiles').upsert({id:data.user.id,display_name:email.split('@')[0],role:'reader'},{onConflict:'id'}).then(()=>{})
           location.href='/account';return
         }
         form.reset()
-        setStatus('Account request received. Check your inbox for the confirmation email before signing in.')
+        setStatus('Account request received. Open the newest confirmation email, then press the KAPORAL confirmation button. Older confirmation links may be expired and should not be reused.')
       }else{
         const {data,error}=await supabase.auth.signInWithPassword({email,password})
         if(error) throw error
         if(data.user){
-          await supabase.from('profiles').insert({id:data.user.id,display_name:email.split('@')[0],role:'reader'}).then(()=>{})
+          await supabase.from('profiles').upsert({id:data.user.id,display_name:email.split('@')[0],role:'reader'},{onConflict:'id'}).then(()=>{})
           location.href=await destination(data.user.id)
         }
       }
@@ -87,7 +94,7 @@ export function AuthForm(){
       <label>Email<input name="email" type="email" required inputMode="email" autoCapitalize="none" autoComplete="email"/></label>
       <label>Password<input name="password" type="password" minLength={10} required autoComplete={mode==='signin'?'current-password':'new-password'}/></label>
       {mode==='signup'&&<label>Confirm password<input name="confirmPassword" type="password" minLength={10} required autoComplete="new-password"/></label>}
-      {mode==='signup'&&<p className="authHint">Use at least 10 characters. Submit once, then wait for the confirmation email instead of repeatedly requesting new messages.</p>}
+      {mode==='signup'&&<p className="authHint">Use at least 10 characters. Submit once, then use only the newest confirmation email. KAPORAL deliberately throttles repeated confirmation requests.</p>}
       <button className="goldButton big" disabled={busy} aria-busy={busy}>{busy?'Working…':mode==='signin'?'Sign in':'Create free account'}</button>
     </form>
     {status&&<div className="authStatus" role="status"><p>{status}</p>{rateLimited&&<Link href="/contact">Contact support →</Link>}</div>}

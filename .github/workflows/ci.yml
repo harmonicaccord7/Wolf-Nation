@@ -16,8 +16,10 @@ jobs:
         with:
           node-version: 22
       - run: npm install
+      - run: npm run qa:launch
       - run: npm run typecheck
       - run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_SITE_URL: https://www.kaporalintelligence.com

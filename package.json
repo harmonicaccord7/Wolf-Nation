@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "qa:launch": "node scripts/launch-qa.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",
