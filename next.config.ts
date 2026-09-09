@@ -8,16 +8,17 @@ const securityHeaders=[
   {key:'Cross-Origin-Opener-Policy',value:'same-origin'},
   {key:'Strict-Transport-Security',value:'max-age=63072000; includeSubDomains; preload'}
 ]
-const stateHeaders=[{key:'Cache-Control',value:'no-store, max-age=0, must-revalidate'}]
+const stateHeaders=[{key:'Cache-Control',value:'private, no-store, no-cache, max-age=0, must-revalidate'}]
 
 const nextConfig:NextConfig={
   poweredByHeader:false,
   async headers(){return [
     {source:'/:path*',headers:securityHeaders},
     {source:'/auth/:path*',headers:stateHeaders},
+    {source:'/account/:path*',headers:stateHeaders},
+    {source:'/studio/:path*',headers:stateHeaders},
     {source:'/newsletter/:path*',headers:stateHeaders},
-    {source:'/api/newsletter/:path*',headers:stateHeaders},
-    {source:'/api/contact',headers:stateHeaders}
+    {source:'/api/:path*',headers:stateHeaders}
   ]}
 }
 
