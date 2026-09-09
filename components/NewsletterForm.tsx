@@ -6,12 +6,14 @@ export function NewsletterForm(){
  async function submit(e:FormEvent<HTMLFormElement>){
   e.preventDefault();setBusy(true);setStatus('');const form=e.currentTarget;const email=String(new FormData(form).get('email')||'').trim().toLowerCase()
   try{
-   const response=await fetch('/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})})
+   const response=await fetch('/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email}),cache:'no-store'})
    const data=await response.json().catch(()=>({}))
-   if(!response.ok||!data?.ok)throw new Error('subscription_failed')
+   if(!response.ok||!data?.ok)throw new Error(data?.error||'subscription_failed')
    if(data.status==='already_confirmed')setStatus('This email is already confirmed for the KAPORAL Market Letter.')
-   else if(data.delivery==='sent'||data.delivery==='recently_sent')setStatus('Check your inbox to confirm your subscription. You are not subscribed until you confirm.')
-   else setStatus('Your request is pending. Confirmation email delivery is not active yet, so your address has not been subscribed.')
+   else if(data.delivery==='sent'||data.delivery==='recently_sent')setStatus('Check your inbox for the KAPORAL confirmation email. You are not subscribed until you confirm.')
+   else if(data.delivery==='resend_api_key_missing')setStatus('Your request is pending, but newsletter email delivery still needs its Resend key connected to Supabase. Your address is not subscribed yet.')
+   else if(String(data.delivery||'').startsWith('resend_http_'))setStatus('Your request is pending, but the email provider rejected the confirmation message. KAPORAL support is checking the mail configuration; your address is not subscribed yet.')
+   else setStatus('Your request is pending. Confirmation delivery is temporarily unavailable, so your address has not been subscribed.')
    form.reset()
   }catch{setStatus('Could not process the newsletter request right now.')}
   finally{setBusy(false)}
