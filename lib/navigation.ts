@@ -17,6 +17,7 @@ export const institutionalNav = [
   { label: 'Track Record', href: '/track-record' },
   { label: 'Impact Map', href: '/impact-map' },
   { label: 'System Status', href: '/status' },
+  { label: 'Contact', href: '/contact' },
   { label: 'Corrections', href: '/corrections' },
   { label: 'Disclosures', href: '/disclosures' },
   { label: 'Privacy', href: '/privacy' },

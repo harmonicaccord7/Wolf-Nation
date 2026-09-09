@@ -26,9 +26,9 @@ export const deskConfigs: Record<DeskSlug, DeskConfig> = {
     slug:'bitcoin', eyebrow:'BITCOIN INTELLIGENCE', title:'Bitcoin through the macro, flow and derivatives lens.',
     summary:'Price is only one layer. We connect Bitcoin to liquidity, ETF flows, rates, the dollar, derivatives positioning and the broader cycle.',
     question:'What is actually driving Bitcoin, and what would invalidate the current interpretation?',
-    seriesCodes:['BTC_ETF_FLOW','US10Y','BROAD_DOLLAR','M2_US','BTC_OPTIONS_IV','BTC_PUT_CALL_OI'], cryptoSymbols:['BTC'],
+    seriesCodes:['BTC_ETF_FLOW','BTC_ETF_COVERED_AUM','BTC_ETF_FUNDS_COVERED','US10Y','BROAD_DOLLAR','M2_US','BTC_OPTIONS_IV','BTC_PUT_CALL_OI'], cryptoSymbols:['BTC'],
     coverage:['Cycle structure','ETF flows','Macro liquidity','Derivatives positioning','Institutional adoption','Regulation and market structure'],
-    sourceNote:'ETF flow is displayed only when an authorized provider feed is available. Missing data is never replaced with an estimate.'
+    sourceNote:'KAPORAL Estimated ETF flow is derived from free issuer-published share counts and prior stored NAV, with explicit fund coverage and source provenance. It is an estimate, not an official consolidated flow feed.'
   },
   crypto: {
     slug:'crypto', eyebrow:'DIGITAL ASSETS', title:'Crypto without the noise.',
