@@ -1,6 +1,6 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-09-09.
+Last operational refresh: 2026-09-10.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
 
@@ -52,7 +52,8 @@ Coverage is partial. Missing issuer observations remain missing; do not impute o
 ### Newsletter
 - `RESEND_API_KEY` is restored in Supabase Edge Function secrets.
 - Production delivery probe returned `delivery: sent`.
-- Final double-opt-in confirmation/unsubscribe acceptance is still pending.
+- Final production double-opt-in confirmation/unsubscribe acceptance passed on 2026-09-10. The original delivered QA email remained pending on GET, confirmed only after the button POST, and then unsubscribed successfully. The synthetic QA row was deleted.
+- A launch-blocking schema mismatch was repaired: the Edge Function writes `confirmed`, but the legacy constraint allowed only `active`. Migration `20260910140844_allow_confirmed_newsletter_status.sql` adds `confirmed` while preserving every previous state. It is already applied to production.
 - Launch hardening changes confirmation from GET/page-load to a deliberate POST/button so mail scanners cannot silently confirm an address.
 
 ### Supabase Auth
@@ -82,7 +83,7 @@ Coverage is partial. Missing issuer observations remain missing; do not impute o
 - Private and transactional routes are excluded from robots crawling.
 
 ## Launch QA checklist
-- [ ] Newsletter: subscribe -> delivered -> deliberate confirm -> confirmed -> unsubscribe.
+- [x] Newsletter: subscribe -> delivered -> deliberate confirm -> confirmed -> unsubscribe; QA row removed.
 - [x] Auth: production URL + branded SMTP + fresh confirmation -> account/session.
 - [x] Contact storage path + email delivery; synthetic QA data removed.
 - [x] ETF database values/provenance verified.
@@ -91,3 +92,12 @@ Coverage is partial. Missing issuer observations remain missing; do not impute o
 - [x] `robots.ts` references canonical site and sitemap; private/transactional surfaces excluded.
 - [ ] Production `sitemap.xml` HTTP verification and Google Search Console/Bing submission.
 - [ ] Final mobile acceptance on narrow iPhone-class viewport and Android/Chrome-class viewport.
+
+## Launch continuation, 2026-09-10
+- Fixes and final QA are tracked in PR #21: `https://github.com/harmonicaccord7/Wolf-Nation/pull/21`.
+- Per-series history queries restore ETF, Treasury, dollar and other lower-frequency observations hidden by a shared row limit. Public pages receive their own canonical URLs.
+- The first PR commit passed both CI runs and produced a ready Vercel preview. The preview is protected, and the current Vercel connector cannot access the intended project or issue a share link. Do not weaken deployment protection to work around this.
+- CI now includes desktop Chromium, 375px WebKit phone emulation and 393px Chromium phone emulation, with layout, navigation, ETF/provenance and confirmation-error checks plus screenshot artifacts. Record actual run results before marking acceptance passed. Emulation is not physical-device sign-off.
+- Google sign-in still returns 502 / connection refused in the cloud browser. GSC Wizard is connected as `harmonicaccord7@gmail.com`, but neither `https://www.kaporalintelligence.com/` nor `sc-domain:kaporalintelligence.com` exists in that account's accessible properties. Register/verify the property there, or connect the Google account that already owns it.
+- Production sitemap HTTP verification previously passed (200, 73 URLs). Search Console processing status, live inspection and indexing requests remain open. Submission is distinct from Google choosing to index a page.
+- Keep the application PR unmerged until the remaining acceptance evidence is available; only the newsletter database repair has been applied to production during this continuation.

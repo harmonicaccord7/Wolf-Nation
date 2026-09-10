@@ -7,3 +7,7 @@ out/
 *.log
 .DS_Store
 .vercel/
+playwright-report/
+test-results/
+supabase/.temp/
+*.tsbuildinfo
