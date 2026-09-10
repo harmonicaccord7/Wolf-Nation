@@ -34,7 +34,7 @@ for (const route of routes) {
       await expect(subject).toHaveValue('Launch acceptance')
       await expect(message).toHaveValue('Testing contact form input on the launch candidate.')
       expect(await page.locator('.contactForm').evaluate((form: HTMLFormElement) => form.checkValidity())).toBe(true)
-      await testInfo.attach('contact-form-filled', { body: await page.screenshot({ scale: 'css' }), contentType: 'image/png' })
+      await testInfo.attach('contact-form-filled', { body: await page.locator('.contactForm').screenshot({ scale: 'css' }), contentType: 'image/png' })
     }
     expect(errors).toEqual([])
     // CSS-pixel capture keeps long phone pages below WebKit's bitmap dimension limit.
@@ -79,7 +79,7 @@ test('public search accepts a query and returns public results', async ({ page }
   ])
   await expect(page.locator('.searchResults h2')).toHaveText('Results for “Bitcoin”')
   await expect(page.locator('.searchResults .researchCard').first()).toBeVisible()
-  await testInfo.attach('search-query-results', { body: await page.screenshot({ scale: 'css' }), contentType: 'image/png' })
+  await testInfo.attach('search-query-results', { body: await page.locator('.searchResults').screenshot({ scale: 'css' }), contentType: 'image/png' })
 })
 
 test('phone navigation opens, closes, navigates, and survives rotation', async ({ page, isMobile }, testInfo) => {
