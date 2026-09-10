@@ -18,9 +18,23 @@ for (const route of routes) {
       expect(new URL(canonical!).href).toBe(new URL(route, canonicalOrigin).href)
     }
     if (route === '/contact') {
-      await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toBeEditable()
-      await expect(page.getByRole('textbox', { name: 'Message', exact: true })).toBeEditable()
+      const name = page.getByRole('textbox', { name: 'Name', exact: true })
+      const email = page.getByRole('textbox', { name: 'Email', exact: true })
+      const subject = page.getByRole('textbox', { name: 'Subject', exact: true })
+      const message = page.getByRole('textbox', { name: 'Message', exact: true })
+      await expect(name).toBeEditable()
+      await expect(message).toBeEditable()
       expect(await page.locator('.contactForm').evaluate((form: HTMLFormElement) => form.checkValidity())).toBe(false)
+      await name.pressSequentially('Launch QA')
+      await email.pressSequentially('qa@example.com')
+      await subject.fill('Launch acceptance')
+      await message.pressSequentially('Testing contact form input on the launch candidate.')
+      await expect(name).toHaveValue('Launch QA')
+      await expect(email).toHaveValue('qa@example.com')
+      await expect(subject).toHaveValue('Launch acceptance')
+      await expect(message).toHaveValue('Testing contact form input on the launch candidate.')
+      expect(await page.locator('.contactForm').evaluate((form: HTMLFormElement) => form.checkValidity())).toBe(true)
+      await testInfo.attach('contact-form-filled', { body: await page.screenshot({ scale: 'css' }), contentType: 'image/png' })
     }
     expect(errors).toEqual([])
     // CSS-pixel capture keeps long phone pages below WebKit's bitmap dimension limit.
@@ -44,8 +58,28 @@ test('ETF values and issuer provenance reach the rendered page', async ({ page }
   // Coverage changes with available issuer observations; never require a stale fund count.
   const fundCount = Number(await values.nth(1).innerText())
   expect(fundCount).toBeGreaterThan(0)
-  expect(await panel.locator('.etfFlowDisclosure li a').count()).toBe(fundCount)
+  const sourceLinks = await panel.locator('.etfFlowDisclosure li a').all()
+  expect(sourceLinks).toHaveLength(fundCount)
+  for (const link of sourceLinks) {
+    expect((await link.innerText()).trim()).not.toBe('')
+    expect(await link.getAttribute('href')).toMatch(/^https:\/\//)
+    expect(await link.getAttribute('target')).toBe('_blank')
+  }
   await testInfo.attach('etf-panel', { body: await panel.screenshot({ scale: 'css' }), contentType: 'image/png' })
+})
+
+test('public search accepts a query and returns public results', async ({ page }, testInfo) => {
+  await page.goto('/search')
+  const query = page.getByRole('textbox', { name: 'Search query', exact: true })
+  await query.fill('Bitcoin')
+  await expect(query).toHaveValue('Bitcoin')
+  await Promise.all([
+    page.waitForURL(/\/search\?q=Bitcoin$/),
+    page.getByRole('button', { name: 'Search', exact: true }).click(),
+  ])
+  await expect(page.locator('.searchResults h2')).toHaveText('Results for “Bitcoin”')
+  await expect(page.locator('.searchResults .researchCard').first()).toBeVisible()
+  await testInfo.attach('search-query-results', { body: await page.screenshot({ scale: 'css' }), contentType: 'image/png' })
 })
 
 test('phone navigation opens, closes, navigates, and survives rotation', async ({ page, isMobile }, testInfo) => {
@@ -66,7 +100,10 @@ test('phone navigation opens, closes, navigates, and survives rotation', async (
   await expect(page).toHaveURL(/\/bitcoin$/)
   await expect(menu).toHaveAttribute('aria-expanded', 'false')
   await page.setViewportSize({ width: 844, height: 390 })
+  expect(page.viewportSize()).toEqual({ width: 844, height: 390 })
   await menu.click()
+  await expect(page.getByRole('navigation', { name: 'Primary mobile navigation' })).toBeVisible()
+  await testInfo.attach('phone-rotation', { body: await page.screenshot({ scale: 'css' }), contentType: 'image/png' })
   await page.getByRole('button', { name: 'Close navigation', exact: true }).click()
   await expect(menu).toHaveAttribute('aria-expanded', 'false')
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1)
