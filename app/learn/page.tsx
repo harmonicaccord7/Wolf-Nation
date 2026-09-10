@@ -1,3 +1,3 @@
 import { DeskPage } from '../../components/intelligence/DeskPage'
-export const metadata={title:'Learn | KAPORAL INTELLIGENCE'}
+export const metadata={alternates:{canonical:'/learn'},title:'Learn'}
 export default function Page(){return <DeskPage slug="learn"/>}

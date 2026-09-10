@@ -6,7 +6,12 @@ import { HistoryChart } from '../../../components/intelligence/HistoryChart'
 import { getSeriesHistory } from '../../../lib/data/intelligence'
 import { formatIntelligenceValue,formatObservationDate } from '../../../lib/format-intelligence'
 
-export async function generateMetadata({params}:{params:Promise<{code:string}>}){const {code}=await params;const s=await getSeriesHistory(code,2);return s?{title:`${s.label} Data`,description:`Historical ${s.label} observations with provider and source provenance.`}:{title:'Data Series'}}
+export async function generateMetadata({params}:{params:Promise<{code:string}>}){
+ const {code}=await params
+ const series=await getSeriesHistory(code.toUpperCase(),2)
+ if(!series)return {title:'Data series not found',robots:{index:false,follow:false}}
+ return {title:`${series.label} Data`,description:`Historical ${series.label} observations with provider and source provenance.`,alternates:{canonical:`/data/${String(series.code).toLowerCase()}`}}
+}
 
 export default async function DataSeriesPage({params}:{params:Promise<{code:string}>}){
  const {code}=await params; const series=await getSeriesHistory(code.toUpperCase(),500); if(!series)notFound()

@@ -3,7 +3,7 @@ import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { getPublicImpactMaps } from '../../lib/data/accountability'
 
-export const metadata={title:'Impact Map',description:'Evidence-linked causal consequence maps for published KAPORAL INTELLIGENCE research.'}
+export const metadata={alternates:{canonical:'/impact-map'},title:'Impact Map',description:'Evidence-linked causal consequence maps for published KAPORAL INTELLIGENCE research.'}
 
 export default async function ImpactMapPage(){
   const maps=await getPublicImpactMaps()

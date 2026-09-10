@@ -17,12 +17,17 @@ function maxIso(values:(string|null|undefined)[]){ const good=values.filter(Bool
 async function loadPoints(supabase:any, series:any[]){
   if(!series.length) return new Map<string,DataPoint[]>()
   const ids=series.map(s=>s.id)
-  const {data:rows}=await supabase.from('data_points').select('series_id,value,observed_at,provider,metadata').in('series_id',ids).order('observed_at',{ascending:false}).limit(1200)
+  // Bound history per series. A global limit lets frequent options updates
+  // crowd out valid daily ETF and slower macro observations.
+  const {data:rows}=await supabase.from('data_series')
+    .select('id,data_points(value,observed_at,provider,metadata)')
+    .in('id',ids)
+    .order('observed_at',{ascending:false,referencedTable:'data_points'})
+    .limit(40,{referencedTable:'data_points'})
   const map=new Map<string,DataPoint[]>()
-  for(const r of rows??[]){
-    const list=map.get(r.series_id)??[]
-    if(list.length<40) list.push({value:num(r.value),observedAt:r.observed_at,provider:r.provider,metadata:r.metadata??{}})
-    map.set(r.series_id,list)
+  for(const row of rows??[]){
+    const history=(row.data_points??[]).map((r:any)=>({value:num(r.value),observedAt:r.observed_at,provider:r.provider,metadata:r.metadata??{}}))
+    map.set(row.id,history)
   }
   return map
 }

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { searchPublicIntelligence } from '../../lib/data/search'
-export const metadata={title:'Search | KAPORAL INTELLIGENCE',description:'Search published KAPORAL research, verified data series and public intelligence sections.'}
+export const metadata={alternates:{canonical:'/search'},title:'Search',description:'Search published KAPORAL research, verified data series and public intelligence sections.'}
 export default async function SearchPage({searchParams}:{searchParams:Promise<{q?:string}>}){
  const{q=''}=await searchParams;const results=q?await searchPublicIntelligence(q):[]
  const groups=[['research','Research'],['data','Data series'],['desk','Intelligence desks'],['page','Methodology & policy']] as const
