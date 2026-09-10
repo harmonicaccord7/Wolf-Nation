@@ -30,7 +30,17 @@
   .shell{width:calc(100% - 20px)}.header .brand strong{font-size:10px}.header .brand small{font-size:6px}.mobileMenuButton{padding:8px 10px}.mobileMenuButton span:last-child{display:none}.hero h1{font-size:42px}.heroScene{transform:scale(.72);height:300px;margin-bottom:-70px}.signalBoard{grid-template-columns:1fr}.impactBranches,.coverageCards,.optionStats,.studio-kpis{grid-template-columns:1fr!important}.mobileNavUtilities{grid-template-columns:1fr}.deskHero h1,.contactHero h1{font-size:40px!important}.sectionTitle h2,.liveSectionHead h2,.etfFlowIntro h2{font-size:32px!important}.contactHero aside{padding:20px}.etfFlowPanel{padding:18px}.researchCard,.metricCard,.cryptoLiveCard{overflow-wrap:anywhere}
 }
 
-/* Keep section labels readable on the light intelligence-page background. */
-.liveSection .liveSectionHead .eyebrow{color:#806024}
+/* Prevent desktop pill styles from narrowing links inside the phone drawer. */
+.mobileNavPanel nav{grid-template-columns:minmax(0,1fr);justify-content:stretch}
+.mobileNavPanel nav a{border-width:0 0 1px}
+.mobileNavPanel nav a::after{display:none}
+
+/* Keep section labels readable on light page backgrounds. */
+.liveSection .liveSectionHead .eyebrow,.contactContext .eyebrow{color:#806024}
+
+@media(max-width:720px){
+  /* A horizontal flex basis becomes an unwanted 280px height after stacking. */
+  .newsletterForm input{flex:0 1 auto;font-size:16px}
+}
 
 @media(prefers-reduced-motion:reduce){.mobileNavOverlay{backdrop-filter:none}*{scroll-behavior:auto!important}}
