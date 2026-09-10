@@ -35,6 +35,10 @@
 .mobileNavPanel nav a{border-width:0 0 1px}
 .mobileNavPanel nav a::after{display:none}
 
+/* Editorial navigation uses links; give them separated, usable tap targets. */
+.depthSwitch{display:inline-flex;flex-wrap:wrap;gap:4px}
+.depthSwitch a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 13px;border-radius:999px}
+
 /* Keep section labels readable on light page backgrounds. */
 .liveSection .liveSectionHead .eyebrow,.contactContext .eyebrow{color:#806024}
 
