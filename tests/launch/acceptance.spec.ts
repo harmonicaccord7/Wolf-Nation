@@ -23,7 +23,8 @@ for (const route of routes) {
       expect(await page.locator('.contactForm').evaluate((form: HTMLFormElement) => form.checkValidity())).toBe(false)
     }
     expect(errors).toEqual([])
-    await testInfo.attach('page-layout', { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
+    // CSS-pixel capture keeps long phone pages below WebKit's bitmap dimension limit.
+    await testInfo.attach('page-layout', { body: await page.screenshot({ fullPage: true, scale: 'css' }), contentType: 'image/png' })
   })
 }
 
@@ -44,7 +45,7 @@ test('ETF values and issuer provenance reach the rendered page', async ({ page }
   const fundCount = Number(await values.nth(1).innerText())
   expect(fundCount).toBeGreaterThan(0)
   expect(await panel.locator('.etfFlowDisclosure li a').count()).toBe(fundCount)
-  await testInfo.attach('etf-panel', { body: await panel.screenshot(), contentType: 'image/png' })
+  await testInfo.attach('etf-panel', { body: await panel.screenshot({ scale: 'css' }), contentType: 'image/png' })
 })
 
 test('phone navigation opens, closes, navigates, and survives rotation', async ({ page, isMobile }, testInfo) => {
@@ -57,7 +58,7 @@ test('phone navigation opens, closes, navigates, and survives rotation', async (
   await menu.click()
   await expect(menu).toHaveAttribute('aria-expanded', 'true')
   await expect(page.getByRole('navigation', { name: 'Primary mobile navigation' })).toBeVisible()
-  await testInfo.attach('phone-menu', { body: await page.screenshot(), contentType: 'image/png' })
+  await testInfo.attach('phone-menu', { body: await page.screenshot({ scale: 'css' }), contentType: 'image/png' })
   await page.keyboard.press('Escape')
   await expect(menu).toHaveAttribute('aria-expanded', 'false')
   await menu.click()
