@@ -13,7 +13,9 @@ for (const route of routes) {
     await expect(page.locator('h1')).not.toHaveText('')
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1)
     if (route !== '/auth') {
-      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${canonicalOrigin}${route === '/' ? '/' : route}`)
+      const canonical = await page.locator('link[rel="canonical"]').getAttribute('href')
+      expect(canonical).not.toBeNull()
+      expect(new URL(canonical!).href).toBe(new URL(route, canonicalOrigin).href)
     }
     if (route === '/contact') {
       await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toBeEditable()
@@ -38,7 +40,10 @@ test('ETF values and issuer provenance reach the rendered page', async ({ page }
   await expect(panel).not.toContainText('No verified observation yet')
   await panel.locator('summary').click()
   await expect(panel.locator('.etfFlowDisclosure li a').first()).toBeVisible()
-  expect(await panel.locator('.etfFlowDisclosure li a').count()).toBeGreaterThanOrEqual(3)
+  // Coverage changes with available issuer observations; never require a stale fund count.
+  const fundCount = Number(await values.nth(1).innerText())
+  expect(fundCount).toBeGreaterThan(0)
+  expect(await panel.locator('.etfFlowDisclosure li a').count()).toBe(fundCount)
   await testInfo.attach('etf-panel', { body: await panel.screenshot(), contentType: 'image/png' })
 })
 

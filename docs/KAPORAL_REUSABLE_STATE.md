@@ -35,10 +35,10 @@ Current validated free issuer set:
 - BITB — Bitwise public product page
 
 Latest verified database observation at this checkpoint:
-- Flow date: 2026-09-03
-- Estimated flow: +471.32921260273315 USD millions
-- Covered AUM: 69.75811531125 USD billions
-- Funds covered: 3 (IBIT, ARKB, BITB)
+- Flow date: 2026-09-08
+- Estimated flow: -67.27704227405344 USD millions
+- Covered AUM: 64.79782336919 USD billions
+- Funds covered: 2 (IBIT, ARKB). The supported issuer set above is broader than the latest observation's available coverage.
 - Provider: KAPORAL Derived ETF Flow
 Coverage is partial. Missing issuer observations remain missing; do not impute or fabricate them.
 
@@ -98,6 +98,8 @@ Coverage is partial. Missing issuer observations remain missing; do not impute o
 - Per-series history queries restore ETF, Treasury, dollar and other lower-frequency observations hidden by a shared row limit. Public pages receive their own canonical URLs.
 - The first PR commit passed both CI runs and produced a ready Vercel preview. The preview is protected, and the current Vercel connector cannot access the intended project or issue a share link. Do not weaken deployment protection to work around this.
 - CI now includes desktop Chromium, 375px WebKit phone emulation and 393px Chromium phone emulation, with layout, navigation, ETF/provenance and confirmation-error checks plus screenshot artifacts. Record actual run results before marking acceptance passed. Emulation is not physical-device sign-off.
+- The first browser run (34487454792) had 21 passes, 8 failures and one intentional desktop skip. It exposed a phone menu button below 44px width, now corrected. Two test assumptions were corrected: equivalent root canonical URLs normalize identically, and issuer links must match the current observation's fund count rather than an old count of three. Read the latest PR checks for the corrected candidate's result.
+- Screenshot review also found pale section labels on the light intelligence-page background; those labels now use a darker gold without changing labels on dark panels.
 - Google sign-in still returns 502 / connection refused in the cloud browser. GSC Wizard is connected as `harmonicaccord7@gmail.com`, but neither `https://www.kaporalintelligence.com/` nor `sc-domain:kaporalintelligence.com` exists in that account's accessible properties. Register/verify the property there, or connect the Google account that already owns it.
-- Production sitemap HTTP verification previously passed (200, 73 URLs). Search Console processing status, live inspection and indexing requests remain open. Submission is distinct from Google choosing to index a page.
+- Production sitemap HTTP verification passed again on 2026-09-10 (200, application/xml, 73 unique canonical-domain URLs, no auth/API/newsletter transaction URLs). Search Console processing status, live inspection and indexing requests remain open. Submission is distinct from Google choosing to index a page.
 - Keep the application PR unmerged until the remaining acceptance evidence is available; only the newsletter database repair has been applied to production during this continuation.
