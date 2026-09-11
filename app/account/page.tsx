@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { AccountActions } from '../../components/AccountActions'
+import { PreferencePanel } from '../../components/PreferencePanel'
 import { createClient } from '../../lib/supabase/server'
 
 export const metadata={title:'My Account',description:'Manage your KAPORAL INTELLIGENCE reader account and saved research.'}
@@ -29,5 +30,5 @@ export default async function AccountPage(){
     <section className="deskHero"><div className="shell deskHeroGrid"><div><span className="eyebrow">READER ACCOUNT</span><h1>{profile?.display_name||user.email?.split('@')[0]||'Reader'}</h1><p>{user.email} · {role}</p></div><aside><small>ACCOUNT ACCESS</small><strong>{isResearcher?'Research OS enabled':'Reader workspace'}</strong><span>{isResearcher?'Your approved role includes access to the private Studio.':'Save investigations and manage your reading workspace here.'}</span></aside></div></section>
     <section className="shell liveSection"><div className="accountTop"><div><span className="eyebrow">SAVED RESEARCH</span><h2>Your bookmarks</h2></div><div className="accountActions">{isResearcher&&<Link className="goldButton" href="/studio">Open Studio</Link>}<AccountActions/></div></div>
       {articles.length?<div className="researchCardGrid">{articles.map((a:any)=><Link href={`/article/${a.slug}`} className="researchCard" key={a.id}><small>{a.confidence??a.reader_level}</small><h3>{a.headline}</h3><p>{a.dek||'Saved KAPORAL investigation.'}</p></Link>)}</div>:<div className="emptyResearch"><strong>No saved investigations yet.</strong><p>Open a published investigation and choose “Save research” to add it to this private reader workspace.</p><Link className="goldButton" href="/research">Browse research</Link></div>}
-    </section><Footer/></main>
+    </section><section className="shell accountPreferences"><PreferencePanel/></section><Footer/></main>
 }

@@ -1,5 +1,6 @@
 export const primaryNav = [
   { label: 'Markets', href: '/markets' },
+  { label: 'Events', href: '/events' },
   { label: 'Bitcoin', href: '/bitcoin' },
   { label: 'Crypto', href: '/crypto' },
   { label: 'Macro', href: '/macro' },

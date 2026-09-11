@@ -1,4 +1,5 @@
 import { createClient } from '../supabase/server'
+import {instrumentLabel,sourceFrequency} from './freshness'
 import { deskConfigs, type DeskSlug } from './desk-config'
 
 export type DataPoint = { value:number|null; observedAt:string; provider:string; metadata:Record<string,unknown> }
@@ -19,11 +20,12 @@ async function loadPoints(supabase:any, series:any[]){
   const ids=series.map(s=>s.id)
   // Bound history per series. A global limit lets frequent options updates
   // crowd out valid daily ETF and slower macro observations.
-  const {data:rows}=await supabase.from('data_series')
+  const {data:rows,error}=await supabase.from('data_series')
     .select('id,data_points(value,observed_at,provider,metadata)')
     .in('id',ids)
     .order('observed_at',{ascending:false,referencedTable:'data_points'})
     .limit(40,{referencedTable:'data_points'})
+  if(error)throw new Error('Data history lookup failed')
   const map=new Map<string,DataPoint[]>()
   for(const row of rows??[]){
     const history=(row.data_points??[]).map((r:any)=>({value:num(r.value),observedAt:r.observed_at,provider:r.provider,metadata:r.metadata??{}}))
@@ -35,7 +37,7 @@ async function loadPoints(supabase:any, series:any[]){
 function normalizeSeries(series:any[], points:Map<string,DataPoint[]>):MetricSeries[]{
   return series.map(s=>{
     const history=(points.get(s.id)??[])
-    return {id:s.id,code:s.code,label:s.label,deskSlug:s.desk_slug,category:s.category,region:s.region,countryCode:s.country_code,unit:s.unit,frequency:s.frequency,sourceUrl:s.source_url,description:s.description,sortOrder:s.sort_order??0,metadata:s.metadata??{},latest:history[0]??null,history:[...history].reverse()}
+    return {id:s.id,code:s.code,label:instrumentLabel(s.code,s.label),deskSlug:s.desk_slug,category:s.category,region:s.region,countryCode:s.country_code,unit:s.unit,frequency:sourceFrequency(s.code,s.frequency),sourceUrl:s.source_url,description:s.description,sortOrder:s.sort_order??0,metadata:s.metadata??{},latest:history[0]??null,history:[...history].reverse()}
   }).sort((a,b)=>a.sortOrder-b.sortOrder||a.label.localeCompare(b.label))
 }
 

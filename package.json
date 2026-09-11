@@ -8,6 +8,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "qa:launch": "node scripts/launch-qa.mjs",
+    "qa:models": "node --experimental-strip-types scripts/model-qa.mjs",
+    "qa:rls": "node scripts/rls-qa.mjs",
     "qa:browser": "playwright test"
   },
   "dependencies": {
@@ -18,6 +20,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "@playwright/test": "1.63.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",

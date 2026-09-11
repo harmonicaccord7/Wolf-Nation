@@ -6,7 +6,7 @@ const appDir=path.join(root,'app')
 const errors=[]
 const warnings=[]
 
-const requiredPublicRoutes=['/','/markets','/bitcoin','/crypto','/macro','/options','/africa','/business','/technology','/learn','/research','/track-record','/impact-map','/status','/about','/methodology','/contact','/disclosures','/corrections','/privacy','/terms']
+const requiredPublicRoutes=['/','/markets','/events','/newsletter','/bitcoin','/crypto','/macro','/options','/africa','/business','/technology','/learn','/research','/track-record','/impact-map','/status','/about','/methodology','/contact','/disclosures','/corrections','/privacy','/terms']
 const requiredPrivateRoutes=['/auth','/auth/confirm','/account','/studio','/studio/signals','/newsletter/confirm','/newsletter/unsubscribe']
 
 function segments(route){return route.split('?')[0].split('#')[0].split('/').filter(Boolean)}

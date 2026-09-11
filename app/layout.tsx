@@ -8,6 +8,10 @@ import './research-os.css';
 import './accountability.css';
 import './data-lab.css';
 import './launch-v11.css';
+import './events.css';
+import './account-preferences.css';
+import './model-panel.css';
+import './newsletter.css';
 
 export const metadata: Metadata = {
   metadataBase:new URL('https://www.kaporalintelligence.com'),

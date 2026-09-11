@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { getStudioOverview } from '../../lib/data/content'
 import { KScoreForm, StoryIntakeForm } from '../../components/StoryIntakeForm'
+import { ModelsPanel } from '../../components/ModelsPanel'
+import { NewsletterStudioPanel } from '../../components/NewsletterStudioPanel'
 
 export default async function StudioPage(){
   const data = await getStudioOverview()
@@ -16,6 +18,6 @@ export default async function StudioPage(){
       <article className="studio-panel"><h2>Agent audit trail</h2>{data.runs.length?data.runs.slice(0,12).map((r:any)=><div className="studio-row" key={r.id}><div><strong>{r.agent_name.replaceAll('_',' ')}</strong><small>{r.model??'no model'} · {r.run_type}</small></div><span>{r.status}</span></div>):<p>No model runs yet. Open a story workspace to run evidence-grounded analysts.</p>}</article>
     </section>
     <section className="studio-panel studioAgentPolicy"><p className="eyebrow">OPERATING RULE</p><h2>Agents can investigate. Only humans can publish.</h2><p>The Signal Scout can create candidates automatically. Analyst agents can summarize, challenge, quantify and propose claims. The final transition to <code>published</code> is protected by an editor-only server endpoint and a PostgreSQL trigger that independently checks evidence, claims and four mandatory reviews.</p><div className="agent-pills"><span>Signal Scout</span><span>Niche Scout</span><span>Source Analyst</span><span>Macro</span><span>Crypto</span><span>Options</span><span>Africa</span><span>Business</span><span>Technology</span><span>Contrarian</span><span>Quant</span><span>Standards</span><span>Visual Intelligence</span></div></section>
-    <section className="studio-tools"><StoryIntakeForm/><KScoreForm stories={data.stories.map((s:any)=>({id:s.id,title:s.title}))}/>{canEdit&&<div className="studioForm"><div className="formTitle"><span>03</span><h3>Editorial drafting</h3></div><p>Drafts are now created from inside a story workspace so every article stays linked to its source pack, claims, K-SCORE and agent audit trail.</p><Link className="goldButton" href={data.stories[0]?`/studio/story/${data.stories[0].id}`:'/studio'}>Open research queue</Link></div>}</section>
+    <ModelsPanel/><NewsletterStudioPanel canEdit={canEdit}/><section className="studio-tools"><StoryIntakeForm/><KScoreForm stories={data.stories.map((s:any)=>({id:s.id,title:s.title}))}/>{canEdit&&<div className="studioForm"><div className="formTitle"><span>03</span><h3>Editorial drafting</h3></div><p>Drafts are now created from inside a story workspace so every article stays linked to its source pack, claims, K-SCORE and agent audit trail.</p><Link className="goldButton" href={data.stories[0]?`/studio/story/${data.stories[0].id}`:'/studio'}>Open research queue</Link></div>}</section>
   </main>
 }

@@ -18,6 +18,8 @@ jobs:
       - run: npm ci
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run qa:launch
+      - run: npm run qa:models
+      - run: npm run qa:rls
       - run: npm run typecheck
       - run: npm run build
         env:
