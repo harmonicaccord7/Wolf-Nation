@@ -20,6 +20,7 @@ jobs:
       - run: npm run qa:launch
       - run: npm run qa:models
       - run: npm run qa:rls
+      - run: npm run qa:newsletter
       - run: npm run typecheck
       - run: npm run build
         env:

@@ -1,5 +1,11 @@
-import {createHash} from 'node:crypto'
-import {NextResponse} from 'next/server'
-import {createClient} from '../../../../../lib/supabase/server'
-export const dynamic='force-dynamic'; export const revalidate=0
-export async function POST(request:Request){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:'Authentication required'},{status:401,headers:{'cache-control':'no-store'}});const {data:profile}=await supabase.from('profiles').select('role').eq('id',user.id).maybeSingle();if(!['editor','admin'].includes(profile?.role??''))return NextResponse.json({error:'Editor access required'},{status:403,headers:{'cache-control':'no-store'}});const body=await request.json().catch(()=>null) as {issueId?:unknown}|null;if(typeof body?.issueId!=='string')return NextResponse.json({error:'Issue id required.'},{status:400,headers:{'cache-control':'no-store'}});const {data:issue,error:issueError}=await supabase.from('newsletter_issues').select('id,status,published_at').eq('id',body.issueId).maybeSingle();if(issueError||!issue||issue.status!=='published'||!issue.published_at)return NextResponse.json({error:'Only a published issue can be queued.'},{status:409,headers:{'cache-control':'no-store'}});const {data:subscribers,error:subscriberError}=await supabase.from('newsletter_subscribers').select('id,email').in('status',['confirmed','active']).is('unsubscribed_at',null).limit(10000);if(subscriberError)return NextResponse.json({error:'Confirmed subscriber list is unavailable.'},{status:503,headers:{'cache-control':'no-store'}});const rows=(subscribers??[]).map(subscriber=>({issue_id:issue.id,subscriber_id:subscriber.id,recipient_hash:createHash('sha256').update(String(subscriber.email).trim().toLowerCase()).digest('hex'),status:'queued'}));if(rows.length){const {error:queueError}=await supabase.from('newsletter_deliveries').upsert(rows,{onConflict:'issue_id,recipient_hash',ignoreDuplicates:true});if(queueError)return NextResponse.json({error:'The delivery queue could not be updated.'},{status:503,headers:{'cache-control':'no-store'}})}return NextResponse.json({ok:true,queued:rows.length,addressesExposed:false},{headers:{'cache-control':'no-store'}})}
+import { studioAccess, reply } from '../../../../../lib/studio-access'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+export async function POST(request: Request) {
+  const { db, role, error } = await studioAccess(); if (error) return error
+  if (!['editor', 'admin'].includes(role ?? '')) return reply({ error: 'Editor access required' }, 403)
+  const body = await request.json().catch(() => null)
+  if (typeof body?.issueId !== 'string' || !/^[0-9a-f-]{36}$/i.test(body.issueId)) return reply({ error: 'Valid issue id required.' }, 400)
+  const result = await db.rpc('queue_newsletter_issue', { target_issue: body.issueId })
+  return result.error ? reply({ error: 'Queue rejected. Check publication approval and subscriber consent.' }, 409) : reply({ ok: true, queued: result.data, sent: 0 })
+}

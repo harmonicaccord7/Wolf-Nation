@@ -3,6 +3,8 @@ export type EconomicEvent = {
   id: string; slug: string; kind: EventKind; title: string; scheduledAt: string;
   precision: 'minute' | 'date'; timezone: string; provider: string; sourceUrl: string;
   checkedAt: string; sequence: number; status: 'scheduled' | 'cancelled';
+  databaseId?: string;
+  values?: { prior: number | null; consensus: number | null; actual: number | null; revisedPrior: number | null; unit: string | null; referencePeriod: string | null; sources: Record<string, string> };
 }
 export const calendarSources = {
   bls: 'https://www.bls.gov/schedule/news_release/bls.ics',
@@ -73,7 +75,8 @@ export function parseFedCalendar(html: string, checkedAt: string): EconomicEvent
       if (!monthText || !dateText || /unscheduled/i.test(row.slice(0, 300))) continue
       const months = monthText.split(/[\/–-]/).map(m => m.trim())
       const month = monthNumber[months.at(-1) ?? '']
-      const day = Number(dateText.match(/^(\d+)/)?.[1])
+      // A policy decision belongs to the FINAL meeting day (including cross-month meetings).
+      const day = Number(dateText.replace(/\*/g, '').match(/(\d+)\s*$/)?.[1])
       if (!month || !day || day > 31) continue
       const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
       events.push({ id: `fed:fomc:${date}`, slug: `fomc-${date}`, kind: 'fomc', title: `FOMC policy decision${dateText.includes('*') ? ' and economic projections' : ''}`,

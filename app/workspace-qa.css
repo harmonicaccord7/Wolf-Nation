@@ -1,0 +1,26 @@
+.historyControls,.eventFilters,.newsletterActions,.eventChartLinks,.saveWatchlist{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0}
+.historyControls button,.newsletterStudio button,.savedItems button{min-height:44px;min-width:44px;padding:10px 16px;border:1px solid #8798a1;border-radius:8px;background:#fff;color:#142a38;cursor:pointer}
+.historyControls button[aria-pressed="true"]{background:#173849;color:#fff}
+.historyControls button:disabled,.newsletterStudio button:disabled{opacity:.6;cursor:wait}
+.historyChartBlock{min-width:0}.historyChartBlock .interactiveHistory{display:block;width:100%;height:260px;overflow:visible}
+.interactiveHistory polyline{fill:none;stroke:#987020;stroke-width:.5;vector-effect:non-scaling-stroke}
+.interactiveHistory .chartCursor{stroke:#173849;stroke-width:.4;vector-effect:non-scaling-stroke}
+.interactiveHistory .eventMarker{stroke:#9b3425;stroke-dasharray:2;stroke-width:.4;vector-effect:non-scaling-stroke}
+.historySummary{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;margin:15px 0}
+.historySummary em{font-style:normal}.chartScrubber{display:grid;gap:8px;margin-top:18px}.chartScrubber input{width:100%;min-height:44px}
+.chartReadout,.chartCoverage{font-size:14px;line-height:1.6}.historyTable,.decisionTable{max-width:100%;overflow-x:auto}
+.historyTable table,.decisionTable table{width:100%;border-collapse:collapse}.historyTable th,.historyTable td,.decisionTable th,.decisionTable td{padding:12px;text-align:left;border-bottom:1px solid #cbd3d6}
+.historyTable summary{min-height:44px;cursor:pointer}.historyEmpty{padding:30px;background:#f4f2ec;border-radius:12px}
+.eventFilters label,.eventTiming label,.newsletterStudio label{display:grid;gap:8px}
+.eventFilters input,.eventFilters select,.eventTiming select,.newsletterStudio select,.newsletterStudio textarea{font:inherit;min-height:44px;padding:10px;border:1px solid #899aa5;border-radius:8px;background:#fff;color:#162e3e;max-width:100%}
+.eventTiming a{color:#f0ce81;text-decoration:underline}.eventFactGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.eventFactGrid span,.eventCard p,.eventSource,.scenarioCard li,.scenarioSources,.eventHeroMeta span{font-size:14px}.eventCardTop{font-size:12px}.scenarioCard p{font-size:15px;line-height:1.6}
+.eventFilters input{width:min(420px,100%)}.eventChartLinks a{color:#715219;text-decoration:underline}
+.issueReview textarea{width:100%;line-height:1.65}.issueReview{margin-top:24px;padding-top:24px;border-top:1px solid #c6d0d6}
+.newsletterIssueRows{padding-left:0;list-style:none}.newsletterIssueRows li{margin:12px 0}.newsletterStudio .issueReview button{margin:8px 8px 8px 0}
+.savedItems{padding:0;list-style:none}.savedItems li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #cbd3d6}
+.modelRows .modelRow{display:block}.modelRows .modelRow strong{font-size:21px}.modelRows .modelRow p{font-size:14px;line-height:1.6}.modelRows .modelRow dl{display:flex;gap:12px;flex-wrap:wrap}.modelRows .modelRow dd{margin:4px 0}
+.signalCell .sourceStamp{overflow-wrap:anywhere}.signalCell .sourceStamp a{text-decoration:underline}
+.signalCell{min-width:0}.signalCell .signalNumber{font-size:clamp(25px,2.6vw,36px);overflow-wrap:anywhere}.signalCell h3{font-size:16px}.signalCell em{font-size:12px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b38027;outline-offset:3px}
+@media(max-width:700px){.eventFactGrid{grid-template-columns:1fr 1fr}.eventDetailBody h2{font-size:34px}.eventFilters{display:grid;grid-template-columns:1fr}.eventFilters input{width:100%}.historySummary{display:grid}.historyChartBlock .interactiveHistory{height:220px}.decisionTable{font-size:14px}.decisionTable th,.decisionTable td{padding:9px}.newsletterStudio textarea{font-size:16px}}

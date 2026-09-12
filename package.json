@@ -10,6 +10,7 @@
     "qa:launch": "node scripts/launch-qa.mjs",
     "qa:models": "node --experimental-strip-types scripts/model-qa.mjs",
     "qa:rls": "node scripts/rls-qa.mjs",
+    "qa:newsletter": "node --experimental-strip-types scripts/newsletter-qa.mjs",
     "qa:browser": "playwright test"
   },
   "dependencies": {

@@ -1,5 +1,12 @@
-import {NextResponse} from 'next/server'
-import {createClient} from '../../../../../lib/supabase/server'
-import {getUpcomingEvents} from '../../../../../lib/events/calendar-data'
-export const dynamic='force-dynamic'; export const revalidate=0
-export async function POST(){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:'Authentication required'},{status:401,headers:{'cache-control':'no-store'}});const {data:profile}=await supabase.from('profiles').select('role').eq('id',user.id).maybeSingle();if(!['researcher','editor','admin'].includes(profile?.role??''))return NextResponse.json({error:'Research staff access required'},{status:403,headers:{'cache-control':'no-store'}});const calendar=await getUpcomingEvents(60);const rows=calendar.events.map(event=>({slug:event.slug,kind:event.kind,title:event.title,scheduled_at:event.scheduledAt,date_precision:event.precision,timezone:event.timezone,provider:event.provider,source_url:event.sourceUrl,checked_at:event.checkedAt,provider_sequence:event.sequence,status:event.status,metadata:{source_id:event.id}}));if(!rows.length)return NextResponse.json({error:'No official calendar events were returned.',sourceState:calendar.sourceState},{status:503,headers:{'cache-control':'no-store'}});const {data,error}=await supabase.from('economic_events').upsert(rows,{onConflict:'slug'}).select('id,slug');if(error)return NextResponse.json({error:'Calendar data was fetched but could not be stored.'},{status:503,headers:{'cache-control':'no-store'}});return NextResponse.json({ok:true,count:data?.length??0,sourceState:calendar.sourceState,checkedAt:calendar.checkedAt},{headers:{'cache-control':'no-store'}})}
+import { studioAccess, reply } from '../../../../../lib/studio-access'
+import { getOfficialCalendar } from '../../../../../lib/events/calendar-data'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+export async function POST() {
+  const { db, error } = await studioAccess(); if (error) return error
+  const calendar = await getOfficialCalendar()
+  const events = calendar.events.filter(e => Date.parse(e.scheduledAt) >= Date.now() - 90 * 86400000)
+  if (!events.length) return reply({ error: 'No official calendar events returned.' }, 503)
+  const { data, error: saveError } = await db.rpc('sync_economic_events', { events_json: events.map(e => ({ slug: e.slug, kind: e.kind, title: e.title, scheduled_at: e.scheduledAt, date_precision: e.precision, timezone: e.timezone, provider: e.provider, source_url: e.sourceUrl, checked_at: e.checkedAt, provider_sequence: e.sequence, status: e.status, metadata: { source_id: e.id } })) })
+  return saveError ? reply({ error: 'Calendar data could not be stored.' }, 503) : reply({ ok: true, count: data, sourceState: calendar.sourceState, checkedAt: calendar.checkedAt })
+}

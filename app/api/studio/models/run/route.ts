@@ -1,10 +1,23 @@
-import {NextResponse} from 'next/server'
-import {createClient} from '../../../../../lib/supabase/server'
-import {ModelSnapshot,runDecisionModules} from '../../../../../lib/models/modules'
-export const dynamic='force-dynamic'; export const revalidate=0
-const requested=['CPI_US','DXY','US10Y','FEDFUNDS','BTC','BTC_USD','NGDP','AFRICA_GDP','CPI_NG']
-async function staff(){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return {supabase,user:null,allowed:false};const {data:profile}=await supabase.from('profiles').select('role').eq('id',user.id).maybeSingle();return {supabase,user,allowed:['researcher','editor','admin'].includes(profile?.role??'')}}
-export async function GET(){const {supabase,user,allowed}=await staff();if(!user||!allowed)return NextResponse.json({error:'Research staff access required'},{status:403,headers:{'cache-control':'no-store'}});const {data,error}=await supabase.from('model_runs').select('id,module_code,model_version,run_type,universe,as_of,status,metrics,results,abstention_reason,created_at').order('as_of',{ascending:false}).limit(20);if(error)return NextResponse.json({error:'Model run table is not available yet.'},{status:503,headers:{'cache-control':'no-store'}});return NextResponse.json({runs:data??[]},{headers:{'cache-control':'no-store'}})}
-export async function POST(){const {supabase,user,allowed}=await staff();if(!user||!allowed)return NextResponse.json({error:'Research staff access required'},{status:403,headers:{'cache-control':'no-store'}});const {data:rows,error}=await supabase.from('data_series').select('code').eq('is_public',true).in('code',requested);if(error)return NextResponse.json({error:'Could not load source series.'},{status:503,headers:{'cache-control':'no-store'}});const snapshot:ModelSnapshot={};for(const row of rows??[]){const {data:series,error:seriesError}=await supabase.from('data_series').select('id').eq('code',row.code).maybeSingle();if(seriesError||!series)continue;const {data:points}=await supabase.from('data_points').select('observed_at,value').eq('series_id',series.id).not('value','is',null).order('observed_at',{ascending:true}).limit(600);snapshot[row.code]=(points??[]).map(point=>({observedAt:point.observed_at,value:Number(point.value)})).filter(point=>Number.isFinite(point.value))}
-const {data:marketRows}=await supabase.from('market_snapshots').select('symbol,price,captured_at').in('symbol',['BTC','BTC-USD','ETH','SOL']).not('price','is',null).order('captured_at',{ascending:false}).limit(1200);for(const row of marketRows??[]){const code=String(row.symbol).toUpperCase().startsWith('BTC')?'BTC':String(row.symbol).toUpperCase();(snapshot[code]??=[]).push({observedAt:row.captured_at,value:Number(row.price)})}for(const code of Object.keys(snapshot))snapshot[code]=snapshot[code].sort((a,b)=>a.observedAt.localeCompare(b.observedAt)).slice(-600)
-const asOf=new Date().toISOString();const results=runDecisionModules(snapshot,asOf);const {error:insertError}=await supabase.from('model_runs').insert({module_code:'decision-suite',model_version:'0.1',run_type:'research_snapshot',universe:'public series and market snapshots',as_of:asOf,status:'completed',input_snapshot:{series:Object.fromEntries(Object.entries(snapshot).map(([code,points])=>[code,{points:points.length,asOf:points.at(-1)?.observedAt??null}]))},metrics:{scored:results.filter(result=>result.status==='scored').length,abstained:results.filter(result=>result.status==='abstained').length},results,created_by:user.id});if(insertError)return NextResponse.json({error:'Model results were computed but could not be stored.'},{status:503,headers:{'cache-control':'no-store'}});return NextResponse.json({asOf,results},{headers:{'cache-control':'no-store'}})}
+import { createHash } from 'node:crypto'
+import { studioAccess, reply } from '../../../../../lib/studio-access'
+import { runDecisionModules, replayBtcBaseline, DECISION_MODEL_VERSION, canonicalJson } from '../../../../../lib/models/modules'
+import { loadModelSnapshot } from '../../../../../lib/models/load-snapshot'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+export async function GET() {
+  const { db, error } = await studioAccess(); if (error) return error
+  const result = await db.from('model_runs').select('id,module_code,model_version,as_of,status,metrics,results,created_at').order('created_at', { ascending: false }).limit(20)
+  return result.error ? reply({ error: 'Model history unavailable.' }, 503) : reply({ runs: result.data })
+}
+export async function POST() {
+  const { db, user, error } = await studioAccess(); if (error || !user) return error!
+  const asOf = new Date().toISOString()
+  try {
+    const snapshot = await loadModelSnapshot(db, asOf)
+    const results = runDecisionModules(snapshot.series, asOf), replay = replayBtcBaseline(snapshot.series.BTC ?? [], asOf)
+    const inputHash = createHash('sha256').update(canonicalJson(snapshot.series)).digest('hex')
+    const metrics = { observed: results.filter(r => r.status === 'observed').length, abstained: results.filter(r => r.status === 'abstained').length, inputHash, replay }
+    const saved = await db.from('model_runs').insert({ module_code: 'decision-suite', model_version: DECISION_MODEL_VERSION, run_type: 'research_snapshot', universe: 'Observed public data; experimental BTC baseline replay', as_of: asOf, status: metrics.observed ? 'completed' : 'abstained', input_snapshot: { ...snapshot, cutoff: asOf, hash: inputHash }, metrics, results, created_by: user.id }).select('id').single()
+    return saved.error ? reply({ error: 'Results could not be stored; no successful run is claimed.' }, 503) : reply({ id: saved.data.id, asOf, results, replay, inputHash })
+  } catch { return reply({ error: 'Source queries failed; no run was stored.' }, 503) }
+}

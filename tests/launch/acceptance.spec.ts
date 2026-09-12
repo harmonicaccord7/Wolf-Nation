@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 const canonicalOrigin = 'https://www.kaporalintelligence.com'
-const routes = ['/', '/bitcoin', '/macro', '/contact', '/auth', '/search', '/data/btc_etf_flow']
+const routes = ['/', '/bitcoin', '/macro', '/contact', '/auth', '/search', '/data/btc_etf_flow', '/events', '/newsletter', '/data/btc']
 
 for (const route of routes) {
   test(`${route} renders within the viewport`, async ({ page }, testInfo) => {

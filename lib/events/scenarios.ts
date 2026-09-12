@@ -1,4 +1,4 @@
-import {EventKind, EconomicEvent} from './calendar'
+import type {EventKind, EconomicEvent} from './calendar'
 
 export type Scenario = {key: string; title: string; observation: string; mechanism: string; options: string[]; invalidation: string; sources: {label: string; url: string}[]}
 const sourceMap: Record<EventKind, {label: string; url: string}[]> = {
@@ -12,6 +12,16 @@ const sourceMap: Record<EventKind, {label: string; url: string}[]> = {
 
 export function scenariosForEvent(event: EconomicEvent): Scenario[] {
   const sources = sourceMap[event.kind]
+  if (event.kind === 'payrolls' || event.kind === 'gdp') {
+    const jobs = event.kind === 'payrolls'
+    const metric = jobs ? 'Employment growth' : 'Economic growth'
+    const details = jobs ? 'payroll revisions, unemployment, participation and wage growth' : 'real growth, consumer spending, inventories and revisions'
+    return [
+      {key:'above_consensus',title:`${metric} stronger than expected`,observation:`Compare the release with a timestamped expectation and examine ${details}.`,mechanism:'Stronger activity can support earnings while also delaying expected rate cuts. The growth and interest-rate effects can pull asset prices in opposite directions.',options:['Compare the growth interpretation with the rates and dollar response.','Waiting preserves flexibility but can miss the initial move.','Buying before the details are clear increases exposure to an adverse reversal.'],invalidation:'The apparent strength depends on a temporary component or is offset by revisions.',sources},
+      {key:'in_line',title:`${metric} near expectations`,observation:`An aggregate near expectations can hide a different story in ${details}.`,mechanism:'Component surprises and positioning may matter more than the headline; no directional response follows automatically.',options:['Compare the composition with the previous release.','Keep an existing plan if the thesis has not changed.','Allow for spread and transaction costs before making a small adjustment.'],invalidation:'Components or revised history materially change the interpretation.',sources},
+      {key:'below_consensus',title:`${metric} weaker than expected`,observation:`Check whether weakness is broad or concentrated, including ${details}.`,mechanism:'Easier-rate expectations may support some assets, while recession concerns can weigh on earnings and risk appetite. Weak growth is not automatically positive for Bitcoin or gold.',options:['Consider both an easing scenario and a growth-shock scenario.','Staging limits initial exposure but does not eliminate loss risk.','Remaining uninvested avoids that exposure while carrying an opportunity cost.'],invalidation:'The weakness is revised away or the market prices a different growth/rate tradeoff.',sources},
+    ]
+  }
   if (event.kind === 'fomc') return [
     {key:'above_consensus',title:'More restrictive than expected',observation:'A higher path for rates or a more restrictive communication can tighten financial conditions.',mechanism:'Rates, the dollar and real yields may reprice together; risk assets can be more sensitive to the size and speed of the surprise than to the meeting label.',options:['Wait for the statement and press conference to be read together.','Stage exposure only if the price response confirms the thesis.','Keep a written invalidation level and position-size limit.'],invalidation:'The statement, projections and market reaction point in different directions or liquidity is too thin.',sources},
     {key:'in_line',title:'Close to the expected path',observation:'An in-line decision can reduce one source of uncertainty, but it does not guarantee a directional move.',mechanism:'Markets may focus on guidance, growth language, balance-sheet policy or the next data release.',options:['Hold existing risk within the user’s plan.','Compare the decision with the prior path before changing exposure.','Avoid treating a calm first reaction as confirmation.'],invalidation:'The press conference materially changes the expected path.',sources},

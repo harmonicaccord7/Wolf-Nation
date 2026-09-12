@@ -1,9 +1,55 @@
-import {NextResponse} from 'next/server'
-import {createClient} from '../../../../../lib/supabase/server'
-import {getUpcomingEvents} from '../../../../../lib/events/calendar-data'
-export const dynamic='force-dynamic'; export const revalidate=0
-async function staff(){const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return {supabase,user:null,role:null};const {data:profile}=await supabase.from('profiles').select('role').eq('id',user.id).maybeSingle();return {supabase,user,role:profile?.role??null}}
-export async function GET(){const {supabase,user,role}=await staff();if(!user||!['researcher','editor','admin'].includes(role??''))return NextResponse.json({error:'Research staff access required'},{status:403,headers:{'cache-control':'no-store'}});const {data,error}=await supabase.from('newsletter_issues').select('id,issue_key,title,dek,issue_date,status,reviewed_at,approved_at,published_at,created_at').order('issue_date',{ascending:false}).limit(30);if(error)return NextResponse.json({error:'Newsletter issue table is not available yet.'},{status:503,headers:{'cache-control':'no-store'}});return NextResponse.json({issues:data??[]},{headers:{'cache-control':'no-store'}})}
-export async function POST(){const {supabase,user,role}=await staff();if(!user||!['researcher','editor','admin'].includes(role??''))return NextResponse.json({error:'Research staff access required'},{status:403,headers:{'cache-control':'no-store'}});const calendar=await getUpcomingEvents(8);const date=new Date().toISOString().slice(0,10);const issueKey=`market-letter-${date}`;const body={blocks:[{type:'heading',text:'Upcoming events to watch'},{type:'paragraph',text:'This draft uses official release calendars. Prior, consensus, actual and revision fields remain blank until separately sourced and reviewed.'},{type:'bullet_list',items:calendar.events.map(event=>`${event.kind.toUpperCase()}: ${event.title} — ${event.scheduledAt} (${event.precision} precision)` )},{type:'heading',text:'Decision guardrail'},{type:'paragraph',text:'Evaluate wait, stage, hold or reduce-risk options against the user’s own plan. This edition is educational and is not a personal recommendation.'}]};const result=await supabase.from('newsletter_issues').upsert({issue_key:titleCase(issueKey),title:`KAPORAL Market Letter — ${date}`,dek:'A source-labelled event brief prepared for human review.',body,issue_date:date,status:'draft',source_snapshot:{checkedAt:calendar.checkedAt,sourceState:calendar.sourceState,events:calendar.events},created_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'issue_key'}).select('id,issue_key,status').single();if(result.error)return NextResponse.json({error:'Could not create newsletter draft.'},{status:503,headers:{'cache-control':'no-store'}});return NextResponse.json({ok:true,issue:result.data},{headers:{'cache-control':'no-store'}})}
-export async function PATCH(request:Request){const {supabase,user,role}=await staff();if(!user||!['researcher','editor','admin'].includes(role??''))return NextResponse.json({error:'Research staff access required'},{status:403,headers:{'cache-control':'no-store'}});const body=await request.json().catch(()=>null) as {id?:string;status?:string}|null;const next=body?.status;const allowed=['draft','review','approved','published','archived'];if(!body?.id||!allowed.includes(String(next)))return NextResponse.json({error:'Issue id and valid status required.'},{status:400,headers:{'cache-control':'no-store'}});if(['approved','published'].includes(String(next))&&!['editor','admin'].includes(role??''))return NextResponse.json({error:'Only an editor or administrator can approve or publish an issue.'},{status:403,headers:{'cache-control':'no-store'}});const patch:any={status:next,updated_at:new Date().toISOString()};if(next==='approved')Object.assign(patch,{reviewed_at:new Date().toISOString(),reviewed_by:user.id,approved_at:new Date().toISOString(),approved_by:user.id});if(next==='published')Object.assign(patch,{published_at:new Date().toISOString()});const result=await supabase.from('newsletter_issues').update(patch).eq('id',body.id).select('id,status,published_at').single();if(result.error)return NextResponse.json({error:'Newsletter status transition rejected.'},{status:503,headers:{'cache-control':'no-store'}});return NextResponse.json({ok:true,issue:result.data},{headers:{'cache-control':'no-store'}})}
-function titleCase(value:string){return value}
+import { studioAccess, reply } from '../../../../../lib/studio-access'
+import { getUpcomingEvents } from '../../../../../lib/events/calendar-data'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+const fields = 'id,issue_key,title,dek,body,source_snapshot,issue_kind,issue_date,status,review_notes,reviewed_at,approved_at,published_at,updated_at,newsletter_deliveries(id,status,attempts,provider_message_id,last_error,sent_at)'
+export async function GET() {
+  const { db, error } = await studioAccess(); if (error) return error
+  const result = await db.from('newsletter_issues').select(fields).order('issue_date', { ascending: false }).limit(30)
+  return result.error ? reply({ error: 'Newsletter workspace unavailable.' }, 503) : reply({ issues: result.data })
+}
+export async function POST(request: Request) {
+  const { db, error } = await studioAccess(); if (error) return error
+  const input = await request.json().catch(() => ({}))
+  const kind = input.issueKind ?? 'weekly'
+  if (!['weekly', 'weekday', 'material_event'].includes(kind)) return reply({ error: 'Invalid edition cadence.' }, 400)
+  const calendar = await getUpcomingEvents(8)
+  if (calendar.sourceState !== 'live' || !calendar.events.length) return reply({ error: 'A complete official calendar check is required to generate this draft.' }, 503)
+  const date = new Date().toISOString().slice(0, 10), issueKey = 'market-letter-' + kind + '-' + date
+  const body = { blocks: [
+    { type: 'heading', text: 'The next market catalysts' },
+    { type: 'paragraph', text: 'Review the releases below against your own time horizon and risk budget. An event can create both an opportunity and a loss; acting early also exposes you to a release surprise.' },
+    { type: 'bullet_list', items: calendar.events.map(event => event.title + ' — ' + new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: event.precision === 'minute' ? 'short' : undefined, timeZone: event.timezone }).format(new Date(event.scheduledAt)) + ' (' + event.timezone + (event.precision === 'date' ? '; time not specified' : '') + ')') },
+    { type: 'heading', text: 'A decision before a release' },
+    { type: 'paragraph', text: 'Buying before the announcement increases exposure to both the intended move and an adverse surprise. Waiting avoids that initial exposure but can mean a less attractive entry or missing a move. Staging divides the exposure across time but adds costs and still leaves downside risk. Remaining uninvested can preserve capital while carrying an opportunity cost. The final choice belongs to the reader.' },
+    { type: 'paragraph', text: 'Compare the published release with a properly sourced expectation, its components and revisions. Do not equate an increase from last month with an upside surprise. No consensus value, forecast probability or guaranteed asset response is asserted in this edition.' },
+  ] }
+  const result = await db.from('newsletter_issues').insert({ issue_key: issueKey, issue_kind: kind, title: 'KAPORAL Market Letter — ' + date, dek: 'Official catalysts and a framework for considering exposure, waiting and risk.', body, issue_date: date, source_snapshot: calendar }).select(fields).single()
+  if (result.error?.code === '23505') return reply({ error: 'This cadence already has an edition today. Open and review it; generating again never overwrites an issue.' }, 409)
+  return result.error ? reply({ error: 'Could not create draft.' }, 503) : reply({ ok: true, issue: result.data }, 201)
+}
+export async function PATCH(request: Request) {
+  const { db, role, error } = await studioAccess(); if (error) return error
+  const input = await request.json().catch(() => null)
+  if (!input || typeof input.id !== 'string' || typeof input.updatedAt !== 'string') return reply({ error: 'Issue id and current revision required.' }, 400)
+  const patch: Record<string, unknown> = {}
+  if (input.status !== undefined) {
+    if (!['draft', 'review', 'approved', 'published', 'archived'].includes(input.status)) return reply({ error: 'Invalid status.' }, 400)
+    if (['approved', 'published', 'archived'].includes(input.status) && !['editor', 'admin'].includes(role ?? '')) return reply({ error: 'Editor required.' }, 403)
+    patch.status = input.status
+  }
+  if (input.bodyText !== undefined) {
+    if (typeof input.bodyText !== 'string' || input.bodyText.trim().length < 50 || input.bodyText.length > 40000) return reply({ error: 'Issue text must contain 50–40,000 characters.' }, 400)
+    patch.body = { blocks: input.bodyText.trim().split(/\n\s*\n/).map((text: string) => ({ type: 'paragraph', text })) }
+    patch.status = 'draft'
+  }
+  if (input.reviewNotes !== undefined) {
+    if (typeof input.reviewNotes !== 'string' || input.reviewNotes.length > 4000) return reply({ error: 'Invalid review notes.' }, 400)
+    patch.review_notes = input.reviewNotes
+  }
+  if (!Object.keys(patch).length) return reply({ error: 'No change supplied.' }, 400)
+  const result = await db.from('newsletter_issues').update(patch).eq('id', input.id).eq('updated_at', input.updatedAt).select(fields).maybeSingle()
+  if (result.error) return reply({ error: 'Publication gate rejected the change. Review the full text and sources, record review notes, then approve before publishing.' }, 409)
+  if (!result.data) return reply({ error: 'This edition changed in another session. Reload before editing.' }, 409)
+  return reply({ ok: true, issue: result.data })
+}
