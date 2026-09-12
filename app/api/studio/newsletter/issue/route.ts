@@ -1,5 +1,6 @@
 import { studioAccess, reply } from '../../../../../lib/studio-access'
 import { getUpcomingEvents } from '../../../../../lib/events/calendar-data'
+import { draftEdition } from '../../../../../lib/newsletter-draft'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 const fields = 'id,issue_key,title,dek,body,source_snapshot,issue_kind,issue_date,status,review_notes,reviewed_at,approved_at,published_at,updated_at,newsletter_deliveries(id,status,attempts,provider_message_id,last_error,sent_at)'
@@ -14,16 +15,10 @@ export async function POST(request: Request) {
   const kind = input.issueKind ?? 'weekly'
   if (!['weekly', 'weekday', 'material_event'].includes(kind)) return reply({ error: 'Invalid edition cadence.' }, 400)
   const calendar = await getUpcomingEvents(8)
+  calendar.events = calendar.events.filter(event => event.status === 'scheduled')
   if (calendar.sourceState !== 'live' || !calendar.events.length) return reply({ error: 'A complete official calendar check is required to generate this draft.' }, 503)
   const date = new Date().toISOString().slice(0, 10), issueKey = 'market-letter-' + kind + '-' + date
-  const body = { blocks: [
-    { type: 'heading', text: 'The next market catalysts' },
-    { type: 'paragraph', text: 'Review the releases below against your own time horizon and risk budget. An event can create both an opportunity and a loss; acting early also exposes you to a release surprise.' },
-    { type: 'bullet_list', items: calendar.events.map(event => event.title + ' — ' + new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: event.precision === 'minute' ? 'short' : undefined, timeZone: event.timezone }).format(new Date(event.scheduledAt)) + ' (' + event.timezone + (event.precision === 'date' ? '; time not specified' : '') + ')') },
-    { type: 'heading', text: 'A decision before a release' },
-    { type: 'paragraph', text: 'Buying before the announcement increases exposure to both the intended move and an adverse surprise. Waiting avoids that initial exposure but can mean a less attractive entry or missing a move. Staging divides the exposure across time but adds costs and still leaves downside risk. Remaining uninvested can preserve capital while carrying an opportunity cost. The final choice belongs to the reader.' },
-    { type: 'paragraph', text: 'Compare the published release with a properly sourced expectation, its components and revisions. Do not equate an increase from last month with an upside surprise. No consensus value, forecast probability or guaranteed asset response is asserted in this edition.' },
-  ] }
+  const body = draftEdition(calendar.events)
   const result = await db.from('newsletter_issues').insert({ issue_key: issueKey, issue_kind: kind, title: 'KAPORAL Market Letter — ' + date, dek: 'Official catalysts and a framework for considering exposure, waiting and risk.', body, issue_date: date, source_snapshot: calendar }).select(fields).single()
   if (result.error?.code === '23505') return reply({ error: 'This cadence already has an edition today. Open and review it; generating again never overwrites an issue.' }, 409)
   return result.error ? reply({ error: 'Could not create draft.' }, 503) : reply({ ok: true, issue: result.data }, 201)

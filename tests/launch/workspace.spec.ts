@@ -46,8 +46,10 @@ test('private workspace endpoints reject unsigned mutations', async ({ request }
 
 test('public newsletter archive is indexable while consent pages remain private', async ({ page }) => {
   await page.goto('/newsletter')
-  const robots = await page.locator('meta[name="robots"]').getAttribute('content').catch(() => null)
-  expect(robots ?? '').not.toContain('noindex')
+  // Omitting robots metadata permits indexing. Reading an absent optional tag
+  // must not consume the test timeout before the consent-page assertion runs.
+  const robots = await page.locator('meta[name="robots"]').evaluateAll(nodes => nodes.map(node => node.getAttribute('content') ?? ''))
+  expect(robots.join(' ')).not.toContain('noindex')
   await page.goto('/newsletter/confirm')
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
 })
