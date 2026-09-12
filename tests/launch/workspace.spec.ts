@@ -15,6 +15,8 @@ test('event search opens an official FOMC decision with scenarios and a real cha
   await expect(page.locator('.historyChart')).toBeVisible()
   await expect(page.locator('.chartReadout')).toContainText('USD')
   await expect(page.getByRole('link', { name: 'Gold futures chart →' })).toHaveAttribute('href', '/data/gold')
+  await page.getByRole('button', { name: 'Save to watchlist', exact: true }).click()
+  await expect(page.getByRole('link', { name: 'Sign in to save', exact: true })).toHaveAttribute('href', '/auth')
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1)
   await info.attach('event-scenarios-and-chart', { body: await page.screenshot({ fullPage: true, scale: 'css' }), contentType: 'image/png' })
 })
