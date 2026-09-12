@@ -22,7 +22,8 @@
 .newsletterIssueRows{padding-left:0;list-style:none}.newsletterIssueRows li{margin:12px 0}.newsletterStudio .issueReview button{margin:8px 8px 8px 0}
 .savedItems{padding:0;list-style:none}.savedItems li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #cbd3d6}
 .modelRows .modelRow{display:block}.modelRows .modelRow strong{font-size:21px}.modelRows .modelRow p{font-size:14px;line-height:1.6}.modelRows .modelRow dl{display:flex;gap:12px;flex-wrap:wrap}.modelRows .modelRow dd{margin:4px 0}
-.signalCell .sourceStamp{overflow-wrap:anywhere}.signalCell .sourceStamp a{text-decoration:underline}
+.signalCell .sourceStamp{overflow-wrap:anywhere;color:#536875}.signalCell .sourceStamp a{text-decoration:underline}
+.eventPreview .eyebrow,.searchResults .eyebrow{color:#8a6118}.eventPreviewFoot,.eventPreviewFoot .outlineButton{color:#415562;font-size:14px}.eventPreviewFoot .outlineButton{min-height:44px}
 .signalCell{min-width:0}.signalCell .signalNumber{font-size:clamp(25px,2.6vw,36px);overflow-wrap:anywhere}.signalCell h3{font-size:16px}.signalCell em{font-size:12px}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b38027;outline-offset:3px}
 @media(max-width:700px){.eventFactGrid{grid-template-columns:1fr 1fr}.eventDetailBody h2{font-size:34px}.eventFilters{display:grid;grid-template-columns:1fr}.eventFilters input{width:100%}.historySummary{display:grid}.historyChartBlock .interactiveHistory{height:220px}.decisionTable{font-size:14px}.decisionTable th,.decisionTable td{padding:9px}.newsletterStudio textarea{font-size:16px}}
