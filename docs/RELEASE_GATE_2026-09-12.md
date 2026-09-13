@@ -8,7 +8,7 @@ The owner reported that the **Confirm subscription** link in a received email di
 
 Newsletter Edge Function v12 is now active. New messages use the canonical HTTPS KAPORAL host even if a malformed `SITE_URL` secret is present, and include both an HTML copy/paste fallback URL and a plain-text alternative. The landing page now explains that opening the email is step one and the clearly labelled **Confirm subscription** button is the deliberate step two. Existing emails were generated before this hardening; request a fresh message before testing the revised copy.
 
-The prior browser CI failure was isolated to an inaccessible test locator (`getByLabel('Topic')`) even though the rendered combobox was present. The test now uses the accessible combobox role and records whether the third-party TradingView iframe actually attaches. Current candidate head: `b1c97c060a43350df0f6fc447385ee35d252300b`; CI run `34760828951` is running. Keep the release held until that run, the real mailbox confirmation, human editorial approval and the other gates below are complete.
+The prior browser CI failures were isolated to an inaccessible test locator (`getByLabel('Topic')`) and a stale confirmation-button label; the rendered controls were present. The tests now use accessible roles and record whether the third-party TradingView iframe actually attaches. Final candidate head: `1528912174d6b419c17b6b2730a7e83360d1282c`; CI run `34761134001` is green with 77 passed and one intentional desktop skip. Keep the release held for the real mailbox confirmation, human editorial approval and the other gates below.
 
 | Gate | Evidence now | Remaining closure action |
 |---|---|---|
