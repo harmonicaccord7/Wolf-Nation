@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "qa:launch": "node scripts/launch-qa.mjs",
     "qa:models": "node --experimental-strip-types scripts/model-qa.mjs",
+    "qa:btc24": "node --experimental-strip-types scripts/btc24-qa.mjs && node scripts/btc24-ledger-qa.mjs",
     "qa:rls": "node scripts/rls-qa.mjs",
     "qa:newsletter": "node --experimental-strip-types scripts/newsletter-qa.mjs",
     "qa:browser": "playwright test"

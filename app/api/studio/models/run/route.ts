@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 export async function GET() {
   const { db, error } = await studioAccess(); if (error) return error
-  const result = await db.from('model_runs').select('id,module_code,model_version,as_of,status,metrics,results,created_at').order('created_at', { ascending: false }).limit(20)
+  const result = await db.from('model_runs').select('id,module_code,model_version,as_of,status,metrics,results,created_at').eq('module_code', 'decision-suite').order('created_at', { ascending: false }).limit(20)
   return result.error ? reply({ error: 'Model history unavailable.' }, 503) : reply({ runs: result.data })
 }
 export async function POST() {
