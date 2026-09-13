@@ -115,7 +115,7 @@ test('confirmation distinguishes a service failure from an invalid link', async 
     status: 500, contentType: 'application/json', body: JSON.stringify({ ok: false, error: 'newsletter_operation_failed' }),
   }))
   await page.goto(`/newsletter/confirm?token=${'0'.repeat(64)}`)
-  await page.getByRole('button', { name: 'Confirm Market Letter' }).click()
+  await page.getByRole('button', { name: 'Confirm subscription' }).click()
   await expect(page.getByRole('status')).toContainText('Please try this button again')
   await expect(page.getByRole('status')).not.toContainText('invalid or expired')
 })
