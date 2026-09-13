@@ -49,3 +49,14 @@ Editor assignment is complete (one existing confirmed owner account, five remain
 ## Overnight job verification, September 13 07:19 UTC
 
 The 00:20 UTC scheduled run added the next day's real forecast and advanced source history to 3,542 candles; the 01:20 retry left two total forecasts. Zero outcomes have matured. The first can resolve after September 14 00:00 UTC. The private daily automation is functioning; this does not establish prediction skill or close the other release requirements.
+
+## September 13 scope additions
+
+- Owner requests: plain-English financial background, visible Daily News, email-only newsletter signup, stronger email uniqueness, account recovery/password visibility, and TradingView news/referral placement.
+- Revised exact text: `docs/EDITORIAL_REVIEW_2026-09-12.md`. Original newsletter remains draft; revisions do not constitute approval. The stored draft now contains 62 blocks.
+- Daily News backend has 50 real dated headlines across all four configured sources and an enabled hourly job. Publishing facts from approved RSS sources does not publish financial conclusions or research drafts.
+- New newsletter reservation migration and v11 worker are active. Existing subscription state is protected against repeated requests; unsubscription requires new confirmation before resubscription.
+- Browser checks added to CI for email-only navigation/subscription, password visibility, recovery endpoint selection, duplicate-email feedback, ten financial backgrounds, news search/categories/dates and TradingView attribution. Inspect the CI for the new commit before closing these gates.
+- Real user mailbox recovery and review of revised financial copy are still outstanding. Earlier user phone checks are positive provisional evidence; Google sign-in is deferred.
+- TradingView personal-referral bulk-email/automation is excluded by its program terms. A normal TradingView tool card is prepared; activation of referral marketing requires the appropriate reviewed Partner Program link. Its news widget cannot guarantee the identical news selection from a personal chart and is not an API for model input.
+- No merge, production application deployment, newsletter issue send, paid partnership signup, or claimed model validation is authorized by successful implementation checks alone.

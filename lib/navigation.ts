@@ -1,4 +1,5 @@
 export const primaryNav = [
+  { label: 'Daily News', href: '/news' },
   { label: 'Markets', href: '/markets' },
   { label: 'Events', href: '/events' },
   { label: 'Bitcoin', href: '/bitcoin' },

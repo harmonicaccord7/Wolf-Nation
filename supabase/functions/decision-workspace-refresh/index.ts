@@ -2,7 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.112.3'
 import { calendarSources, parseICS, parseFedCalendar, eventHasPassed } from '../../../lib/events/calendar.ts'
 import { runDecisionModules, replayBtcBaseline, DECISION_MODEL_VERSION, canonicalJson } from '../../../lib/models/modules.ts'
 import { loadModelSnapshot } from '../../../lib/models/load-snapshot.ts'
-import { draftEdition } from '../../../lib/newsletter-draft.ts'
+import { draftEdition, newsletterBackgroundVersion } from '../../../lib/newsletter-draft.ts'
 const headers = { 'content-type': 'application/json', 'cache-control': 'no-store' }
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers })
 Deno.serve(async request => {
@@ -42,7 +42,7 @@ Deno.serve(async request => {
     if (upcoming.some(e => Date.parse(e.scheduledAt) - Date.parse(cutoff) <= 86400000)) kinds.push('material_event')
     let created = 0
     if (sourceState === 'live' && upcoming.length) for (const kind of kinds) {
-      const result = await db.from('newsletter_issues').insert({ issue_key: 'market-letter-' + kind + '-' + date, issue_kind: kind, issue_date: date, title: 'KAPORAL Market Letter — ' + date, dek: 'Official catalysts and a framework for exposure, waiting and risk.', body: draftEdition(upcoming), source_snapshot: { events: upcoming, sourceState, checkedAt: upcoming.map(e=>e.checkedAt).sort()[0], modelRunId: stored.data.id } })
+      const result = await db.from('newsletter_issues').insert({ issue_key: 'market-letter-' + kind + '-' + date, issue_kind: kind, issue_date: date, title: 'KAPORAL Market Letter — ' + date, dek: 'Official catalysts and a framework for exposure, waiting and risk.', body: draftEdition(upcoming), source_snapshot: { events: upcoming, sourceState, checkedAt: upcoming.map(e=>e.checkedAt).sort()[0], modelRunId: stored.data.id, backgroundVersion:newsletterBackgroundVersion } })
       if (result.error && result.error.code !== '23505') throw new Error('Newsletter draft persistence failed')
       if (!result.error) created++
     }

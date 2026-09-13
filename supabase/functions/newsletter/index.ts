@@ -1,4 +1,3 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
 
 const H = { "Content-Type": "application/json", "Cache-Control": "no-store, max-age=0" };
@@ -50,22 +49,20 @@ Deno.serve(async (req: Request) => {
       const email = String(body?.email ?? "").trim().toLowerCase();
       const source = String(body?.source ?? "website").slice(0, 80);
       if (!validEmail(email)) return json({ ok: false, error: "invalid_email" }, 400);
-      const { data: existing } = await db.from("newsletter_subscribers").select("status,last_confirmation_sent_at").eq("email", email).maybeSingle();
-      if (existing?.status === "confirmed") return json({ ok: true, status: "already_confirmed" });
-      if (existing?.last_confirmation_sent_at && Date.now() - Date.parse(existing.last_confirmation_sent_at) < 10 * 60e3) return json({ ok: true, status: "pending", delivery: "recently_sent" });
       const confirmToken = randomToken(), unsubscribeToken = randomToken();
       const confirmHash = await sha256(confirmToken), unsubscribeHash = await sha256(unsubscribeToken);
-      const expires = new Date(Date.now() + 48 * 3600e3).toISOString();
-      const { error } = await db.from("newsletter_subscribers").upsert({ email, status: "pending", source, consent_at: new Date().toISOString(), confirm_token_hash: confirmHash, confirm_expires_at: expires, unsubscribe_token_hash: unsubscribeHash, unsubscribed_at: null }, { onConflict: "email" });
+      const { data: reservation, error } = await db.rpc("reserve_newsletter_confirmation", {email_input:email,source_input:source,confirm_hash_input:confirmHash,unsubscribe_hash_input:unsubscribeHash,resend_input:body?.resend===true});
       if (error) throw error;
+      if (!reservation?.send) return json({ok:true,status:reservation?.status,delivery:reservation?.delivery});
       const delivery = await sendConfirmation(email, confirmToken, unsubscribeToken);
-      if (delivery.sent) await db.from("newsletter_subscribers").update({ last_confirmation_sent_at: new Date().toISOString() }).eq("email", email);
+      const recorded = await db.from("newsletter_subscribers").update({ last_confirmation_sent_at: delivery.sent?new Date().toISOString():null,last_delivery_status:delivery.sent?'sent':'failed',last_delivery_error:delivery.sent?null:delivery.reason }).eq("id", reservation.subscriber_id).eq("confirm_token_hash",confirmHash);
+      if (recorded.error) throw recorded.error;
       return json({ ok: true, status: "pending", delivery: delivery.reason });
     }
     if (action === "confirm") {
       const token = String(body?.token ?? ""); if (token.length < 40) return json({ ok: false, status: "invalid" }, 400);
       const hash = await sha256(token), now = new Date().toISOString();
-      const { data, error } = await db.from("newsletter_subscribers").update({ status: "confirmed", confirmed_at: now, confirm_token_hash: null, confirm_expires_at: null }).eq("confirm_token_hash", hash).eq("status", "pending").gt("confirm_expires_at", now).select("id").maybeSingle();
+      const { data, error } = await db.from("newsletter_subscribers").update({ status: "confirmed", confirmed_at: now, unsubscribed_at:null, confirm_token_hash: null, confirm_expires_at: null }).eq("confirm_token_hash", hash).eq("status", "pending").gt("confirm_expires_at", now).select("id").maybeSingle();
       if (error) throw error;
       return json({ ok: Boolean(data), status: data ? "confirmed" : "invalid_or_expired" }, data ? 200 : 400);
     }

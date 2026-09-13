@@ -13,6 +13,7 @@ import './account-preferences.css';
 import './model-panel.css';
 import './newsletter.css';
 import './workspace-qa.css';
+import './news.css';
 
 export const metadata: Metadata = {
   metadataBase:new URL('https://www.kaporalintelligence.com'),
