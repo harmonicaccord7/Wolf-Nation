@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "qa:launch": "node scripts/launch-qa.mjs"
+    "qa:launch": "node scripts/launch-qa.mjs",
+    "qa:models": "node --experimental-strip-types scripts/model-qa.mjs",
+    "qa:btc24": "node --experimental-strip-types scripts/btc24-qa.mjs && node scripts/btc24-ledger-qa.mjs",
+    "qa:rls": "node scripts/rls-qa.mjs",
+    "qa:newsletter": "node --experimental-strip-types scripts/newsletter-qa.mjs",
+    "qa:browser": "playwright test"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",
@@ -17,6 +22,8 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@playwright/test": "1.63.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

@@ -2,7 +2,7 @@ import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { ContactForm } from '../../components/ContactForm'
 
-export const metadata={title:'Contact & Support | KAPORAL INTELLIGENCE',description:'Contact KAPORAL INTELLIGENCE for account, research, data and website support.'}
+export const metadata={alternates:{canonical:'/contact'},title:'Contact & Support',description:'Contact KAPORAL INTELLIGENCE for account, research, data and website support.'}
 
 export default function ContactPage(){
   return <main className="contactPage">

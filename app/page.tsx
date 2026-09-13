@@ -8,7 +8,11 @@ import {DeskGrid} from '../components/DeskGrid'
 import {OptionsAfrica} from '../components/OptionsAfrica'
 import {Methodology} from '../components/Methodology'
 import {Footer} from '../components/Footer'
+import {EventPreview} from '../components/events/EventPreview'
 import {getHomeContent} from '../lib/data/content'
 import {getOverviewIntelligence} from '../lib/data/intelligence'
+import {Suspense} from 'react'
 
-export default async function Home(){const[{articles,signals},overview]=await Promise.all([getHomeContent(),getOverviewIntelligence()]);return <main><Header/><Hero overview={overview}/><MarketStrip/><SignalBoard signals={signals as any}/><EditorialGrid articles={articles as any}/><ImpactMap/><DeskGrid/><OptionsAfrica overview={overview}/><Methodology/><Footer/></main>}
+export const metadata={alternates:{canonical:'/'}}
+
+export default async function Home(){const[{articles},overview]=await Promise.all([getHomeContent(),getOverviewIntelligence()]);return <main><Header/><Hero overview={overview}/><MarketStrip/><SignalBoard overview={overview}/><Suspense fallback={<section className="shell eventPreview">Loading official event calendars…</section>}><EventPreview/></Suspense><EditorialGrid articles={articles as any}/><ImpactMap/><DeskGrid/><OptionsAfrica overview={overview}/><Methodology/><Footer/></main>}
