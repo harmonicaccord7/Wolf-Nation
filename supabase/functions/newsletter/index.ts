@@ -63,8 +63,19 @@ Deno.serve(async (req: Request) => {
       if (!validEmail(email)) return json({ ok: false, error: "invalid_email" }, 400);
       const confirmToken = randomToken(), unsubscribeToken = randomToken();
       const confirmHash = await sha256(confirmToken), unsubscribeHash = await sha256(unsubscribeToken);
-      const { data: reservation, error } = await db.rpc("reserve_newsletter_confirmation", {email_input:email,source_input:source,confirm_hash_input:confirmHash,unsubscribe_hash_input:unsubscribeHash,resend_input:body?.resend===true});
+      const { data: initialReservation, error } = await db.rpc("reserve_newsletter_confirmation", {email_input:email,source_input:source,confirm_hash_input:confirmHash,unsubscribe_hash_input:unsubscribeHash,resend_input:body?.resend===true});
       if (error) throw error;
+      // The original production form did not expose a resend button. If a
+      // still-pending address is submitted again, retry through the same
+      // database cooldown instead of silently returning `already_pending`.
+      // The RPC still enforces the ten-minute rate limit and rotates the
+      // token only when a resend is actually allowed.
+      let reservation = initialReservation;
+      if (reservation?.status === "already_pending") {
+        const retry = await db.rpc("reserve_newsletter_confirmation", {email_input:email,source_input:source,confirm_hash_input:confirmHash,unsubscribe_hash_input:unsubscribeHash,resend_input:true});
+        if (retry.error) throw retry.error;
+        reservation = retry.data;
+      }
       if (!reservation?.send) return json({ok:true,status:reservation?.status,delivery:reservation?.delivery});
       const delivery = await sendConfirmation(email, confirmToken, unsubscribeToken);
       const recorded = await db.from("newsletter_subscribers").update({ last_confirmation_sent_at: delivery.sent?new Date().toISOString():null,last_delivery_status:delivery.sent?'sent':'failed',last_delivery_error:delivery.sent?null:delivery.reason }).eq("id", reservation.subscriber_id).eq("confirm_token_hash",confirmHash);

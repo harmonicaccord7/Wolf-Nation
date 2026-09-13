@@ -13,7 +13,7 @@ export function NewsletterForm(){
    else if(data.status==='delivery_blocked')setStatus('We cannot deliver to this email right now. Please use another address you own or contact support.')
    else if(data.status==='already_pending'){setStatus('This email already has a pending subscription. Open the confirmation email to finish. No second subscription was created.');setCanResend(true)}
    else if(data.delivery==='cooldown'){setStatus('A confirmation request was made recently. Check your inbox or wait 10 minutes before requesting another.');setCanResend(true)}
-   else if(data.delivery==='sent'||data.delivery==='recently_sent'){setStatus('Check your inbox for the KAPORAL confirmation email. Click Confirm Market Letter to subscribe. No password or website account is needed.');setCanResend(true)}
+   else if(data.delivery==='sent'||data.delivery==='recently_sent'){setStatus('Check your inbox for the KAPORAL confirmation email. Click Confirm subscription to finish. No password or website account is needed.');setCanResend(true)}
    else {setStatus('Confirmation email delivery is temporarily unavailable. You have not been subscribed. Please try again later or contact support.');setCanResend(true)}
   }catch{setStatus('Could not process your request right now. Please try again. Your subscription has not been confirmed.')}
   finally{setBusy(false)}
