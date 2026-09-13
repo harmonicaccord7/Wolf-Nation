@@ -1,0 +1,26 @@
+-- Applied 2026-09-12: retain tested permissions and avoid repeated auth lookups.
+drop policy public_read_economic_events on public.economic_events;
+drop policy staff_manage_economic_events on public.economic_events;
+create policy anon_read_economic_events on public.economic_events for select to anon using (status in ('scheduled','cancelled') and (source_claim_status='reviewed' or (prior_value is null and consensus_value is null and actual_value is null and revised_prior_value is null)));
+create policy authenticated_read_economic_events on public.economic_events for select to authenticated using ((status in ('scheduled','cancelled') and (source_claim_status='reviewed' or (prior_value is null and consensus_value is null and actual_value is null and revised_prior_value is null))) or exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+create policy staff_insert_economic_events on public.economic_events for insert to authenticated with check (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+create policy staff_update_economic_events on public.economic_events for update to authenticated using (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin'))) with check (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+drop policy public_read_event_scenarios on public.event_scenarios;
+drop policy staff_manage_event_scenarios on public.event_scenarios;
+create policy anon_read_event_scenarios on public.event_scenarios for select to anon using (status='published' and reviewed_at is not null);
+create policy authenticated_read_event_scenarios on public.event_scenarios for select to authenticated using ((status='published' and reviewed_at is not null) or exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+create policy staff_insert_event_scenarios on public.event_scenarios for insert to authenticated with check (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+create policy staff_update_event_scenarios on public.event_scenarios for update to authenticated using (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin'))) with check (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+drop policy public_read_published_newsletter_issues on public.newsletter_issues;
+drop policy staff_manage_newsletter_issues on public.newsletter_issues;
+create policy anon_read_newsletter_issues on public.newsletter_issues for select to anon using (status='published' and published_at is not null and published_at<=now());
+create policy authenticated_read_newsletter_issues on public.newsletter_issues for select to authenticated using ((status='published' and published_at is not null and published_at<=now()) or exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+create policy staff_insert_newsletter_issues on public.newsletter_issues for insert to authenticated with check (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+create policy staff_update_newsletter_issues on public.newsletter_issues for update to authenticated using (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin'))) with check (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+alter policy staff_read_model_runs on public.model_runs using (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+alter policy staff_insert_model_runs on public.model_runs with check (created_by=(select auth.uid()) and exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('researcher','editor','admin')));
+alter policy owner_manage_watchlists on public.watchlists using (profile_id=(select auth.uid())) with check (profile_id=(select auth.uid()));
+alter policy owner_manage_reader_preferences on public.reader_preferences using (profile_id=(select auth.uid())) with check (profile_id=(select auth.uid()));
+alter policy owner_manage_watchlist_items on public.watchlist_items using (exists(select 1 from public.watchlists w where w.id=watchlist_id and w.profile_id=(select auth.uid()))) with check (exists(select 1 from public.watchlists w where w.id=watchlist_id and w.profile_id=(select auth.uid())));
+drop policy staff_manage_newsletter_deliveries on public.newsletter_deliveries;
+create policy editor_read_newsletter_deliveries on public.newsletter_deliveries for select to authenticated using (exists(select 1 from public.profiles p where p.id=(select auth.uid()) and p.role in ('editor','admin')));

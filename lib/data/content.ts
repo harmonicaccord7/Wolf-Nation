@@ -3,7 +3,7 @@ import { createClient } from '../supabase/server'
 export async function getHomeContent() {
   const supabase = await createClient()
   const [{ data: articles }, { data: signals }, { data: desks }] = await Promise.all([
-    supabase.from('articles').select('id,slug,headline,dek,confidence,reader_level,published_at,is_featured').order('published_at',{ascending:false}).limit(8),
+    supabase.from('articles').select('id,slug,headline,dek,confidence,reader_level,published_at,is_featured').eq('status','published').lte('published_at',new Date().toISOString()).order('published_at',{ascending:false}).limit(8),
     supabase.from('signals').select('code,label,value,unit,regime,score,direction,region,as_of,provider').order('as_of',{ascending:false}).limit(12),
     supabase.from('desks').select('slug,name,description,is_featured,sort_order').order('sort_order')
   ])

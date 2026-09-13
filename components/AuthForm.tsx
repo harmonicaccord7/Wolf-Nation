@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { FormEvent, useMemo, useState } from 'react'
 import { createClient } from '../lib/supabase/client'
+import { PasswordField } from './PasswordField'
+import { accountExistsMessage, newPasswordError, NEW_PASSWORD_MIN } from '../lib/auth/forms'
 
 type Mode='signin'|'signup'
 type AuthErrorLike={message?:string;status?:number;code?:string}
@@ -45,8 +47,8 @@ export function AuthForm(){
     const confirmPassword=String(fd.get('confirmPassword')||'')
 
     if(!EMAIL_RE.test(email)){setStatus('Enter a valid email address.');return}
-    if(password.length<10){setStatus('Use at least 10 characters for your password.');return}
-    if(mode==='signup'&&password!==confirmPassword){setStatus('The two passwords do not match.');return}
+    if(mode==='signin'&&!password){setStatus('Enter your password.');return}
+    if(mode==='signup'){const validation=newPasswordError(password,confirmPassword);if(validation){setStatus(validation);return}}
 
     if(mode==='signup'){
       const key=`kaporal-signup-cooldown:${email}`
@@ -61,13 +63,14 @@ export function AuthForm(){
         const confirmationUrl=`${SITE_URL}/auth/confirm?next=/account`
         const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:confirmationUrl}})
         if(error) throw error
+        if(data.user?.identities?.length===0){setStatus(accountExistsMessage);return}
         localStorage.setItem(`kaporal-signup-cooldown:${email}`,String(Date.now()))
         if(data.user&&data.session){
           await supabase.from('profiles').insert({id:data.user.id,display_name:email.split('@')[0],role:'reader'}).then(()=>{})
           location.href='/account';return
         }
         form.reset()
-        setStatus('Account request received. Use the newest KAPORAL confirmation email. The link should return to kaporalintelligence.com, never localhost.')
+        setStatus('Check your inbox to confirm your account. If this email already belongs to an account, sign in or use Forgot password. Submitting again does not create another account.')
       }else{
         const {data,error}=await supabase.auth.signInWithPassword({email,password})
         if(error) throw error
@@ -85,12 +88,14 @@ export function AuthForm(){
   return <div className="authCard">
     <div className="authTabs"><button type="button" className={mode==='signin'?'active':''} onClick={()=>switchMode('signin')}>Sign in</button><button type="button" className={mode==='signup'?'active':''} onClick={()=>switchMode('signup')}>Create account</button></div>
     <form onSubmit={submit} noValidate>
-      <label>Email<input name="email" type="email" required inputMode="email" autoCapitalize="none" autoComplete="email"/></label>
-      <label>Password<input name="password" type="password" minLength={10} required autoComplete={mode==='signin'?'current-password':'new-password'}/></label>
-      {mode==='signup'&&<label>Confirm password<input name="confirmPassword" type="password" minLength={10} required autoComplete="new-password"/></label>}
-      {mode==='signup'&&<p className="authHint">Use at least 10 characters. Submit once, then wait for the newest confirmation email instead of repeatedly requesting new messages.</p>}
+      <label>Email<input name="email" type="email" required maxLength={254} inputMode="email" autoCapitalize="none" autoComplete="username"/></label>
+      <PasswordField key={mode} name="password" minLength={mode==='signup'?NEW_PASSWORD_MIN:undefined} autoComplete={mode==='signin'?'current-password':'new-password'}/>
+      {mode==='signup'&&<PasswordField name="confirmPassword" label="Confirm password" minLength={NEW_PASSWORD_MIN} autoComplete="new-password"/>}
+      {mode==='signup'&&<p className="authHint">Use at least 12 characters and a password you do not use elsewhere. Accept your browser’s strong-password suggestion or choose your own, then save it in your password manager.</p>}
       <button className="goldButton big" disabled={busy} aria-busy={busy}>{busy?'Working…':mode==='signin'?'Sign in':'Create free account'}</button>
     </form>
+    <Link className="authRecoveryLink" href="/auth/forgot-password">Forgot password?</Link>
+    <p className="authHint">Your email is your username. To receive email updates only, <Link href="/newsletter#newsletter-signup">subscribe to the newsletter with just your email</Link>.</p>
     {status&&<div className="authStatus" role="status"><p>{status}</p>{rateLimited&&<Link href="/contact">Contact support →</Link>}</div>}
     <p className="authFine">Reader accounts can bookmark and personalize. Research Studio access requires an approved researcher/editor role.</p>
   </div>

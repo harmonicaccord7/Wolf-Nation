@@ -3,7 +3,7 @@ import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 import { getPublicTrackRecord } from '../../lib/data/accountability'
 
-export const metadata={title:'Track Record',description:'Auditable public prediction ledger and resolution history for KAPORAL INTELLIGENCE.'}
+export const metadata={alternates:{canonical:'/track-record'},title:'Track Record',description:'Auditable public prediction ledger and resolution history for KAPORAL INTELLIGENCE.'}
 
 function pct(v:any){const n=Number(v);return Number.isFinite(n)?`${Math.round(n)}%`:'—'}
 function score(v:any){const n=Number(v);return Number.isFinite(n)?n.toFixed(2):'—'}

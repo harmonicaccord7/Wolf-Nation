@@ -26,7 +26,7 @@ export function MobileNav(){
       <section className="mobileNavPanel" id="mobile-navigation" aria-label="Mobile navigation">
         <div className="mobileNavHead"><strong>KAPORAL INTELLIGENCE</strong><button type="button" aria-label="Close navigation" onClick={close}>×</button></div>
         <nav aria-label="Primary mobile navigation">{primaryNav.map(item=><Link key={item.href} href={item.href} onClick={close}>{item.label}<span aria-hidden="true">→</span></Link>)}</nav>
-        <div className="mobileNavUtilities"><Link href="/search" onClick={close}>Search</Link><Link href="/contact" onClick={close}>Contact & support</Link><Link href="/auth" onClick={close}>Sign in</Link><Link className="mobileJoin" href="/auth" onClick={close}>Join free</Link></div>
+        <div className="mobileNavUtilities"><Link href="/search" onClick={close}>Search</Link><Link href="/contact" onClick={close}>Contact & support</Link><Link href="/auth" onClick={close}>Account sign in</Link><Link className="mobileJoin" href="/newsletter#newsletter-signup" onClick={close}>Newsletter — email only</Link></div>
         <p>Independent financial-market research and education. Not personalized financial advice.</p>
       </section>
     </div>}

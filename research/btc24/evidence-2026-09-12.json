@@ -1,0 +1,568 @@
+{
+  "modelId": "03678a20-af58-4157-b16a-5aa599eee99d",
+  "backtestId": "c565ae10-f56c-4180-9c5f-0d4561d26e93",
+  "snapshotHash": "b9da28a6fccde64b3fd3084e4d17ca8e351aba3c7e3360d5d43ee67a611fdc76",
+  "artifactHash": "ee960f66a8186d882d400f056659fbb55b6fd0b92b90ed4fa92ca9926dd8d498",
+  "quality": {
+    "gaps": [],
+    "last": "2026-09-11T00:00:00.000Z",
+    "rows": 3541,
+    "first": "2017-01-01T00:00:00.000Z",
+    "duplicates": 0,
+    "incomplete": 0
+  },
+  "train": {
+    "last": "2022-12-30T00:00:00.000Z",
+    "first": "2017-02-02T00:00:00.000Z",
+    "observations": 2157
+  },
+  "validation": {
+    "model": {
+      "brier": 0.2506144245122956,
+      "hitRate": 0.4986301369863014,
+      "logLoss": 0.6943767914939871,
+      "precision": 0.49722222222222223,
+      "reliability": [
+        {
+          "count": 0,
+          "lower": 0,
+          "upper": 0.1,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.1,
+          "upper": 0.2,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.2,
+          "upper": 0.3,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.3,
+          "upper": 0.4,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 5,
+          "lower": 0.4,
+          "upper": 0.5,
+          "observed": 0.4,
+          "predicted": 0.4979161735605623
+        },
+        {
+          "count": 360,
+          "lower": 0.5,
+          "upper": 0.6,
+          "observed": 0.49722222222222223,
+          "predicted": 0.5271712270925636
+        },
+        {
+          "count": 0,
+          "lower": 0.6,
+          "upper": 0.7,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.7,
+          "upper": 0.8,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.8,
+          "upper": 0.9,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.9,
+          "upper": 1,
+          "observed": null,
+          "predicted": null
+        }
+      ],
+      "actualUpRate": 0.4958904109589041,
+      "observations": 365
+    },
+    "baseline": {
+      "brier": 0.25084607022971694,
+      "hitRate": 0.4958904109589041,
+      "logLoss": 0.694841308097734,
+      "precision": 0.4958904109589041,
+      "reliability": [
+        {
+          "count": 0,
+          "lower": 0,
+          "upper": 0.1,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.1,
+          "upper": 0.2,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.2,
+          "upper": 0.3,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.3,
+          "upper": 0.4,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.4,
+          "upper": 0.5,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 365,
+          "lower": 0.5,
+          "upper": 0.6,
+          "observed": 0.4958904109589041,
+          "predicted": 0.5252665739452903
+        },
+        {
+          "count": 0,
+          "lower": 0.6,
+          "upper": 0.7,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.7,
+          "upper": 0.8,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.8,
+          "upper": 0.9,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.9,
+          "upper": 1,
+          "observed": null,
+          "predicted": null
+        }
+      ],
+      "actualUpRate": 0.4958904109589041,
+      "observations": 365
+    },
+    "periodEnd": "2024-01-01T00:00:00.000Z",
+    "periodStart": "2023-01-01T00:00:00.000Z"
+  },
+  "test": {
+    "model": {
+      "brier": 0.25029014955097406,
+      "hitRate": 0.49441624365482234,
+      "logLoss": 0.6937260412261552,
+      "precision": 0.49947643979057593,
+      "reliability": [
+        {
+          "count": 0,
+          "lower": 0,
+          "upper": 0.1,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.1,
+          "upper": 0.2,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.2,
+          "upper": 0.3,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.3,
+          "upper": 0.4,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 30,
+          "lower": 0.4,
+          "upper": 0.5,
+          "observed": 0.6666666666666666,
+          "predicted": 0.49648785049896627
+        },
+        {
+          "count": 955,
+          "lower": 0.5,
+          "upper": 0.6,
+          "observed": 0.49947643979057593,
+          "predicted": 0.5171427438194708
+        },
+        {
+          "count": 0,
+          "lower": 0.6,
+          "upper": 0.7,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.7,
+          "upper": 0.8,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.8,
+          "upper": 0.9,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.9,
+          "upper": 1,
+          "observed": null,
+          "predicted": null
+        }
+      ],
+      "actualUpRate": 0.5045685279187817,
+      "observations": 985
+    },
+    "baseline": {
+      "brier": 0.2502353096153254,
+      "hitRate": 0.5045685279187817,
+      "logLoss": 0.6936183225774042,
+      "precision": 0.5045685279187817,
+      "reliability": [
+        {
+          "count": 0,
+          "lower": 0,
+          "upper": 0.1,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.1,
+          "upper": 0.2,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.2,
+          "upper": 0.3,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.3,
+          "upper": 0.4,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.4,
+          "upper": 0.5,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 985,
+          "lower": 0.5,
+          "upper": 0.6,
+          "observed": 0.5045685279187817,
+          "predicted": 0.5196425193482108
+        },
+        {
+          "count": 0,
+          "lower": 0.6,
+          "upper": 0.7,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.7,
+          "upper": 0.8,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.8,
+          "upper": 0.9,
+          "observed": null,
+          "predicted": null
+        },
+        {
+          "count": 0,
+          "lower": 0.9,
+          "upper": 1,
+          "observed": null,
+          "predicted": null
+        }
+      ],
+      "actualUpRate": 0.5045685279187817,
+      "observations": 985
+    },
+    "periodEnd": "2026-09-12T00:00:00.000Z",
+    "periodStart": "2024-01-01T00:00:00.000Z",
+    "brierDifference": {
+      "seed": 241017,
+      "lower95": -0.0005221433319333603,
+      "upper95": 0.0006004760811603531,
+      "blockDays": 14,
+      "difference": 5.483993565012079e-05,
+      "repetitions": 1000,
+      "interpretation": "Negative favors model; uncertainty is exploratory and not corrected for future model searches."
+    }
+  },
+  "folds": [
+    {
+      "start": "2024-01-01T00:00:00.000Z",
+      "observations": 91,
+      "trainingObservations": 2522,
+      "trainingLastTargetEnd": "2023-12-30T00:00:00.000Z"
+    },
+    {
+      "start": "2024-04-01T00:00:00.000Z",
+      "observations": 91,
+      "trainingObservations": 2613,
+      "trainingLastTargetEnd": "2024-03-30T00:00:00.000Z"
+    },
+    {
+      "start": "2024-07-01T00:00:00.000Z",
+      "observations": 92,
+      "trainingObservations": 2704,
+      "trainingLastTargetEnd": "2024-06-29T00:00:00.000Z"
+    },
+    {
+      "start": "2024-10-01T00:00:00.000Z",
+      "observations": 92,
+      "trainingObservations": 2796,
+      "trainingLastTargetEnd": "2024-09-29T00:00:00.000Z"
+    },
+    {
+      "start": "2025-01-01T00:00:00.000Z",
+      "observations": 90,
+      "trainingObservations": 2888,
+      "trainingLastTargetEnd": "2024-12-30T00:00:00.000Z"
+    },
+    {
+      "start": "2025-04-01T00:00:00.000Z",
+      "observations": 91,
+      "trainingObservations": 2978,
+      "trainingLastTargetEnd": "2025-03-30T00:00:00.000Z"
+    },
+    {
+      "start": "2025-07-01T00:00:00.000Z",
+      "observations": 92,
+      "trainingObservations": 3069,
+      "trainingLastTargetEnd": "2025-06-29T00:00:00.000Z"
+    },
+    {
+      "start": "2025-10-01T00:00:00.000Z",
+      "observations": 92,
+      "trainingObservations": 3161,
+      "trainingLastTargetEnd": "2025-09-29T00:00:00.000Z"
+    },
+    {
+      "start": "2026-01-01T00:00:00.000Z",
+      "observations": 90,
+      "trainingObservations": 3253,
+      "trainingLastTargetEnd": "2025-12-30T00:00:00.000Z"
+    },
+    {
+      "start": "2026-04-01T00:00:00.000Z",
+      "observations": 91,
+      "trainingObservations": 3343,
+      "trainingLastTargetEnd": "2026-03-30T00:00:00.000Z"
+    },
+    {
+      "start": "2026-07-01T00:00:00.000Z",
+      "observations": 73,
+      "trainingObservations": 3434,
+      "trainingLastTargetEnd": "2026-06-29T00:00:00.000Z"
+    }
+  ],
+  "strategies": [
+    {
+      "cash": {
+        "activeDays": 0,
+        "observations": 985,
+        "costBpsPerSide": 10,
+        "maxDrawdownPct": 0,
+        "totalReturnPct": 0,
+        "averageDayReturnPct": 0
+      },
+      "model": {
+        "activeDays": 5,
+        "observations": 985,
+        "costBpsPerSide": 10,
+        "maxDrawdownPct": 0,
+        "totalReturnPct": 9.73916380430271,
+        "averageDayReturnPct": 0.009546345315429973
+      },
+      "buyHold": {
+        "costBpsPerSide": 10,
+        "maxDrawdownPct": 53.075779531589504,
+        "totalReturnPct": 82.21044572447221
+      },
+      "momentum": {
+        "activeDays": 497,
+        "observations": 985,
+        "costBpsPerSide": 10,
+        "maxDrawdownPct": 72.71090539112568,
+        "totalReturnPct": -50.91095669535367,
+        "averageDayReturnPct": -0.05631907445191856
+      },
+      "costBpsPerSide": 10,
+      "alwaysLongDaily": {
+        "activeDays": 985,
+        "observations": 985,
+        "costBpsPerSide": 10,
+        "maxDrawdownPct": 85.40183638004379,
+        "totalReturnPct": -74.55659253903526,
+        "averageDayReturnPct": -0.10801557044012715
+      }
+    },
+    {
+      "cash": {
+        "activeDays": 0,
+        "observations": 985,
+        "costBpsPerSide": 25,
+        "maxDrawdownPct": 0,
+        "totalReturnPct": 0,
+        "averageDayReturnPct": 0
+      },
+      "model": {
+        "activeDays": 5,
+        "observations": 985,
+        "costBpsPerSide": 25,
+        "maxDrawdownPct": 0,
+        "totalReturnPct": 8.102517496901541,
+        "averageDayReturnPct": 0.007994476547154237
+      },
+      "buyHold": {
+        "costBpsPerSide": 25,
+        "maxDrawdownPct": 53.0757795315895,
+        "totalReturnPct": 81.66367800346454
+      },
+      "momentum": {
+        "activeDays": 497,
+        "observations": 985,
+        "costBpsPerSide": 25,
+        "maxDrawdownPct": 91.46702521442745,
+        "totalReturnPct": -88.9765838179898,
+        "averageDayReturnPct": -0.20755840021437505
+      },
+      "costBpsPerSide": 25,
+      "alwaysLongDaily": {
+        "activeDays": 985,
+        "observations": 985,
+        "costBpsPerSide": 25,
+        "maxDrawdownPct": 98.98159713045908,
+        "totalReturnPct": -98.68178862598357,
+        "averageDayReturnPct": -0.40776629250394714
+      }
+    },
+    {
+      "cash": {
+        "activeDays": 0,
+        "observations": 985,
+        "costBpsPerSide": 50,
+        "maxDrawdownPct": 0,
+        "totalReturnPct": 0,
+        "averageDayReturnPct": 0
+      },
+      "model": {
+        "activeDays": 5,
+        "observations": 985,
+        "costBpsPerSide": 50,
+        "maxDrawdownPct": 0,
+        "totalReturnPct": 5.423534315941958,
+        "averageDayReturnPct": 0.005413210564359711
+      },
+      "buyHold": {
+        "costBpsPerSide": 50,
+        "maxDrawdownPct": 53.0757795315895,
+        "totalReturnPct": 80.75422422259155
+      },
+      "momentum": {
+        "activeDays": 497,
+        "observations": 985,
+        "costBpsPerSide": 50,
+        "maxDrawdownPct": 99.14637101486959,
+        "totalReturnPct": -99.09002065883055,
+        "averageDayReturnPct": -0.45911892828993317
+      },
+      "costBpsPerSide": 50,
+      "alwaysLongDaily": {
+        "activeDays": 985,
+        "observations": 985,
+        "costBpsPerSide": 50,
+        "maxDrawdownPct": 99.9909840106789,
+        "totalReturnPct": -99.99060206283804,
+        "averageDayReturnPct": -0.9063499085922636
+      }
+    }
+  ],
+  "gate": {
+    "reason": "No prospective outcomes have established calibration or performance; historical data are a present-day vendor vintage.",
+    "status": "experimental",
+    "publication": "blocked",
+    "historicalSkill": "not-demonstrated",
+    "forwardValidation": "pending"
+  },
+  "forward": {
+    "id": "4c93f41e-cad8-44ec-a6b4-2ee8157fadd0",
+    "createdAt": "2026-09-12T16:33:48.502549+00:00",
+    "windowStart": "2026-09-13T00:00:00.000Z",
+    "windowEnd": "2026-09-14T00:00:00.000Z",
+    "statusAtCheckpoint": "open",
+    "resolvedOutcomesAtCheckpoint": 0
+  },
+  "independentVerification": {
+    "numpy": "2.3.5",
+    "scikitLearn": "1.8.0",
+    "fits": 12,
+    "holdoutRows": 985,
+    "maxCoefficientAbsoluteError": 6.70482460829458e-07
+  }
+}

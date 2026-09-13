@@ -1,0 +1,5 @@
+{
+  "nodeModulesDir": "auto",
+  "imports": { "fast-xml-parser": "npm:fast-xml-parser@5.11.1" },
+  "compilerOptions": { "strict": true }
+}
