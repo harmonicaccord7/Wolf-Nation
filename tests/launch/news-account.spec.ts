@@ -84,7 +84,7 @@ test('daily news has dated sources, topic search, and distinct TradingView attri
   await expect(cards.first()).toBeVisible()
   await expect(cards.first().locator('time')).toHaveAttribute('datetime',/^20/)
   await expect(cards.first().getByRole('link').first()).toHaveAttribute('href',/^https:\/\//)
-  await page.getByLabel('Topic',{exact:true}).selectOption('geopolitics')
+  await page.getByRole('combobox',{name:'Topic',exact:true}).selectOption('geopolitics')
   await expect(cards.first().locator('.newsCategory')).toHaveText('Geopolitics')
   await page.getByRole('searchbox',{name:'Search news',exact:true}).fill('definitely-no-matching-news-qa')
   await expect(page.locator('.newsResultCount')).toContainText('0 headlines')
@@ -94,6 +94,10 @@ test('daily news has dated sources, topic search, and distinct TradingView attri
   await expect(page.locator('.tradingViewCard a')).not.toHaveAttribute('href',/share_your_love/)
   await page.locator('.tradingViewNews').scrollIntoViewIfNeeded()
   await expect(page.locator('.tradingview-widget-copyright')).toContainText('by TradingView')
-  // Third-party rendering is verified separately; provider failures must not break source news.
-  await testInfo.attach('daily-news-controls',{body:await page.screenshot({scale:'css'}),contentType:'image/png'})
+  // Capture actual provider availability separately from KAPORAL's own controls.
+  // An unavailable external provider must not break the source-news assertions.
+  const widgetFrame = page.locator('.tradingViewNews iframe')
+  const widgetAttached = await widgetFrame.waitFor({state:'attached',timeout:15_000}).then(()=>true,()=>false)
+  await testInfo.attach('tradingview-availability',{body:JSON.stringify({widgetAttached,source:widgetAttached?await widgetFrame.getAttribute('src'):null}),contentType:'application/json'})
+  await testInfo.attach('daily-news-controls',{body:await page.locator('.tradingViewNews').screenshot({scale:'css'}),contentType:'image/png'})
 })
