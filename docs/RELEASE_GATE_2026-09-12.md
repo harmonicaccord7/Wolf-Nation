@@ -2,6 +2,14 @@
 
 Application release is held. The owner has authorized completing the work and merging when the required evidence passes. No production application deployment or merge has been performed during this continuation.
 
+## Confirmation-link follow-up, September 13
+
+The owner reported that the **Confirm subscription** link in a received email did not appear to work. The production confirmation page returned HTTP 200 for a controlled token-shaped URL. A controlled synthetic pending subscriber was then confirmed through the deployed website endpoint (`POST /api/newsletter/confirm`) with HTTP 200 and `{\"ok\":true,\"status\":\"confirmed\"}`; the synthetic row was deleted immediately. This proves the production database, Edge Function and website API path are operational, but it does not substitute for observing the owner's mailbox click.
+
+Newsletter Edge Function v12 is now active. New messages use the canonical HTTPS KAPORAL host even if a malformed `SITE_URL` secret is present, and include both an HTML copy/paste fallback URL and a plain-text alternative. The landing page now explains that opening the email is step one and the clearly labelled **Confirm subscription** button is the deliberate step two. Existing emails were generated before this hardening; request a fresh message before testing the revised copy.
+
+The prior browser CI failure was isolated to an inaccessible test locator (`getByLabel('Topic')`) even though the rendered combobox was present. The test now uses the accessible combobox role and records whether the third-party TradingView iframe actually attaches. Current candidate head: `b1c97c060a43350df0f6fc447385ee35d252300b`; CI run `34760828951` is running. Keep the release held until that run, the real mailbox confirmation, human editorial approval and the other gates below are complete.
+
 | Gate | Evidence now | Remaining closure action |
 |---|---|---|
 | Database migration and access | Applied three migrations; repaired six missing reader profiles; owner isolation and publication controls pass 31 assertions. | Editor assignment completed and verified on September 12 (one editor, five readers). Verify that account's authenticated Studio and reader flows. |
