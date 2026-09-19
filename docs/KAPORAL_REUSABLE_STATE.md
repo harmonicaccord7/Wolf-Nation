@@ -1,8 +1,17 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-09-12. See the latest continuation below before relying on the historical checklist.
+Last operational refresh: 2026-09-19. Read the current checkpoint in `docs/RELEASE_GATE_2026-09-12.md` before relying on the historical checklist below.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
+
+## September 19 continuation
+- Owner accepts newsletter email reception and subscription. Production confirms one subscriber since September 13 at 19:30 UTC. Do not reopen that completed acceptance; actual newsletter-edition delivery is a separate outstanding step.
+- PR21 remains open/draft. Previous head `5eff8c7ca324465b6632aa5a2e0654b9f34a5f84` passed CI `34764449687` (77 browser tests, one intentional skip) and Vercel preview. Today's password-control follow-up needs its own check result, recorded on the PR.
+- Live `/auth` still lacks visibility controls. The candidate now labels both signup controls explicitly **Show password / Hide password**, with independent state and additional signup regression assertions. No account was created during these tests.
+- Background jobs continued: four news sources successfully checked September 19 11:05 UTC; ten private newsletter drafts, latest updated September 18; eight BTC forecasts (six resolved, two open). This is scheduled data processing, not unattended application development. No public predictive advantage is established.
+- Real received messages confirm `globalsupport@kaporalintelligence.com` -> ImprovMX -> `kaporalintelligence@gmail.com`. `intelligence@kaporalintelligence.com` is the outbound newsletter identity; its inbound alias is not yet verified. ImprovMX settings require sign-in in the available browser.
+- Owner's earlier real-phone checks remain positive evidence. Google sign-in remains deferred; the GSC connector now reports an expired trial. Neither condition authorizes fabricated acceptance details.
+- Preserve the existing human editorial/publication gate. Revised financial copy, real authenticated account/editor acceptance and approved issue-to-inbox/unsubscribe acceptance remain to close before the full application release. Future model research must continue privately; no profit claims or model-validation claims.
 
 ## Canonical production
 - Product: KAPORAL INTELLIGENCE
