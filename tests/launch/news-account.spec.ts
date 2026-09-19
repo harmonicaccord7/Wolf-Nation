@@ -108,7 +108,7 @@ test('daily news has dated sources, topic search, and distinct TradingView attri
   // in the default seven-day window. Exercise filtering with an observed topic
   // instead of assuming the UN publishes a new geopolitical story each week.
   await page.getByRole('combobox',{name:'Published',exact:true}).selectOption('30')
-  const availableTopic=await cards.first().locator('.newsCategory').innerText()
+  const availableTopic=(await cards.first().locator('.newsCategory').textContent())!.trim()
   await page.getByRole('combobox',{name:'Topic',exact:true}).selectOption({label:availableTopic})
   await expect(cards.first().locator('.newsCategory')).toHaveText(availableTopic)
   for (const label of await cards.locator('.newsCategory').allTextContents()) expect(label).toBe(availableTopic)
