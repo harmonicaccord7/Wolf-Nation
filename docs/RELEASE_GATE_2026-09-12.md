@@ -6,6 +6,8 @@ Application release is held. The owner has authorized completing the work and me
 
 This section supersedes dated status statements below; the older sections retain their historical evidence.
 
+Candidate `219acce` passed the password-control checks on all three browsers, but run `35439624130` exposed an outdated Daily News test assumption (74 passed, three news-test failures, one intentional skip). The UN feed's latest article is September 9: zero geopolitical articles in seven days and ten in thirty days, confirmed directly in production. The default seven-day filter correctly excluded them. The follow-up test selects an actually observed topic and checks every visible result, including the existing no-match/search behavior; it no longer assumes weekly publication by every source. The final candidate's CI result belongs in the PR description.
+
 | Area | Current evidence | Release implication |
 |---|---|---|
 | Newsletter consent | Owner reports receiving the email and completing subscription successfully. Production has one confirmed subscriber, confirmed September 13 at 19:30 UTC. | Consent email reception and subscription are accepted. Do not ask the owner to repeat this test. This is separate from delivery of an actual newsletter edition. |

@@ -104,8 +104,14 @@ test('daily news has dated sources, topic search, and distinct TradingView attri
   await expect(cards.first()).toBeVisible()
   await expect(cards.first().locator('time')).toHaveAttribute('datetime',/^20/)
   await expect(cards.first().getByRole('link').first()).toHaveAttribute('href',/^https:\/\//)
-  await page.getByRole('combobox',{name:'Topic',exact:true}).selectOption('geopolitics')
-  await expect(cards.first().locator('.newsCategory')).toHaveText('Geopolitics')
+  // Live publishers have different cadences: a valid topic may have no articles
+  // in the default seven-day window. Exercise filtering with an observed topic
+  // instead of assuming the UN publishes a new geopolitical story each week.
+  await page.getByRole('combobox',{name:'Published',exact:true}).selectOption('30')
+  const availableTopic=await cards.first().locator('.newsCategory').innerText()
+  await page.getByRole('combobox',{name:'Topic',exact:true}).selectOption({label:availableTopic})
+  await expect(cards.first().locator('.newsCategory')).toHaveText(availableTopic)
+  for (const label of await cards.locator('.newsCategory').allTextContents()) expect(label).toBe(availableTopic)
   await page.getByRole('searchbox',{name:'Search news',exact:true}).fill('definitely-no-matching-news-qa')
   await expect(page.locator('.newsResultCount')).toContainText('0 headlines')
   await expect(page.locator('.newsEmpty')).toBeVisible()
