@@ -1,5 +1,14 @@
 # KAPORAL PR #21 release evidence
 
+## Latest acceptance checkpoint — 19 September 2026
+
+- **Revised financial-content authorization recorded.** The owner instructed us to finish the revised approval and authenticated editor/newsletter acceptance, then merge PR #21. That instruction is recorded against the scenario/background copy at `21689fa493305fab9acea9a4dca1fb67ebc25698`. The September 12 first-edition dates remain a historical snapshot, not a current publication approval.
+- **Current application checks pass.** CI `35440138813` passed 77 browser tests with zero failures and one intentional desktop skip, together with the required source/model/ledger/RLS/newsletter/audit/typecheck/build checks. Vercel preview succeeded.
+- **Authenticated acceptance still open.** The exact preview requires Vercel sign-in; secure browser authentication has been requested. The owner editor role is present. The latest September 18 draft includes the revised six calendar explanations and upcoming releases. Zero editions are published or delivered; the test has not been substituted with a database impersonation.
+- **Next transition.** Complete real editor sign-in, create/recheck the current edition, review/approve/publish through Studio, deliver only to the consented owner test recipient, and verify inbox receipt, unsubscribe, suppression and duplicate protection. Then merge the checked PR and verify the production deployment. Owner merge authorization already exists.
+
+This checkpoint supersedes older pending-approval statements in the historical sections below. It does not close an unobserved authenticated test or validate the experimental prediction models.
+
 Application release is held. The owner has authorized completing the work and merging when the required evidence passes. No production application deployment or merge has been performed during this continuation.
 
 ## Current checkpoint — September 19, 2026

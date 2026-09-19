@@ -1,13 +1,13 @@
 # KAPORAL editorial review packet — revised 13 September 2026
 
-**DRAFT — awaiting human editorial approval.** This is the exact scenario text in the PR candidate and the first stored newsletter draft. Preparing this packet does not approve or publish it. Record corrections in the PR or edit the draft in Studio.
+**Scenario and background approval recorded — 19 September 2026.** The owner's instruction to finish revised financial-content approval, complete authenticated acceptance and then merge is recorded against the scenario/background text at PR head `21689fa493305fab9acea9a4dca1fb67ebc25698`. This records the owner's release authorization following the earlier review and requested revisions; it does not claim an additional independent human review. The dated first-edition snapshot below is historical. A current newsletter edition still requires the authenticated Studio review/publication workflow and delivery acceptance.
 
 ## Review decision
 
-- Owner reviewed the initial material and requested plain-English background on 13 September. The revised material still awaits approval in Studio.
-- Scenario decision: pending.
-- Newsletter decision: pending.
-- Review notes: pending.
+- Owner reviewed the initial material, requested plain-English background on 13 September, and instructed us on 19 September to finish revised-content approval and authenticated acceptance, then merge PR #21.
+- Scenario/background decision: approved under that owner instruction, for the exact candidate identified above.
+- Newsletter decision: publication pending the authenticated editor workflow for a current edition. No issue receipt, unsubscribe or suppression acceptance has yet been observed.
+- Review notes: preserve conditional language, distinguish a change from the previous value from a surprise relative to expectations, explain competing effects on gold/crypto and household costs, and leave the final investment decision to the reader. No prediction-validation claim is approved.
 - No personal trade recommendation, probability of profit, licensed consensus value or guaranteed response is claimed.
 - Check the distinction between previous observations and expectations. CPI rising from last month does not, by itself, mean an upside surprise.
 
