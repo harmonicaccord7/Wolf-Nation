@@ -3,7 +3,7 @@ import { Footer } from '../../components/Footer'
 import { createClient } from '../../lib/supabase/server'
 
 export const dynamic='force-dynamic'
-export const metadata={title:'System Status',description:'Operational status, data freshness and provider health for KAPORAL INTELLIGENCE.'}
+export const metadata={alternates:{canonical:'/status'},title:'System Status',description:'Operational status, data freshness and provider health for KAPORAL INTELLIGENCE.'}
 
 type Provider={slug:string;name:string;enabled:boolean;last_success_at:string|null;last_error_at:string|null}
 type Run={job_type:string;status:string;rows_written:number|null;started_at:string|null;completed_at:string|null;message:string|null}
@@ -35,6 +35,6 @@ export default async function StatusPage(){
    <div className="trackTable" role="table" aria-label="External provider status">{(providers as Provider[]??[]).map(p=><article className="trackRow" key={p.slug}><div><small>STATUS</small><b>{providerState(p)}</b></div><div className="trackStatement"><strong>{p.name}</strong><p>{p.slug}</p><small>Last successful ingestion: {fmt(p.last_success_at)}</small></div><div><small>LAST ERROR</small><b>{p.last_error_at?fmt(p.last_error_at):'None recorded'}</b></div></article>)}</div>
    <div className="liveSectionHead"><div><span className="eyebrow">AUTOMATION</span><h2>Scheduled ingestion jobs</h2></div></div>
    <div className="trackTable" role="table" aria-label="Ingestion job status">{jobs.map(({name,run})=><article className="trackRow" key={name}><div><small>STATUS</small><b>{run?.status??'Missing'}</b></div><div className="trackStatement"><strong>{name.replaceAll('_',' ')}</strong><p>{run?`${run.rows_written??0} rows written in latest run`:'No run recorded yet.'}</p><small>Completed: {fmt(run?.completed_at??null)}</small></div><div><small>DETAIL</small><b>{run?.status==='failed'?'Needs attention':'Tracked'}</b></div></article>)}</div>
-   <div className="emptyResearch"><strong>Known external dependencies</strong><p>Bitcoin ETF flow enrichment requires an authorized provider credential. Newsletter email delivery requires a configured transactional email provider and verified sending domain. The target custom domain is <b>www.kaporalintelligence.com</b> and must be purchased and attached before it can become the canonical live hostname.</p></div>
+   <div className="emptyResearch"><strong>Known external dependencies</strong><p>KAPORAL estimates Bitcoin ETF flows from issuer-published observations, with partial fund coverage and the observation date shown on the Bitcoin desk. Newsletter delivery uses a verified sending domain and requires deliberate double opt-in. The canonical live site is <b>www.kaporalintelligence.com</b>.</p></div>
   </section><Footer/></main>
 }

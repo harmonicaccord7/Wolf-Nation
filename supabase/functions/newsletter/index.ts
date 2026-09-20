@@ -1,20 +1,30 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.112.3";
 
 const H = { "Content-Type": "application/json", "Cache-Control": "no-store, max-age=0" };
 const encoder = new TextEncoder();
 const DEFAULT_SITE = "https://www.kaporalintelligence.com";
 const DEFAULT_FROM = "KAPORAL Market Letter <intelligence@kaporalintelligence.com>";
+const ALLOWED_SITE_HOSTS = new Set(["www.kaporalintelligence.com", "kaporalintelligence.com"]);
 
 function json(body: unknown, status = 200) { return new Response(JSON.stringify(body), { status, headers: H }); }
 function validEmail(v: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && v.length <= 254; }
 function randomToken() { const b = new Uint8Array(32); crypto.getRandomValues(b); return Array.from(b, x => x.toString(16).padStart(2, "0")).join(""); }
 async function sha256(value: string) { const digest = await crypto.subtle.digest("SHA-256", encoder.encode(value)); return Array.from(new Uint8Array(digest), x => x.toString(16).padStart(2, "0")).join(""); }
 
+// A bad SITE_URL secret must never send a confirmation link to a preview,
+// localhost or an unencrypted host. Always fall back to the canonical site.
+function confirmationSite() {
+  try {
+    const candidate = new URL((Deno.env.get("SITE_URL") || DEFAULT_SITE).trim());
+    if (candidate.protocol === "https:" && ALLOWED_SITE_HOSTS.has(candidate.hostname.toLowerCase()) && !candidate.username && !candidate.password && !candidate.port) return DEFAULT_SITE;
+  } catch { /* use the canonical fallback below */ }
+  return DEFAULT_SITE;
+}
+
 async function sendConfirmation(email: string, token: string, unsubscribeToken: string) {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   const from = (Deno.env.get("NEWSLETTER_FROM_EMAIL") || DEFAULT_FROM).trim();
-  const site = (Deno.env.get("SITE_URL") || DEFAULT_SITE).replace(/\/$/, "");
+  const site = confirmationSite();
   if (!apiKey) return { sent: false, reason: "resend_api_key_missing" };
   const confirm = `${site}/newsletter/confirm?token=${encodeURIComponent(token)}`;
   const unsubscribe = `${site}/newsletter/unsubscribe?token=${encodeURIComponent(unsubscribeToken)}`;
@@ -25,7 +35,8 @@ async function sendConfirmation(email: string, token: string, unsubscribeToken: 
       from,
       to: [email],
       subject: "Confirm your KAPORAL Market Letter subscription",
-      html: `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#101820"><p style="font-size:12px;letter-spacing:.12em;font-weight:700;color:#9b7938">KAPORAL INTELLIGENCE</p><h1 style="font-size:28px;margin:12px 0">Confirm your Market Letter subscription</h1><p>Confirm that you want to receive the KAPORAL Market Letter.</p><p style="margin:26px 0"><a href="${confirm}" style="background:#d9b76a;color:#101820;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700">Confirm subscription</a></p><p>If you did not request this, no action is required.</p><p style="font-size:12px;color:#666;margin-top:28px">You can unsubscribe at any time: <a href="${unsubscribe}">unsubscribe</a>.</p></div>`
+      html: `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#101820"><p style="font-size:12px;letter-spacing:.12em;font-weight:700;color:#9b7938">KAPORAL INTELLIGENCE</p><h1 style="font-size:28px;margin:12px 0">Confirm your Market Letter subscription</h1><p>Confirm that you want to receive the KAPORAL Market Letter.</p><p style="margin:26px 0"><a href="${confirm}" role="button" style="background:#d9b76a;color:#101820;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700">Confirm subscription</a></p><p style="font-size:13px;color:#4c5960">If the button does not open, copy and paste this secure address into your browser:</p><p style="font-size:12px;line-height:1.6;overflow-wrap:anywhere"><a href="${confirm}">${confirm}</a></p><p>If you did not request this, no action is required.</p><p style="font-size:12px;color:#666;margin-top:28px">You can unsubscribe at any time: <a href="${unsubscribe}">unsubscribe</a>.</p></div>`,
+      text: `Confirm your KAPORAL Market Letter subscription\n\nOpen this secure link to confirm: ${confirm}\n\nIf the link does not open when clicked, copy and paste it into your browser. If you did not request this, no action is required.\n\nUnsubscribe: ${unsubscribe}`
     })
   });
   if (!response.ok) {
@@ -50,22 +61,31 @@ Deno.serve(async (req: Request) => {
       const email = String(body?.email ?? "").trim().toLowerCase();
       const source = String(body?.source ?? "website").slice(0, 80);
       if (!validEmail(email)) return json({ ok: false, error: "invalid_email" }, 400);
-      const { data: existing } = await db.from("newsletter_subscribers").select("status,last_confirmation_sent_at").eq("email", email).maybeSingle();
-      if (existing?.status === "confirmed") return json({ ok: true, status: "already_confirmed" });
-      if (existing?.last_confirmation_sent_at && Date.now() - Date.parse(existing.last_confirmation_sent_at) < 10 * 60e3) return json({ ok: true, status: "pending", delivery: "recently_sent" });
       const confirmToken = randomToken(), unsubscribeToken = randomToken();
       const confirmHash = await sha256(confirmToken), unsubscribeHash = await sha256(unsubscribeToken);
-      const expires = new Date(Date.now() + 48 * 3600e3).toISOString();
-      const { error } = await db.from("newsletter_subscribers").upsert({ email, status: "pending", source, consent_at: new Date().toISOString(), confirm_token_hash: confirmHash, confirm_expires_at: expires, unsubscribe_token_hash: unsubscribeHash, unsubscribed_at: null }, { onConflict: "email" });
+      const { data: initialReservation, error } = await db.rpc("reserve_newsletter_confirmation", {email_input:email,source_input:source,confirm_hash_input:confirmHash,unsubscribe_hash_input:unsubscribeHash,resend_input:body?.resend===true});
       if (error) throw error;
+      // The original production form did not expose a resend button. If a
+      // still-pending address is submitted again, retry through the same
+      // database cooldown instead of silently returning `already_pending`.
+      // The RPC still enforces the ten-minute rate limit and rotates the
+      // token only when a resend is actually allowed.
+      let reservation = initialReservation;
+      if (reservation?.status === "already_pending") {
+        const retry = await db.rpc("reserve_newsletter_confirmation", {email_input:email,source_input:source,confirm_hash_input:confirmHash,unsubscribe_hash_input:unsubscribeHash,resend_input:true});
+        if (retry.error) throw retry.error;
+        reservation = retry.data;
+      }
+      if (!reservation?.send) return json({ok:true,status:reservation?.status,delivery:reservation?.delivery});
       const delivery = await sendConfirmation(email, confirmToken, unsubscribeToken);
-      if (delivery.sent) await db.from("newsletter_subscribers").update({ last_confirmation_sent_at: new Date().toISOString() }).eq("email", email);
+      const recorded = await db.from("newsletter_subscribers").update({ last_confirmation_sent_at: delivery.sent?new Date().toISOString():null,last_delivery_status:delivery.sent?'sent':'failed',last_delivery_error:delivery.sent?null:delivery.reason }).eq("id", reservation.subscriber_id).eq("confirm_token_hash",confirmHash);
+      if (recorded.error) throw recorded.error;
       return json({ ok: true, status: "pending", delivery: delivery.reason });
     }
     if (action === "confirm") {
       const token = String(body?.token ?? ""); if (token.length < 40) return json({ ok: false, status: "invalid" }, 400);
       const hash = await sha256(token), now = new Date().toISOString();
-      const { data, error } = await db.from("newsletter_subscribers").update({ status: "confirmed", confirmed_at: now, confirm_token_hash: null, confirm_expires_at: null }).eq("confirm_token_hash", hash).eq("status", "pending").gt("confirm_expires_at", now).select("id").maybeSingle();
+      const { data, error } = await db.from("newsletter_subscribers").update({ status: "confirmed", confirmed_at: now, unsubscribed_at:null, confirm_token_hash: null, confirm_expires_at: null }).eq("confirm_token_hash", hash).eq("status", "pending").gt("confirm_expires_at", now).select("id").maybeSingle();
       if (error) throw error;
       return json({ ok: Boolean(data), status: data ? "confirmed" : "invalid_or_expired" }, data ? 200 : 400);
     }

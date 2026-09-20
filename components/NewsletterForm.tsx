@@ -1,22 +1,23 @@
 'use client'
-import { FormEvent, useState } from 'react'
-
+import { FormEvent, useId, useState } from 'react'
 export function NewsletterForm(){
- const [status,setStatus]=useState(''); const [busy,setBusy]=useState(false)
- async function submit(e:FormEvent<HTMLFormElement>){
-  e.preventDefault();setBusy(true);setStatus('');const form=e.currentTarget;const email=String(new FormData(form).get('email')||'').trim().toLowerCase()
+ const id=useId(),[status,setStatus]=useState(''),[busy,setBusy]=useState(false),[email,setEmail]=useState(''),[canResend,setCanResend]=useState(false)
+ async function request(resend=false){
+  if(busy)return
+  setBusy(true);setStatus('');setCanResend(false)
   try{
-   const response=await fetch('/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email}),cache:'no-store'})
+   const response=await fetch('/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim().toLowerCase(),resend}),cache:'no-store'})
    const data=await response.json().catch(()=>({}))
-   if(!response.ok||!data?.ok)throw new Error(data?.error||'subscription_failed')
-   if(data.status==='already_confirmed')setStatus('This email is already confirmed for the KAPORAL Market Letter.')
-   else if(data.delivery==='sent'||data.delivery==='recently_sent')setStatus('Check your inbox for the KAPORAL confirmation email. You are not subscribed until you confirm.')
-   else if(data.delivery==='resend_api_key_missing')setStatus('Your request is pending, but newsletter email delivery still needs its Resend key connected to Supabase. Your address is not subscribed yet.')
-   else if(String(data.delivery||'').startsWith('resend_http_'))setStatus('Your request is pending, but the email provider rejected the confirmation message. KAPORAL support is checking the mail configuration; your address is not subscribed yet.')
-   else setStatus('Your request is pending. Confirmation delivery is temporarily unavailable, so your address has not been subscribed.')
-   form.reset()
-  }catch{setStatus('Could not process the newsletter request right now.')}
+   if(!response.ok||!data?.ok)throw new Error('subscription_failed')
+   if(data.status==='already_confirmed')setStatus('This email is already subscribed to the KAPORAL Market Letter. No duplicate subscription was created. Use another email only if you want a separate subscription.')
+   else if(data.status==='delivery_blocked')setStatus('We cannot deliver to this email right now. Please use another address you own or contact support.')
+   else if(data.status==='already_pending'){setStatus('This email already has a pending subscription. Open the confirmation email to finish. No second subscription was created.');setCanResend(true)}
+   else if(data.delivery==='cooldown'){setStatus('A confirmation request was made recently. Check your inbox or wait 10 minutes before requesting another.');setCanResend(true)}
+   else if(data.delivery==='sent'||data.delivery==='recently_sent'){setStatus('Check your inbox for the KAPORAL confirmation email. Click Confirm subscription to finish. No password or website account is needed.');setCanResend(true)}
+   else {setStatus('Confirmation email delivery is temporarily unavailable. You have not been subscribed. Please try again later or contact support.');setCanResend(true)}
+  }catch{setStatus('Could not process your request right now. Please try again. Your subscription has not been confirmed.')}
   finally{setBusy(false)}
  }
- return <div className="newsletterBlock" id="newsletter"><form className="newsletterForm" onSubmit={submit}><input name="email" type="email" placeholder="you@example.com" aria-label="Email address" required/><button className="goldButton" disabled={busy}>{busy?'Joining…':'Join free'}</button></form>{status&&<small className="newsletterStatus" role="status">{status}</small>}<small className="newsletterConsent">Double opt-in: submitting your email creates a pending request only. Subscription starts after confirmation.</small></div>
+ async function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();await request()}
+ return <div className="newsletterBlock" id="newsletter"><p className="newsletterEmailOnly"><b>Email only. No password or account required.</b></p><form className="newsletterForm" aria-label="Newsletter subscription" onSubmit={submit}><label className="srOnly" htmlFor={id}>Email address</label><input id={id} name="email" type="email" placeholder="you@example.com" maxLength={254} inputMode="email" autoComplete="email" autoCapitalize="none" value={email} onChange={event=>{setEmail(event.target.value);setStatus('');setCanResend(false)}} required/><button className="goldButton" disabled={busy}>{busy?'Requesting…':'Subscribe free'}</button></form>{status&&<small className="newsletterStatus" role="status">{status}</small>}{canResend&&<button type="button" className="newsletterResend" disabled={busy} onClick={()=>request(true)}>Resend confirmation email</button>}<small className="newsletterConsent">We send updates only after you confirm your email. You can unsubscribe at any time. Someone entering your address cannot access your inbox or your account.</small></div>
 }
