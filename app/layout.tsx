@@ -23,4 +23,4 @@ export const metadata: Metadata = {
   twitter:{card:'summary_large_image',title:'KAPORAL INTELLIGENCE',description:'Independent global market, business and technology intelligence.'},
   icons:{icon:'/brand/kaporal-intelligence-logo.svg',shortcut:'/brand/kaporal-intelligence-logo.svg',apple:'/brand/kaporal-intelligence-logo.png'}
 };
-export default function RootLayout({children}:Readonly<{children:ReactNode}>){return <html lang="en"><body>{children}</body></html>}
+export default function RootLayout({children}:Readonly<{children:ReactNode}>){return <html lang="en" data-scroll-behavior="smooth"><body>{children}</body></html>}

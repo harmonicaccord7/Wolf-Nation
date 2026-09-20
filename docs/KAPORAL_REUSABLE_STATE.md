@@ -1,10 +1,20 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-09-19. Read the current checkpoint in `docs/RELEASE_GATE_2026-09-12.md` before relying on the historical checklist below.
+Last operational refresh: 2026-09-20. Read the September 20 checkpoint below before relying on historical release holds.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
 
-## September 19 continuation
+## September 20 incremental release
+- The owner explicitly instructed us to merge the tested application now and continue improvements through smaller PRs. This supersedes historical instructions to hold the application for unfinished model research or authenticated edition acceptance. Editorial, access and prediction-validation controls remain enforced.
+- PR #21 merged at `6664cda57a5617a916aef7607956ee5167366d06` after successful candidate CI `35470802049` and Vercel preview. Production deployment `A8cTdUyMf5DN4bhKC7Fcb4bTcPqn` on `kaporal-intelligence_2` succeeded. Live homepage observations, source/chart links, homepage headlines, Daily News search, the email-only newsletter archive and account password controls are visible.
+- A live duplicate-subscription check returned the existing-subscriber message without creating a duplicate. This is not an edition-delivery test: the public archive still has zero published editions.
+- Post-merge CI `35542668386` passed on attempt 2. Its first attempt had one Safari newsletter interaction failure: the trace shows the Subscribe target moving during scrolling and no subscription POST. The focused follow-up adds Next.js smooth-scroll coordination without removing the test, adding retries or changing newsletter logic. Its own checks must pass before merge.
+- The recently signed-in owner's pre-existing confirmed account had a reader role. Its editor role was corrected under the owner's earlier authorization. No authenticated Studio publication or issue-to-inbox/unsubscribe acceptance has been claimed.
+- BTC v0.1.0 has nine immutable forecasts and seven resolved outcomes as of September 20. The historical model did not outperform its benchmark; future models and version-specific complete forward reporting remain separate work. No public validated forecasts are enabled.
+- Follow-up tracker: https://github.com/harmonicaccord7/Wolf-Nation/issues/22. Priorities include Signal Lab reporting, edition acceptance, stronger homepage news/newsletter presentation, Africa depth and paid subscriptions. Current news feeds refresh hourly; source publication dates are distinct from refresh times.
+- Daily continuation is scheduled around 08:00 Europe/Amsterdam from September 21. A scheduled task is not proof of a completed change: record each actual PR, CI result and deployment. Never claim continuous unattended development between runs.
+
+## September 19 continuation (historical)
 - Latest owner instruction closes the revised scenario/background approval under the existing release authorization. Exact content is pinned to `21689fa493305fab9acea9a4dca1fb67ebc25698` in the PR description and editorial packet. A current newsletter edition still needs the real authenticated Studio workflow; this is not an approval to bypass publication controls.
 - Current application candidate `21689fa493305fab9acea9a4dca1fb67ebc25698` passed CI `35440138813`: 77 browser passes, zero failures, one intentional desktop skip, plus the required audit/source/model/ledger/RLS/newsletter/typecheck/build checks. Vercel preview succeeded.
 - Authenticated acceptance is waiting at the protected preview's Vercel sign-in screen. Secure browser sign-in was requested. No editor session, publication, issue send, merge or production application update is claimed. The newest stored draft is September 18 and contains the revised six calendar explanations and upcoming events; generate/recheck a current weekly edition for the consented test recipient in Studio.
