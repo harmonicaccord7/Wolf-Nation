@@ -1,5 +1,13 @@
 # KAPORAL PR #21 release evidence
 
+## September 20 release decision — supersedes historical application holds
+
+The owner explicitly requested releasing the current tested application and continuing model/product improvements through subsequent PRs. PR #21 is merged at `6664cda57a5617a916aef7607956ee5167366d06`; candidate CI `35470802049` passed and Vercel production deployment `A8cTdUyMf5DN4bhKC7Fcb4bTcPqn` succeeded. The remaining research and acceptance tasks are follow-ups, not a claim of 100% completion.
+
+Production checks observed sourced/timestamped homepage data, homepage headlines, working Daily News navigation and search, email-only newsletter signup/archive, password visibility/recovery navigation, and correct duplicate-subscription feedback. No edition has been published or sent. Authenticated edition acceptance, recovery-email completion, Search Console processing, Africa development and paid subscriptions remain tracked in [issue #22](https://github.com/harmonicaccord7/Wolf-Nation/issues/22). Experimental predictions remain private; every published financial edition still requires editorial approval.
+
+Post-merge CI `35542668386` passed on attempt 2. Attempt 1 recorded one failed Safari newsletter interaction: its trace contains an unstable scrolling target and no newsletter POST. A focused follow-up adds Next.js smooth-scroll coordination; it needs its own successful checks before merge. This is a navigation hardening change, not evidence that provider delivery had failed. Earlier records below are retained as historical evidence.
+
 ## Latest acceptance checkpoint — 19 September 2026
 
 - **Revised financial-content authorization recorded.** The owner instructed us to finish the revised approval and authenticated editor/newsletter acceptance, then merge PR #21. That instruction is recorded against the scenario/background copy at `21689fa493305fab9acea9a4dca1fb67ebc25698`. The September 12 first-edition dates remain a historical snapshot, not a current publication approval.
