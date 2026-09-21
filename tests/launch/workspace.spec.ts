@@ -1,5 +1,16 @@
 import { test, expect } from '@playwright/test'
 
+test('version-specific Signal Lab stays private and uncached when signed out', async ({ page }) => {
+  const response = await page.goto('/studio/signals?model=00000000-0000-4000-8000-000000000001')
+  expect(response?.status()).toBe(200)
+  expect(response?.headers()['cache-control']).toContain('no-store')
+  await expect(page.getByRole('heading', { name: 'Private quantitative research workspace' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toHaveAttribute('href', '/auth')
+  await expect(page.getByRole('heading', { name: 'Complete version-specific forward report' })).toHaveCount(0)
+  await expect(page.getByLabel('Model version', { exact: true })).toHaveCount(0)
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
+})
+
 test('event search opens an official FOMC decision with scenarios and a real chart', async ({ page }, info) => {
   await page.goto('/events')
   await page.getByRole('searchbox', { name: 'Find a market event' }).fill('FOMC')

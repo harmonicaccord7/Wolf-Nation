@@ -1,0 +1,6 @@
+.versionForm { margin-bottom: 18px; min-width: 0; }
+.versionForm label { display: block; margin-bottom: 8px; font-weight: 700; }
+.versionForm select { min-height: 44px; max-width: 100%; padding: 9px 12px; border: 1px solid #91a4b2; border-radius: 8px; background: var(--paper); color: var(--ink); }
+.versionForm button { min-height: 44px; margin: 8px 0; }
+.versionForm p { overflow-wrap: anywhere; }
+.versionForm select:focus-visible, .versionForm button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }

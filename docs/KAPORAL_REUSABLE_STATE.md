@@ -1,8 +1,16 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-09-20. Read the September 20 checkpoint below before relying on historical release holds.
+Last operational refresh: 2026-09-21. Read the latest checkpoint and September 20 owner instruction before relying on historical release holds.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
+
+## September 21 focused increment: complete private forward reporting
+- Starting main is `e97cffb2c265ced856fd9c20bfd473ff10fbe0e5` (PR #23). Its post-merge CI `35543268190` and intended Vercel deployment `Aj2PenXqvFgzJ4ohGCWCC7rZfVSN` succeeded. The public site shows sourced observations, homepage headlines and direct Daily News/newsletter access. Anonymous Signal Lab access still shows only the sign-in boundary.
+- This increment replaces mixed-version latest-50 performance with a selected-version, exact-count paginated ledger. Only the row preview remains limited to 50. Partial pages, missing exact counts, count drift, duplicate rows and safety-limit exhaustion explicitly withhold performance.
+- The report reproduces frozen model probabilities/checksums and outcome candle arithmetic, distinguishes pending from missing mature outcomes, flags gaps inside the issued span, and shows version-specific benchmark comparisons, calibration and cost scenarios. Historical simulations stay separate. At least 90 resolved daily outcomes only enables human review, never automatic validation or publication.
+- Read-only production audit at 2026-09-21 06:40 UTC: BTC v0.1.0 has 10 immutable forecasts, 8 resolved outcomes and 2 not yet mature. The new evaluator found no integrity/coverage errors in those rows; the evidence gate remains insufficient. This is not model improvement, predictive validation, a new fit, or a trading recommendation.
+- Synthetic tests exercise 1,107-row pagination, one-to-one PostgREST outcomes, version isolation, cutoffs, frozen benchmarks, corrupt/missing evidence, cost arithmetic, role-gated loading and server rendering. Production ledger rows are not committed as fixtures. No database migration, RLS change, credential change or newsletter send is part of this increment.
+- CI/merge/deployment evidence for this candidate must be recorded in its focused PR and issue #22 after the checked commit passes. Unit tests are not a substitute for real authenticated owner Studio/newsletter-edition acceptance, which remains a separate next step; do not claim it completed.
 
 ## September 20 incremental release
 - The owner explicitly instructed us to merge the tested application now and continue improvements through smaller PRs. This supersedes historical instructions to hold the application for unfinished model research or authenticated edition acceptance. Editorial, access and prediction-validation controls remain enforced.
