@@ -1,5 +1,36 @@
 import { test, expect } from '@playwright/test'
 
+test('homepage puts dated news and the email-only Market Letter within direct reach', async ({ page }, testInfo) => {
+  await page.goto('/')
+  const hero = page.locator('.heroButtons')
+  await expect(hero.getByRole('link', { name: 'Read Daily News', exact: true })).toHaveAttribute('href', '/news')
+  await expect(hero.getByRole('link', { name: 'Get the Market Letter', exact: true })).toHaveAttribute('href', '/newsletter#newsletter-signup')
+  const sources = page.getByRole('region', { name: 'News feed status', exact: true })
+  await expect(sources).toContainText('Latest successful source check:')
+  await expect(sources).toContainText('not that a new story was published')
+  await sources.locator('summary').click()
+  await expect(sources.locator('details')).toHaveAttribute('open', '')
+  await expect(sources).toContainText('latest source publication:')
+  const letter = page.locator('[aria-labelledby="home-market-letter-heading"]')
+  await expect(letter).toContainText('Email only. No password or website account required.')
+  await expect(letter.locator('h3')).toBeVisible()
+  await expect(letter.getByRole('link', { name: 'Browse newsletter editions →', exact: true })).toHaveAttribute('href', '/newsletter')
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1)
+  await testInfo.attach('homepage-market-letter', { body: await letter.screenshot({ scale: 'css' }), contentType: 'image/png' })
+  await letter.getByRole('link', { name: 'Subscribe to the Market Letter →', exact: true }).click()
+  await expect(page).toHaveURL(/\/newsletter#newsletter-signup$/)
+  const form = page.locator('#newsletter-signup').getByRole('form', { name: 'Newsletter subscription' })
+  await expect(form).toBeVisible()
+  await expect(form.locator('input')).toHaveCount(1)
+  await expect(form.getByRole('textbox', { name: 'Email address', exact: true })).toHaveAttribute('type', 'email')
+  await expect(page.locator('input[type="password"]')).toHaveCount(0)
+  // Navigation only: this acceptance never subscribes a real address or sends mail.
+  await page.goto('/')
+  await page.locator('.heroButtons').getByRole('link', { name: 'Read Daily News', exact: true }).click()
+  await expect(page).toHaveURL(/\/news$/)
+  await expect(page.getByRole('region', { name: 'News feed status', exact: true })).toContainText('Latest successful source check:')
+})
+
 for (const path of ['/news', '/learn/market-events', '/auth/forgot-password', '/auth/reset-password']) {
   test(`${path} remains readable on the device`, async ({ page }, testInfo) => {
     const response = await page.goto(path)
