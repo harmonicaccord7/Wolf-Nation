@@ -13,7 +13,7 @@
     "qa:rls": "node scripts/rls-qa.mjs",
     "qa:newsletter": "node --experimental-strip-types scripts/newsletter-qa.mjs",
     "qa:browser": "playwright test",
-    "qa:news-accounts": "node --experimental-strip-types scripts/news-account-qa.mjs"
+    "qa:news-accounts": "node --experimental-strip-types scripts/news-account-qa.mjs && node --experimental-strip-types scripts/homepage-briefing-qa.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",
