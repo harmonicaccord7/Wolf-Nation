@@ -1,13 +1,14 @@
 import {cache} from 'react'
 import {createClient} from '../supabase/server'
-import {type ChartRange,rangeStart} from './chart'
+import {type ChartRange,rangeStart,defaultChartRange} from './chart'
 import {instrumentLabel,sourceFrequency} from './freshness'
 import type {DataPoint} from './intelligence'
-export const getChartSeries=cache(async function getChartSeries(code:string,range:ChartRange='1Y'){
- const db=await createClient(),asOf=new Date().toISOString(),start=rangeStart(range,Date.parse(asOf)),crypto=['BTC','ETH','SOL'].includes(code)
+export const getChartSeries=cache(async function getChartSeries(code:string,requestedRange?:ChartRange){
+ const db=await createClient(),asOf=new Date().toISOString(),crypto=['BTC','ETH','SOL'].includes(code)
  let definition:any
  if(crypto)definition={code,label:`${code} price`,unit:'USD',frequency:'market',source_url:'https://www.coingecko.com/',description:'Provider price snapshots collected approximately every 15 minutes. These are not tick-by-tick quotes.'}
  else{const {data,error}=await db.from('data_series').select('id,code,label,unit,frequency,source_url,description').eq('code',code).eq('is_public',true).maybeSingle();if(error)throw new Error('Series lookup failed');if(!data)return null;definition={...data,label:instrumentLabel(code,data.label),frequency:sourceFrequency(code,data.frequency)}}
+ const range=requestedRange??defaultChartRange(definition.frequency),start=rangeStart(range,Date.parse(asOf))
  const history:DataPoint[]=[];let truncated=false
  for(let offset=0;offset<20000;offset+=1000){
   const timeColumn=crypto?'captured_at':'observed_at'
