@@ -60,7 +60,7 @@ export const deskConfigs: Record<DeskSlug, DeskConfig> = {
     question:'How do global shocks transmit into African markets, businesses, currencies and opportunity?',
     allDeskSeries:true,
     coverage:['Nigeria','South Africa','Egypt','Morocco','Kenya','Ghana','Côte d’Ivoire','Cameroon','WAEMU / BRVM expansion','Fintech, trade and infrastructure'],
-    sourceNote:'The first live macro layer uses World Bank indicators. Exchange, central-bank, sovereign-debt and regional-market feeds are being added provider by provider.'
+    sourceNote:'This desk currently shows stored annual World Bank indicators, not live African market quotes. Reporting years differ and gaps remain visible. Exchange, central-bank, sovereign-debt and regional-market feeds are future coverage, not data already available here.'
   },
   business: {
     slug:'business', eyebrow:'BUSINESS & OPPORTUNITY', title:'From market change to commercial consequence.',

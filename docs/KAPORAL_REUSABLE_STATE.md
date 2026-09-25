@@ -1,8 +1,16 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-09-22. Read the latest checkpoint and September 20 owner instruction before relying on historical release holds.
+Last operational refresh: 2026-09-25. Read the latest checkpoint and September 20 owner instruction before relying on historical release holds.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
+
+## September 25 focused increment: annual chart visibility
+- Starting main is `c4ea2193f15a71cf2bd7182c8d800d558dbc1d1a` (PR #25). Its production CI `35698654612` passed on attempt 1 and intended Vercel deployment `3uT2SVbetJR6LQs1pjfkSevAeo3m` succeeded. The checked candidate `63e7b1be27f2a476250c329ba83c17f8907bc509` passed CI `35698244556` with 83 browser passes and one intentional skip. Homepage briefing access is shipped, not an outstanding implementation.
+- Reproduced a production defect: `/data/cmr_gdp_growth` initially showed no value/zero observations because the default one-year query excluded all 12 stored annual observations. Selecting MAX restored them. This increment defaults annual series to MAX consistently in the server loader, API and chart, preserves explicitly requested short windows and resets chart state when the series changes.
+- Annual chart readouts, accessible tables and desk cards label the reporting year instead of implying a January 1 release time. The Africa matrix links to the stored source and identifies annual-average FX units; coverage text no longer calls annual observations live quotes. No data values or model results are changed.
+- Read-only Supabase audit at 2026-09-25 06:54 UTC: 32 public annual Africa series across eight countries; 31 have observations, Côte d'Ivoire reserves has none, and latest reporting years differ (2024/2025). The newsletter has 16 private drafts and zero published editions. Four news feeds are healthy; publisher times remain separate from check times.
+- The production Studio browser is still signed out. Real owner/editor sign-in, current-edition human approval and consented inbox/unsubscribe/repeat-send acceptance remain required. No authentication bypass, publication, email, migration, credential change or live payment is part of this change.
+- Tests use synthetic annual fixtures and real public read-only browser/API checks. Record this increment's exact candidate CI, merge and production status in the PR and issue #22 after completion. Broader Africa news coverage, paid memberships and future model research remain separate work.
 
 ## September 22 focused increment: homepage briefing access
 - Starting main is `96ec0c7711ad189da6824781d6eb1f9eb8caec1f` (PR #24). Production CI `35571269495` passed and intended Vercel deployment `4MafebHCQJZrdmDQsJWha9d58HeZ` succeeded. PR #24 candidate `321dabfdf2607e6a5eb8492fbfa5c5c800f02f78` passed CI `35570859512` with 80 browser passes and one intentional skip before merging; complete private version-specific reporting is shipped, not model validation.

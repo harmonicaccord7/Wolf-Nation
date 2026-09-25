@@ -1,6 +1,9 @@
 export type ChartRange='30D'|'90D'|'1Y'|'MAX'
 export type ChartPoint={value:number|null;observedAt:string;provider:string;metadata?:Record<string,unknown>}
 export const chartRanges:ChartRange[]=['30D','90D','1Y','MAX']
+// Annual releases often lag by more than a year. A one-year window can hide
+// every valid observation; use available stored history without inventing data.
+export function defaultChartRange(frequency?:string|null):ChartRange{return frequency==='annual'?'MAX':'1Y'}
 export function isChartRange(v:unknown):v is ChartRange{return chartRanges.includes(v as ChartRange)}
 export function rangeStart(range:ChartRange,asOf:number){return range==='MAX'?null:new Date(asOf-({'30D':30,'90D':90,'1Y':365}[range])*86400000).toISOString()}
 export function selectChartPoints(points:ChartPoint[],range:ChartRange,asOf:number){
