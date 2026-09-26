@@ -112,7 +112,7 @@ assert.match(await archive({ ...empty, unavailable: true }), /Published editions
 assert.doesNotMatch(await archive({ ...empty, unavailable: true }), /No newsletter edition has been published yet/)
 
 const { NewsFreshness } = unitModule('../components/news/NewsFreshness.tsx', {
-  '../../lib/news/feeds': { feedIsFresh, newsFeeds }, './NewsCard': { newsDate },
+  '../../lib/news/feeds': { categoryLabels, feedIsFresh, newsFeeds }, './NewsCard': { newsDate },
 })
 const now = Date.parse('2026-09-22T06:30:00Z')
 const currentFeed = { slug: 'fixture', name: 'Synthetic source', source_url: 'https://example.com/feed', category: 'finance', status: 'healthy', last_checked_at: '2026-09-22T06:00:00Z', last_success_at: '2026-09-22T06:00:00Z', latest_published_at: '2026-09-09T13:00:00Z' }
@@ -124,7 +124,20 @@ assert.match(freshHtml, /4\/4 current/)
 assert.match(freshHtml, /datetime="2026-09-22T06:00:00.000Z"/i)
 assert.match(freshHtml, /latest source publication: 9 Sept 2026/)
 assert.match(freshHtml, /not that a new story was published/)
+assert.match(freshHtml, /Publisher activity by topic \(last 7 days\)/)
+assert.match(freshHtml, /data-topic="finance">[\s\S]*No publisher item within the last 7 days is recorded/)
 assert.match(freshHtml, /href="https:\/\/www.ecb.europa.eu\/rss\/press.html"/)
+const activityFeeds = currentFeeds.map(feed => ({
+  ...feed,
+  latest_published_at: feed.category === 'finance' ? '2026-09-21T06:00:00Z' : feed.category === 'business' ? '2026-09-09T13:00:00Z' : feed.category === 'energy' ? null : '2026-09-23T00:00:00Z',
+}))
+const activityHtml = freshness(activityFeeds)
+assert.match(activityHtml, /data-topic="finance">[\s\S]*within the last 7 days/)
+assert.match(activityHtml, /data-topic="business">[\s\S]*No publisher item within the last 7 days is recorded/)
+assert.match(activityHtml, /data-topic="energy">[\s\S]*Publisher date unavailable; topic recency cannot be assessed/)
+assert.match(activityHtml, /data-topic="geopolitics">[\s\S]*Publisher date unavailable; topic recency cannot be assessed/, 'Future publication metadata is not treated as current')
+const delayedGeopolitics = freshness(currentFeeds.map(feed => feed.category === 'geopolitics' ? { ...feed, last_success_at: '2026-09-21T04:30:00Z' } : feed))
+assert.match(delayedGeopolitics, /data-topic="geopolitics">[\s\S]*Source check is delayed, so newer activity may be missing/)
 const missingFeedHtml = freshness(currentFeeds.slice(1))
 assert.match(missingFeedHtml, /3\/4 current/)
 assert.doesNotMatch(missingFeedHtml, /All source checks are current/)
