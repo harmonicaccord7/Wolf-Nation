@@ -2,15 +2,17 @@ import Link from 'next/link'
 import { Header } from '../Header'
 import { Footer } from '../Footer'
 import { getDeskIntelligence } from '../../lib/data/intelligence'
+import { getDailyNews } from '../../lib/news/data'
 import type { DeskSlug } from '../../lib/data/desk-config'
 import { formatCryptoPrice, formatIntelligenceValue, formatObservationDate } from '../../lib/format-intelligence'
 import { MetricCard } from './MetricCard'
 import { OptionsLab } from './OptionsLab'
 import { BitcoinEtfFlowPanel } from './BitcoinEtfFlowPanel'
 import { BusinessFramework,LearnPath,TechnologyFramework } from './DeskGuides'
+import { AfricaNewsBriefing } from '../news/AfricaNewsBriefing'
 
 export async function DeskPage({slug}:{slug:DeskSlug}){
-  const data=await getDeskIntelligence(slug)
+  const [data,africaNews]=await Promise.all([getDeskIntelligence(slug),slug==='africa'?getDailyNews():Promise.resolve(null)])
   const {config,metrics,crypto,articles}=data
   const africaGroups=new Map<string,typeof metrics>()
   if(slug==='africa') for(const m of metrics){ const key=m.countryCode??'Other'; africaGroups.set(key,[...(africaGroups.get(key)??[]),m]) }
@@ -20,6 +22,8 @@ export async function DeskPage({slug}:{slug:DeskSlug}){
   return <main className="intelligencePage">
     <Header/>
     <section className="deskHero"><div className="shell deskHeroGrid"><div><span className="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p>{config.summary}</p><div className="deskHeroActions"><Link className="goldButton" href="/methodology">Research methodology</Link><Link className="glassButton" href="/disclosures">Risk & disclosures</Link></div></div><aside><small>THE QUESTION</small><strong>{config.question}</strong><span>{freshest?`Latest stored observation: ${formatObservationDate(freshest,slug==='africa'?'annual':'market')}`:'This desk is connected; no provider observation is available yet.'}</span></aside></div></section>
+
+    {africaNews&&<AfricaNewsBriefing {...africaNews}/>}
 
     {crypto.length>0&&<section className="shell liveSection"><div className="liveSectionHead"><div><span className="eyebrow">RECENT PRICE SNAPSHOTS</span><h2>Digital-asset snapshot</h2></div><p>Stored server-side with provider and capture time.</p></div><div className="cryptoMetricGrid">{crypto.map(a=><article className="cryptoLiveCard" key={a.symbol}><small>{a.symbol} · {a.provider}</small><strong>{formatCryptoPrice(a.price)}</strong><span className={(a.change24h??0)>=0?'positive':'negative'}>{a.change24h==null?'24h change unavailable':`${a.change24h>=0?'+':''}${a.change24h.toFixed(2)}% / 24h`}</span><time>{formatObservationDate(a.capturedAt,'market')}</time><Link href={`/data/${a.symbol.toLowerCase()}`}>Explore price chart →</Link></article>)}</div></section>}
 

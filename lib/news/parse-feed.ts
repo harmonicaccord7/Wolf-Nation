@@ -2,6 +2,33 @@ import { XMLParser, XMLValidator } from 'fast-xml-parser'
 import type { NewsFeed } from './feeds.ts'
 
 export const MAX_FEED_BYTES = 1_500_000
+const worldBankAfricaRequest = {
+  search: '*',
+  filter: "(contentType eq 'Press Release') and (language eq 'English') and regions/any(r: r eq 'Sub-Saharan Africa')",
+  select: 'title,publishUrl,contentDate,regions,countries',
+  count: true,
+  top: 40,
+  skip: 0,
+  orderby: 'contentDate desc',
+}
+
+export async function fetchNewsSource(feed: NewsFeed, fetcher: typeof fetch = fetch) {
+  if (feed.kind !== 'world-bank-search') return parseNewsFeed(await fetchNewsFeed(feed, fetcher), feed)
+  const response = await fetcher(feed.url, {
+    method: 'POST',
+    redirect: 'manual',
+    headers: {
+      'user-agent': 'KAPORAL-News/1.0 (+https://www.kaporalintelligence.com)',
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(worldBankAfricaRequest),
+    signal: AbortSignal.timeout(20_000),
+  })
+  if (!response.ok) throw new Error('Publisher returned HTTP ' + response.status)
+  return parseWorldBankNews(await readFeedBody(response), feed)
+}
+
 export async function fetchNewsFeed(feed: NewsFeed, fetcher: typeof fetch = fetch) {
   let url = feed.url
   for (let hop = 0; hop < 4; hop++) {
@@ -48,6 +75,27 @@ export function parseNewsFeed(xml: string, feed: NewsFeed, now = Date.now()) {
     // UN Geneva explicitly supplies CEST/CET; JS Date.parse does not recognize them.
     const published = Date.parse(text(item.pubDate ?? item.published ?? item['dc:date']).replace(/\sCEST$/i, ' +0200').replace(/\sCET$/i, ' +0100'))
     if (!title || title.length > 400 || !url || !Number.isFinite(published) || published > now || published < now - 90 * 86400_000) { rejected++; continue }
+    rows.set(url, { feed_slug: feed.slug, title, url, category: feed.category, published_at: new Date(published).toISOString(), last_seen_at: new Date(now).toISOString() })
+  }
+  if (!rows.size) throw new Error('No recent dated headlines passed validation')
+  return { rows: [...rows.values()].sort((a, b) => b.published_at.localeCompare(a.published_at)), rejected }
+}
+
+export function parseWorldBankNews(json: string, feed: NewsFeed, now = Date.now()) {
+  if (new TextEncoder().encode(json).byteLength > MAX_FEED_BYTES) throw new Error('Feed exceeds size limit')
+  let parsed: unknown
+  try { parsed = JSON.parse(json) } catch { throw new Error('Invalid JSON feed') }
+  const entries = Array.isArray((parsed as { value?: unknown })?.value) ? (parsed as { value: unknown[] }).value : null
+  if (!entries) throw new Error('Feed contains no entries')
+  const rows = new Map<string, { feed_slug: string; title: string; url: string; category: NewsFeed['category']; published_at: string; last_seen_at: string }>()
+  let rejected = 0
+  for (const raw of entries.slice(0, 200)) {
+    const item = raw && typeof raw === 'object' ? raw as Record<string, unknown> : {}
+    const title = typeof item.title === 'string' ? item.title.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim() : ''
+    const url = articleUrl(typeof item.publishUrl === 'string' ? item.publishUrl : '', feed)
+    const published = Date.parse(typeof item.contentDate === 'string' ? item.contentDate : '')
+    const regions = Array.isArray(item.regions) ? item.regions.filter((value): value is string => typeof value === 'string') : []
+    if (!regions.includes('Sub-Saharan Africa') || !title || title.length > 400 || !url || !Number.isFinite(published) || published > now || published < now - 90 * 86400_000) { rejected++; continue }
     rows.set(url, { feed_slug: feed.slug, title, url, category: feed.category, published_at: new Date(published).toISOString(), last_seen_at: new Date(now).toISOString() })
   }
   if (!rows.size) throw new Error('No recent dated headlines passed validation')

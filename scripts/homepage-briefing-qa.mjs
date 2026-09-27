@@ -120,13 +120,14 @@ const currentFeeds = newsFeeds.map(source => ({ ...currentFeed, slug: source.slu
 const freshness = (feeds, unavailable = false) => renderToStaticMarkup(React.createElement(NewsFreshness, { feeds, unavailable, now }))
 const freshHtml = freshness(currentFeeds)
 assert.match(freshHtml, /All source checks are current/)
-assert.match(freshHtml, /4\/4 current/)
+assert.match(freshHtml, new RegExp(`${newsFeeds.length}/${newsFeeds.length} current`))
 assert.match(freshHtml, /datetime="2026-09-22T06:00:00.000Z"/i)
 assert.match(freshHtml, /latest source publication: 9 Sept 2026/)
 assert.match(freshHtml, /not that a new story was published/)
 assert.match(freshHtml, /Publisher activity by topic \(last 7 days\)/)
 assert.match(freshHtml, /data-topic="finance">[\s\S]*No publisher item within the last 7 days is recorded/)
 assert.match(freshHtml, /href="https:\/\/www.ecb.europa.eu\/rss\/press.html"/)
+assert.match(freshHtml, /href="https:\/\/www.worldbank.org\/ext\/en\/region\/afr"/)
 const activityFeeds = currentFeeds.map(feed => ({
   ...feed,
   latest_published_at: feed.category === 'finance' ? '2026-09-21T06:00:00Z' : feed.category === 'business' ? '2026-09-09T13:00:00Z' : feed.category === 'energy' ? null : '2026-09-23T00:00:00Z',
@@ -139,9 +140,9 @@ assert.match(activityHtml, /data-topic="geopolitics">[\s\S]*Publisher date unava
 const delayedGeopolitics = freshness(currentFeeds.map(feed => feed.category === 'geopolitics' ? { ...feed, last_success_at: '2026-09-21T04:30:00Z' } : feed))
 assert.match(delayedGeopolitics, /data-topic="geopolitics">[\s\S]*Source check is delayed, so newer activity may be missing/)
 const missingFeedHtml = freshness(currentFeeds.slice(1))
-assert.match(missingFeedHtml, /3\/4 current/)
+assert.match(missingFeedHtml, new RegExp(`${newsFeeds.length - 1}/${newsFeeds.length} current`))
 assert.doesNotMatch(missingFeedHtml, /All source checks are current/)
-assert.match(freshness([...currentFeeds.slice(1), currentFeeds[1], currentFeed]), /3\/4 current/, 'Duplicate or unknown sources cannot cover a missing configured feed')
+assert.match(freshness([...currentFeeds.slice(1), currentFeeds[1], currentFeed]), new RegExp(`${newsFeeds.length - 1}/${newsFeeds.length} current`), 'Duplicate or unknown sources cannot cover a missing configured feed')
 for (const feed of [
   { ...currentFeed, status: 'error' },
   { ...currentFeed, last_success_at: '2026-09-21T04:30:00Z' }, // exactly 26h is not current
@@ -151,7 +152,7 @@ for (const feed of [
 ]) {
   const html = freshness([{ ...feed, slug: newsFeeds[0].slug }])
   assert.doesNotMatch(html, /All source checks are current/)
-  assert.match(html, /0\/4 current/)
+  assert.match(html, new RegExp(`0/${newsFeeds.length} current`))
   assert.match(html, /data-warning="true"/)
 }
 assert.match(freshness([]), /No successful check is assumed/)

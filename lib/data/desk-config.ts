@@ -56,11 +56,11 @@ export const deskConfigs: Record<DeskSlug, DeskConfig> = {
   },
   africa: {
     slug:'africa', eyebrow:'AFRICA INTELLIGENCE', title:'Africa is a first-class intelligence desk.',
-    summary:'Compare growth, inflation, currencies and reserves across major African economies while connecting local conditions to global macro forces.',
+    summary:'Compare growth, inflation, currencies and reserves across major African economies, then follow dated official regional updates without mixing headlines with conclusions.',
     question:'How do global shocks transmit into African markets, businesses, currencies and opportunity?',
     allDeskSeries:true,
     coverage:['Nigeria','South Africa','Egypt','Morocco','Kenya','Ghana','Côte d’Ivoire','Cameroon','WAEMU / BRVM expansion','Fintech, trade and infrastructure'],
-    sourceNote:'This desk currently shows stored annual World Bank indicators, not live African market quotes. Reporting years differ and gaps remain visible. Exchange, central-bank, sovereign-debt and regional-market feeds are future coverage, not data already available here.'
+    sourceNote:'This desk shows stored annual World Bank indicators and World Bank Sub-Saharan Africa press releases, not live African market quotes or complete continental coverage. Reporting years and news dates remain visible. North Africa, local central-bank, sovereign-debt and regional-market feeds remain future coverage.'
   },
   business: {
     slug:'business', eyebrow:'BUSINESS & OPPORTUNITY', title:'From market change to commercial consequence.',

@@ -10,7 +10,7 @@ test('homepage puts dated news and the email-only Market Letter within direct re
   await expect(sources).toContainText('not that a new story was published')
   const topicActivity = sources.locator('.newsTopicActivity')
   await expect(topicActivity.getByRole('heading', { name: 'Publisher activity by topic (last 7 days)', exact: true })).toBeVisible()
-  for (const topic of ['Finance', 'Business & trade', 'Energy', 'Geopolitics']) await expect(topicActivity).toContainText(topic)
+  for (const topic of ['Finance', 'Business & trade', 'Energy', 'Geopolitics', 'Africa']) await expect(topicActivity).toContainText(topic)
   await sources.locator('summary').click()
   await expect(sources.locator('details')).toHaveAttribute('open', '')
   await expect(sources).toContainText('latest source publication:')
@@ -32,6 +32,23 @@ test('homepage puts dated news and the email-only Market Letter within direct re
   await page.locator('.heroButtons').getByRole('link', { name: 'Read Daily News', exact: true }).click()
   await expect(page).toHaveURL(/\/news$/)
   await expect(page.getByRole('region', { name: 'News feed status', exact: true })).toContainText('Latest successful source check:')
+})
+
+test('Africa desk separates official updates from annual indicators and editorial research', async ({page}) => {
+  const response=await page.goto('/africa')
+  expect(response?.status()).toBe(200)
+  const briefing=page.getByRole('region',{name:'What is changing across the region?',exact:true})
+  await expect(briefing).toBeVisible()
+  await expect(briefing).toContainText('World Bank Sub-Saharan Africa press releases')
+  await expect(briefing).toContainText('not a complete Africa newswire')
+  const cards=briefing.locator('.newsCard')
+  if(await cards.count()){
+    await expect(cards.first().locator('time')).toHaveAttribute('datetime',/^20/)
+    await expect(cards.first().getByRole('link').first()).toHaveAttribute('href',/^https:\/\/www\.worldbank\.org\//)
+  }else await expect(briefing.locator('.newsEmpty')).toContainText('Missing coverage is not filled with synthetic news')
+  await expect(page.getByRole('heading',{name:'Country-by-country evidence',exact:true})).toBeVisible()
+  await expect(page.getByRole('heading',{name:'Research only appears after approval.',exact:true})).toBeVisible()
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1)
 })
 
 for (const path of ['/news', '/learn/market-events', '/auth/forgot-password', '/auth/reset-password']) {

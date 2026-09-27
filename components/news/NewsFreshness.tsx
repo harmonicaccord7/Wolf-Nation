@@ -35,9 +35,9 @@ export function NewsFreshness({ feeds, unavailable, now }: { feeds: FeedState[];
       <p>These dates summarize the latest recorded publisher items; a successful feed check does not mean a topic has a new story.</p>
     </div>
     <details id="news-source-checks"><summary>Source checks and coverage ({healthy}/{configured.length} current)</summary>
-      <p>Official finance, trade, energy and UN briefings. This selection does not cover every company or every breaking story. The pocket guides explain possible channels; they do not claim a particular headline has already changed prices.</p>
+      <p>Official finance, trade, energy, UN and African development updates. This selection does not cover every country, company or breaking story. The pocket guides explain possible channels; they do not claim a particular headline has already changed prices.</p>
       {!feeds.length && <p>Source metadata is unavailable. No successful check is assumed.</p>}
-      <ul>{configured.map(({ source, feed }) => <li key={source.slug}><a href={source.url} target="_blank" rel="noreferrer">{source.name} ↗</a> — last successful check: {safeDate(feed?.last_success_at ?? null)}; latest source publication: {safeDate(feed?.latest_published_at ?? null)}. {feed && feedIsFresh(feed, now) ? 'Check current.' : 'Check delayed or unavailable.'}</li>)}</ul>
+      <ul>{configured.map(({ source, feed }) => <li key={source.slug}><a href={source.publicUrl ?? source.url} target="_blank" rel="noreferrer">{source.name} ↗</a> — last successful check: {safeDate(feed?.last_success_at ?? null)}; latest source publication: {safeDate(feed?.latest_published_at ?? null)}. {feed && feedIsFresh(feed, now) ? 'Check current.' : 'Check delayed or unavailable.'}</li>)}</ul>
     </details>
   </section>
 }

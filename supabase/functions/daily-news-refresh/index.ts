@@ -1,6 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.112.3'
 import { newsFeeds } from '../../../lib/news/feeds.ts'
-import { parseNewsFeed, fetchNewsFeed } from '../../../lib/news/parse-feed.ts'
+import { fetchNewsSource } from '../../../lib/news/parse-feed.ts'
 
 const headers = { 'content-type': 'application/json', 'cache-control': 'no-store' }
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers })
@@ -14,7 +14,7 @@ Deno.serve(async request => {
     const started = new Date().toISOString()
     const run = await db.from('ingestion_runs').insert({ job_type: 'daily-news:' + feed.slug, status: 'running', started_at: started }).select('id').single()
     try {
-      const { rows, rejected } = parseNewsFeed(await fetchNewsFeed(feed), feed)
+      const { rows, rejected } = await fetchNewsSource(feed)
       const written = await db.from('daily_news').upsert(rows, { onConflict: 'url' })
       if (written.error) throw new Error('Headline storage failed')
       const completed = new Date().toISOString()
