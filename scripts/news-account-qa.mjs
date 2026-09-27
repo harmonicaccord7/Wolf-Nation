@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync, readdirSync } from 'node:fs'
 import { PGlite } from '@electric-sql/pglite'
-import { parseNewsFeed, articleUrl, readFeedBody, fetchNewsFeed } from '../lib/news/parse-feed.ts'
+import { parseNewsFeed, parseWorldBankNews, articleUrl, readFeedBody, fetchNewsFeed, fetchNewsSource } from '../lib/news/parse-feed.ts'
 import { newsFeeds, feedIsFresh } from '../lib/news/feeds.ts'
 import { newPasswordError, safeAuthNext } from '../lib/auth/forms.ts'
 const now=Date.parse('2026-09-13T12:00:00Z'),feed=newsFeeds[0]
@@ -20,6 +20,23 @@ let redirects=0
 assert.equal(await fetchNewsFeed(feed,async()=>++redirects===1?new Response(null,{status:302,headers:{location:'/rss/new'}}):new Response(rss(item()))),rss(item()))
 await assert.rejects(()=>fetchNewsFeed(feed,async()=>new Response(null,{status:302,headers:{location:'https://127.0.0.1/private'}})),/Unapproved/)
 await assert.rejects(()=>readFeedBody(new Response('x'.repeat(1500001))))
+const worldBankFeed=newsFeeds.find(source=>source.slug==='world-bank-africa')
+assert.ok(worldBankFeed)
+const worldBankFixture=JSON.stringify({value:[
+  {title:'Africa investment update',publishUrl:'https://www.worldbank.org/en/news/press-release/2026/09/12/africa-investment',contentDate:'2026-09-12T09:00:00Z',regions:['Sub-Saharan Africa']},
+  {title:'Wrong region',publishUrl:'https://www.worldbank.org/en/news/press-release/2026/09/12/wrong-region',contentDate:'2026-09-12T08:00:00Z',regions:['Europe and Central Asia']},
+  {title:'Wrong host',publishUrl:'https://example.com/news',contentDate:'2026-09-12T07:00:00Z',regions:['Sub-Saharan Africa']},
+]})
+const worldBankParsed=parseWorldBankNews(worldBankFixture,worldBankFeed,now)
+assert.equal(worldBankParsed.rows.length,1)
+assert.equal(worldBankParsed.rows[0].category,'africa')
+assert.equal(worldBankParsed.rows[0].title,'Africa investment update')
+let worldBankRequest
+const fetchedWorldBank=await fetchNewsSource(worldBankFeed,async(_url,options)=>{worldBankRequest=options;return new Response(JSON.stringify({value:[{title:'Current Africa update',publishUrl:'https://www.worldbank.org/en/news/press-release/current-africa-update',contentDate:new Date(Date.now()-3600_000).toISOString(),regions:['Sub-Saharan Africa']}]}),{headers:{'content-type':'application/json'}})})
+assert.equal(fetchedWorldBank.rows.length,1)
+assert.equal(worldBankRequest.method,'POST')
+assert.match(worldBankRequest.body,/Sub-Saharan Africa/)
+for(const invalid of ['not json',JSON.stringify({}),JSON.stringify({value:[{title:'Other region',publishUrl:'https://www.worldbank.org/en/news/x',contentDate:'2026-09-12T08:00:00Z',regions:['South Asia']}]})])assert.throws(()=>parseWorldBankNews(invalid,worldBankFeed,now))
 assert.equal(feedIsFresh({status:'healthy',last_success_at:'2026-09-13T10:00:00Z'},now),true)
 assert.equal(feedIsFresh({status:'error',last_success_at:'2026-09-13T10:00:00Z'},now),false)
 assert.equal(feedIsFresh({status:'healthy',last_success_at:'2026-09-11T10:00:00Z'},now),false)
@@ -30,9 +47,10 @@ assert.equal(safeAuthNext('/auth/reset-password'),'/auth/reset-password')
 const db=new PGlite()
 await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public to anon,authenticated,service_role;
 create table public.newsletter_subscribers(id uuid primary key default gen_random_uuid(),email text not null unique,status text not null,source text,consent_at timestamptz,unsubscribed_at timestamptz,created_at timestamptz not null default now(),confirm_token_hash text,confirm_expires_at timestamptz,confirmed_at timestamptz,unsubscribe_token_hash text,last_confirmation_sent_at timestamptz,last_delivery_status text,last_delivery_error text,last_delivery_attempt_at timestamptz);`)
-for(const suffix of ['daily_source_news.sql','newsletter_identity_protection.sql'])await db.exec(readFileSync('supabase/migrations/'+readdirSync('supabase/migrations').find(name=>name.endsWith(suffix)),'utf8'))
+for(const suffix of ['daily_source_news.sql','add_world_bank_africa_news.sql','newsletter_identity_protection.sql'])await db.exec(readFileSync('supabase/migrations/'+readdirSync('supabase/migrations').find(name=>name.endsWith(suffix)),'utf8'))
 await db.exec(`insert into public.daily_news(feed_slug,title,url,category,published_at) values('ecb','Visible test','https://www.ecb.europa.eu/visible','finance',now()-interval '1 day'),('ecb','Future test','https://www.ecb.europa.eu/future','finance',now()+interval '1 day');set role anon;`)
 assert.equal((await db.query('select * from public.daily_news')).rows.length,1)
+assert.equal((await db.query("select count(*)::int as n from public.news_feeds where category='africa'")).rows[0].n,1)
 await assert.rejects(()=>db.exec("insert into public.daily_news(feed_slug,title,url,category,published_at) values('ecb','No','https://www.ecb.europa.eu/no','finance',now())"))
 await assert.rejects(()=>db.query('select public.reserve_newsletter_confirmation($1,$2,$3,$4,$5)',['test@example.com','qa','a'.repeat(64),'b'.repeat(64),false]))
 await db.exec('reset role')

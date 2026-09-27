@@ -2,3 +2,4 @@
 .countryMetric small{font-size:.78rem;color:#53626c;line-height:1.5;overflow-wrap:anywhere}
 .countryMetric>a{display:inline-flex;align-items:center;min-height:44px;margin-right:18px;color:#235873;text-decoration:underline}
 .countryMetric>a:focus-visible{outline:3px solid #185c78;outline-offset:3px}
+.africaNewsBriefing{padding-bottom:18px}.africaNewsStatus{border:1px solid #b9cbc5;border-left:4px solid #2f7664;border-radius:14px;background:#edf5f1;padding:18px 22px;margin-bottom:22px;line-height:1.6}.africaNewsStatus[data-warning=true]{border-color:#c7a76d;background:#fff7e8}.africaNewsStatus p{margin:0 0 8px}.africaNewsStatus a{color:#235873;text-decoration:underline;text-underline-offset:3px}.africaNewsBriefing a:focus-visible{outline:3px solid #185c78;outline-offset:4px}
