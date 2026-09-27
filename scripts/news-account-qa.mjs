@@ -4,6 +4,10 @@ import { PGlite } from '@electric-sql/pglite'
 import { parseNewsFeed, parseWorldBankNews, articleUrl, readFeedBody, fetchNewsFeed, fetchNewsSource } from '../lib/news/parse-feed.ts'
 import { newsFeeds, feedIsFresh } from '../lib/news/feeds.ts'
 import { newPasswordError, safeAuthNext } from '../lib/auth/forms.ts'
+const newsWorker=readFileSync('supabase/functions/daily-news-refresh/index.ts','utf8')
+assert.match(newsWorker,/status:\s*'success'/)
+assert.doesNotMatch(newsWorker,/status:\s*'completed'/)
+assert.match(newsWorker,/Ingestion audit completion failed/)
 const now=Date.parse('2026-09-13T12:00:00Z'),feed=newsFeeds[0]
 const item=(title='Test headline',url='https://www.ecb.europa.eu/press/test.html',date='Sat, 12 Sep 2026 10:00:00 GMT')=>`<item><title>${title}</title><link>${url}</link><pubDate>${date}</pubDate></item>`
 const rss=items=>`<?xml version="1.0"?><rss version="2.0"><channel>${items}</channel></rss>`
