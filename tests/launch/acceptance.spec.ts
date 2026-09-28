@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 const canonicalOrigin = 'https://www.kaporalintelligence.com'
-const routes = ['/', '/bitcoin', '/macro', '/contact', '/auth', '/search', '/data/btc_etf_flow', '/events', '/newsletter', '/data/btc']
+const routes = ['/', '/bitcoin', '/macro', '/contact', '/auth', '/search', '/data/btc_etf_flow', '/events', '/newsletter', '/status', '/data/btc']
 
 for (const route of routes) {
   test(`${route} renders within the viewport`, async ({ page }, testInfo) => {
@@ -80,6 +80,22 @@ test('public search accepts a query and returns public results', async ({ page }
   await expect(page.locator('.searchResults h2')).toHaveText('Results for “Bitcoin”')
   await expect(page.locator('.searchResults .researchCard').first()).toBeVisible()
   await testInfo.attach('search-query-results', { body: await page.locator('.searchResults').screenshot({ scale: 'css' }), contentType: 'image/png' })
+})
+
+test('public status reports safe Daily News source health', async ({ page }, testInfo) => {
+  await page.goto('/status')
+  const summary = page.locator('.accountabilityStats')
+  await expect(summary).toContainText('DAILY NEWS CHECKS')
+  await expect(summary.locator('article').filter({ hasText: 'DAILY NEWS CHECKS' }).locator('strong')).toHaveText(/^\d+\/5$/)
+  const table = page.getByRole('table', { name: 'Daily News source status' })
+  await expect(table.locator('.trackRow')).toHaveCount(5)
+  await expect(table).toContainText('European Central Bank')
+  await expect(table).toContainText('World Bank — Sub-Saharan Africa')
+  await expect(table).toContainText('Last successful source check:')
+  await expect(table).toContainText('LATEST PUBLISHER ITEM')
+  await expect(page.getByText('Detailed ingestion logs remain restricted to authorised editors under row-level security.')).toBeVisible()
+  await expect(page.locator('main')).not.toContainText('No run recorded yet.')
+  await testInfo.attach('daily-news-source-health', { body: await table.screenshot({ scale: 'css' }), contentType: 'image/png' })
 })
 
 test('phone navigation opens, closes, navigates, and survives rotation', async ({ page, isMobile }, testInfo) => {
