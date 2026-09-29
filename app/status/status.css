@@ -1,0 +1,9 @@
+.statusNotes {
+  display: grid;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.statusNotes .emptyResearch {
+  padding-block: 28px;
+}
