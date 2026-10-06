@@ -98,6 +98,23 @@ test('public status reports safe Daily News source health', async ({ page }, tes
   await testInfo.attach('daily-news-source-health', { body: await table.screenshot({ scale: 'css' }), contentType: 'image/png' })
 })
 
+test('public health API reports public source checks without private audit fiction', async ({ request }) => {
+  const response = await request.get('/api/health')
+  expect([200, 503]).toContain(response.status())
+  expect(response.headers()['cache-control']).toContain('no-store')
+
+  const health = await response.json()
+  expect(health.schemaVersion).toBe(2)
+  expect(response.status()).toBe(health.status === 'ok' ? 200 : 503)
+  expect(health.dailyNews.currentSources).toBe(5)
+  expect(health.dailyNews.configuredSources).toBe(5)
+  expect(health.dailyNews.sources).toHaveLength(5)
+  expect(health.dailyNews.sources.map((source: { status: string }) => source.status)).toEqual(Array(5).fill('current'))
+  expect(health.ingestionDiagnostics).toEqual({ visibility: 'editor-only', exposed: false })
+  expect(health).not.toHaveProperty('providers')
+  expect(health).not.toHaveProperty('jobs')
+})
+
 test('phone navigation opens, closes, navigates, and survives rotation', async ({ page, isMobile }, testInfo) => {
   test.skip(!isMobile, 'Phone navigation is hidden on desktop')
   await page.goto('/')

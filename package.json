@@ -13,6 +13,7 @@
     "qa:btc24": "node --experimental-strip-types scripts/btc24-qa.mjs && node scripts/btc24-ledger-qa.mjs && node --experimental-strip-types scripts/btc24-forward-qa.mjs && node --experimental-strip-types scripts/signal-lab-qa.mjs",
     "qa:rls": "node scripts/rls-qa.mjs",
     "qa:newsletter": "node --experimental-strip-types scripts/newsletter-qa.mjs",
+    "qa:health": "node --experimental-strip-types scripts/health-qa.mjs",
     "qa:browser": "playwright test",
     "qa:news-accounts": "node --experimental-strip-types scripts/news-account-qa.mjs && node --experimental-strip-types scripts/homepage-briefing-qa.mjs"
   },
@@ -20,7 +21,7 @@
     "@supabase/ssr": "0.12.4",
     "@supabase/supabase-js": "2.112.3",
     "fast-xml-parser": "5.11.1",
-    "next": "16.3.4",
+    "next": "16.3.8",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
