@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { newsFeeds } from '../../lib/news/feeds'
 
 const canonicalOrigin = 'https://www.kaporalintelligence.com'
 const routes = ['/', '/bitcoin', '/macro', '/contact', '/auth', '/search', '/data/btc_etf_flow', '/events', '/newsletter', '/status', '/data/btc']
@@ -86,11 +87,12 @@ test('public status reports safe Daily News source health', async ({ page }, tes
   await page.goto('/status')
   const summary = page.locator('.accountabilityStats')
   await expect(summary).toContainText('DAILY NEWS CHECKS')
-  await expect(summary.locator('article').filter({ hasText: 'DAILY NEWS CHECKS' }).locator('strong')).toHaveText(/^\d+\/5$/)
+  await expect(summary.locator('article').filter({ hasText: 'DAILY NEWS CHECKS' }).locator('strong')).toHaveText(new RegExp(`^\\d+/${newsFeeds.length}$`))
   const table = page.getByRole('table', { name: 'Daily News source status' })
-  await expect(table.locator('.trackRow')).toHaveCount(5)
+  await expect(table.locator('.trackRow')).toHaveCount(newsFeeds.length)
   await expect(table).toContainText('European Central Bank')
   await expect(table).toContainText('World Bank — Sub-Saharan Africa')
+  await expect(table).toContainText('African Development Bank')
   await expect(table).toContainText('Last successful source check:')
   await expect(table).toContainText('LATEST PUBLISHER ITEM')
   await expect(page.getByText('Detailed ingestion logs remain restricted to authorised editors under row-level security.')).toBeVisible()
@@ -106,10 +108,17 @@ test('public health API reports public source checks without private audit ficti
   const health = await response.json()
   expect(health.schemaVersion).toBe(2)
   expect(response.status()).toBe(health.status === 'ok' ? 200 : 503)
-  expect(health.dailyNews.currentSources).toBe(5)
-  expect(health.dailyNews.configuredSources).toBe(5)
-  expect(health.dailyNews.sources).toHaveLength(5)
-  expect(health.dailyNews.sources.map((source: { status: string }) => source.status)).toEqual(Array(5).fill('current'))
+  expect(health.database).toBe('connected')
+  expect(health.dailyNews.configuredSources).toBe(newsFeeds.length)
+  expect(health.dailyNews.sources).toHaveLength(newsFeeds.length)
+  expect(health.dailyNews.sources.map((source: { slug: string }) => source.slug)).toEqual(newsFeeds.map(source => source.slug))
+  // A new source remains missing/pending until its first real ingestion. Verify
+  // the live health contract; the rollout separately verifies all sources current.
+  const current=health.dailyNews.sources.filter((source: { status: string })=>source.status==='current').length
+  for(const source of health.dailyNews.sources) expect(['current','error','stale','pending','missing']).toContain(source.status)
+  expect(health.dailyNews.currentSources).toBe(current)
+  expect(health.dailyNews.status).toBe(current===newsFeeds.length?'current':'degraded')
+  expect(health.status).toBe(current===newsFeeds.length&&health.marketFeed==='fresh'?'ok':'degraded')
   expect(health.ingestionDiagnostics).toEqual({ visibility: 'editor-only', exposed: false })
   expect(health).not.toHaveProperty('providers')
   expect(health).not.toHaveProperty('jobs')

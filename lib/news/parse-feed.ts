@@ -48,6 +48,14 @@ export async function fetchNewsFeed(feed: NewsFeed, fetcher: typeof fetch = fetc
 const parser = new XMLParser({ ignoreAttributes: false, parseTagValue: false, trimValues: true, processEntities: true, htmlEntities: false, ignoreDeclaration: true })
 const list = (value: unknown): any[] => value == null ? [] : Array.isArray(value) ? value : [value]
 const text = (value: any): string => typeof value === 'string' ? value : typeof value?.['#text'] === 'string' ? value['#text'] : ''
+// Some publisher titles contain HTML numeric entities inside escaped XML text.
+// Decode characters only, then discard markup; never persist article HTML.
+function headlineText(value: string) {
+  return value.replace(/&#(x[0-9a-f]+|\d+);/gi, (entity, digits: string) => {
+    const code = digits.toLowerCase().startsWith('x') ? parseInt(digits.slice(1), 16) : Number(digits)
+    return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff) ? String.fromCodePoint(code) : entity
+  }).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
+}
 
 export function articleUrl(value: string, feed: NewsFeed): string | null {
   try {
@@ -68,7 +76,7 @@ export function parseNewsFeed(xml: string, feed: NewsFeed, now = Date.now()) {
   const rows = new Map<string, { feed_slug: string; title: string; url: string; category: NewsFeed['category']; published_at: string; last_seen_at: string }>()
   let rejected = 0
   for (const item of list(entries).slice(0, 200)) {
-    const title = text(item.title).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
+    const title = headlineText(text(item.title))
     const link = list(item.link).find(link => typeof link === 'string' || !link?.['@_rel'] || link['@_rel'] === 'alternate')
     const url = articleUrl(text(link) || link?.['@_href'] || '', feed)
     // A revised/update date is not invented as the publication date.
@@ -91,7 +99,7 @@ export function parseWorldBankNews(json: string, feed: NewsFeed, now = Date.now(
   let rejected = 0
   for (const raw of entries.slice(0, 200)) {
     const item = raw && typeof raw === 'object' ? raw as Record<string, unknown> : {}
-    const title = typeof item.title === 'string' ? item.title.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim() : ''
+    const title = typeof item.title === 'string' ? headlineText(item.title) : ''
     const url = articleUrl(typeof item.publishUrl === 'string' ? item.publishUrl : '', feed)
     const published = Date.parse(typeof item.contentDate === 'string' ? item.contentDate : '')
     const regions = Array.isArray(item.regions) ? item.regions.filter((value): value is string => typeof value === 'string') : []

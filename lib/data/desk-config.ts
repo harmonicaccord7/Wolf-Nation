@@ -60,7 +60,7 @@ export const deskConfigs: Record<DeskSlug, DeskConfig> = {
     question:'How do global shocks transmit into African markets, businesses, currencies and opportunity?',
     allDeskSeries:true,
     coverage:['Nigeria','South Africa','Egypt','Morocco','Kenya','Ghana','Côte d’Ivoire','Cameroon','WAEMU / BRVM expansion','Fintech, trade and infrastructure'],
-    sourceNote:'This desk shows stored annual World Bank indicators and World Bank Sub-Saharan Africa press releases, not live African market quotes or complete continental coverage. Reporting years and news dates remain visible. North Africa, local central-bank, sovereign-debt and regional-market feeds remain future coverage.'
+    sourceNote:'This desk shows stored annual World Bank indicators, World Bank Sub-Saharan Africa press releases and African Development Bank News & Events, including North Africa updates. It does not provide live African market quotes or complete continental coverage. Reporting years and news dates remain visible. Local central-bank, sovereign-debt and regional-market feeds remain future coverage.'
   },
   business: {
     slug:'business', eyebrow:'BUSINESS & OPPORTUNITY', title:'From market change to commercial consequence.',
