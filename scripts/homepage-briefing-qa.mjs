@@ -76,7 +76,7 @@ for (const f of [fixture([], { error: true }), fixture([], { reject: true }), fi
 }
 
 const Link = { default: ({ children, ...props }) => React.createElement('a', props, children) }
-const { newsDate } = unitModule('../components/news/NewsCard.tsx', { 'next/link': Link, '../../lib/news/feeds': { categoryLabels, pocketContexts } })
+const { newsDate, NewsCard } = unitModule('../components/news/NewsCard.tsx', { 'next/link': Link, '../../lib/news/feeds': { categoryLabels, pocketContexts } })
 async function preview(result) {
   const { NewsletterPreview } = unitModule('../components/NewsletterPreview.tsx', {
     'next/link': Link,
@@ -128,6 +128,7 @@ assert.match(freshHtml, /Publisher activity by topic \(last 7 days\)/)
 assert.match(freshHtml, /data-topic="finance">[\s\S]*No publisher item within the last 7 days is recorded/)
 assert.match(freshHtml, /href="https:\/\/www.ecb.europa.eu\/rss\/press.html"/)
 assert.match(freshHtml, /href="https:\/\/www.worldbank.org\/ext\/en\/region\/afr"/)
+assert.match(freshHtml, /href="https:\/\/www.afdb.org\/en\/news-and-events"/)
 const activityFeeds = currentFeeds.map(feed => ({
   ...feed,
   latest_published_at: feed.category === 'finance' ? '2026-09-21T06:00:00Z' : feed.category === 'business' ? '2026-09-09T13:00:00Z' : feed.category === 'energy' ? null : '2026-09-23T00:00:00Z',
@@ -158,4 +159,27 @@ for (const feed of [
 assert.match(freshness([]), /No successful check is assumed/)
 assert.doesNotMatch(freshness([]), /All source checks are current/)
 assert.match(freshness([currentFeed], true), /News is temporarily unavailable/)
+const { AfricaNewsBriefing } = unitModule('../components/news/AfricaNewsBriefing.tsx', {
+  'next/link': Link, '../../lib/news/feeds': { feedIsFresh, newsFeeds }, './NewsCard': { newsDate, NewsCard },
+})
+const africaHeadline=(slug,index)=>({id:slug+index,feed_slug:slug,category:'africa',title:`Synthetic ${slug} ${index}`,url:`https://www.${slug==='afdb-africa'?'afdb':'worldbank'}.org/qa/${index}`,published_at:`2026-09-${String(21-index).padStart(2,'0')}T00:00:00Z`})
+const headlines=[...Array.from({length:10},(_,i)=>africaHeadline('afdb-africa',i)),...Array.from({length:4},(_,i)=>africaHeadline('world-bank-africa',i)),africaHeadline('unknown',0)]
+const africaHtml=(feeds=currentFeeds,unavailable=false,items=headlines)=>renderToStaticMarkup(React.createElement(AfricaNewsBriefing,{headlines:items,feeds,unavailable,viewedAt:new Date(now).toISOString()}))
+const paired=africaHtml()
+assert.equal((paired.match(/class="newsCard"/g)??[]).length,6)
+assert.equal((paired.match(/Synthetic afdb-africa/g)??[]).length,3)
+assert.equal((paired.match(/Synthetic world-bank-africa/g)??[]).length,3)
+assert.doesNotMatch(paired,/Synthetic unknown/)
+assert.match(paired,/North Africa updates/)
+assert.match(paired,/local central banks and regional markets remain coverage gaps/)
+assert.match(paired,/data-source="afdb-africa" data-warning="false"/)
+assert.match(paired,/data-source="world-bank-africa" data-warning="false"/)
+assert.match(paired,/href="https:\/\/www.afdb.org\/qa\/0"[^>]*>Synthetic afdb-africa 0/)
+assert.match(paired,/African Development Bank/)
+const independent=africaHtml(currentFeeds.map(feed=>feed.slug==='world-bank-africa'?{...feed,status:'error'}:feed))
+assert.match(independent,/data-source="world-bank-africa" data-warning="true"/)
+assert.match(independent,/data-source="afdb-africa" data-warning="false"/)
+assert.match(africaHtml([]),/has not completed its first recorded check/)
+assert.match(africaHtml([],true),/Africa source status is temporarily unavailable/)
+assert.match(africaHtml(currentFeeds,false,[]),/Missing coverage is not filled with synthetic news/)
 console.log('Homepage briefing QA passed: public-only metadata, bounded query, future/draft exclusion, safe archive failures, encoded edition links, email-only entry and distinct source/publication freshness.')

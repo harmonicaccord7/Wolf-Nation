@@ -24,6 +24,14 @@ export const newsFeeds: NewsFeed[] = [
     articleHosts: ['www.worldbank.org'],
     kind: 'world-bank-search',
   },
+  {
+    slug: 'afdb-africa',
+    name: 'African Development Bank',
+    url: 'https://www.afdb.org/en/news-and-events/rss',
+    publicUrl: 'https://www.afdb.org/en/news-and-events',
+    category: 'africa',
+    articleHosts: ['www.afdb.org'],
+  },
 ]
 
 export const categoryLabels: Record<NewsCategory, string> = { finance: 'Finance', business: 'Business & trade', energy: 'Energy', geopolitics: 'Geopolitics', africa: 'Africa' }
