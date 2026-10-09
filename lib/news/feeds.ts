@@ -7,6 +7,7 @@ export type NewsFeed = {
   category: NewsCategory
   articleHosts: string[]
   kind?: 'rss' | 'world-bank-search'
+  worldBankScope?: { field: 'regions' | 'countries'; values: string[] }
 }
 
 // Only publisher-provided feeds. No user-supplied fetch targets or copied articles.
@@ -23,14 +24,18 @@ export const newsFeeds: NewsFeed[] = [
     category: 'africa',
     articleHosts: ['www.worldbank.org'],
     kind: 'world-bank-search',
+    worldBankScope: { field: 'regions', values: ['Sub-Saharan Africa'] },
   },
   {
-    slug: 'afdb-africa',
-    name: 'African Development Bank',
-    url: 'https://www.afdb.org/en/news-and-events/rss',
-    publicUrl: 'https://www.afdb.org/en/news-and-events',
+    slug: 'world-bank-north-africa',
+    name: 'World Bank — North Africa',
+    url: 'https://webapi.worldbank.org/aemsite/everything/search',
+    publicUrl: 'https://www.worldbank.org/ext/en/region/mena',
     category: 'africa',
-    articleHosts: ['www.afdb.org'],
+    articleHosts: ['www.worldbank.org'],
+    kind: 'world-bank-search',
+    // Publisher search tags use "Egypt", not the WDI label "Egypt, Arab Rep.".
+    worldBankScope: { field: 'countries', values: ['Algeria', 'Egypt', 'Libya', 'Morocco', 'Tunisia'] },
   },
 ]
 
