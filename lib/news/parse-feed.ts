@@ -2,14 +2,24 @@ import { XMLParser, XMLValidator } from 'fast-xml-parser'
 import type { NewsFeed } from './feeds.ts'
 
 export const MAX_FEED_BYTES = 1_500_000
-const worldBankAfricaRequest = {
-  search: '*',
-  filter: "(contentType eq 'Press Release') and (language eq 'English') and regions/any(r: r eq 'Sub-Saharan Africa')",
-  select: 'title,publishUrl,contentDate,regions,countries',
-  count: true,
-  top: 40,
-  skip: 0,
-  orderby: 'contentDate desc',
+function worldBankScope(feed: NewsFeed) {
+  const scope = feed.worldBankScope
+  if (feed.kind !== 'world-bank-search' || !scope || !['regions', 'countries'].includes(scope.field) || !scope.values.length || scope.values.some(value => !value.trim())) throw new Error('World Bank geographic scope is required')
+  return scope
+}
+
+function worldBankRequest(feed: NewsFeed) {
+  const scope = worldBankScope(feed)
+  const terms = scope.values.map(value => "s eq '" + value.replace(/'/g, "''") + "'").join(' or ')
+  return {
+    search: '*',
+    filter: "(contentType eq 'Press Release') and (language eq 'English') and " + scope.field + '/any(s: ' + terms + ')',
+    select: 'title,publishUrl,contentDate,regions,countries',
+    count: true,
+    top: 40,
+    skip: 0,
+    orderby: 'contentDate desc',
+  }
 }
 
 export async function fetchNewsSource(feed: NewsFeed, fetcher: typeof fetch = fetch) {
@@ -22,7 +32,7 @@ export async function fetchNewsSource(feed: NewsFeed, fetcher: typeof fetch = fe
       accept: 'application/json',
       'content-type': 'application/json',
     },
-    body: JSON.stringify(worldBankAfricaRequest),
+    body: JSON.stringify(worldBankRequest(feed)),
     signal: AbortSignal.timeout(20_000),
   })
   if (!response.ok) throw new Error('Publisher returned HTTP ' + response.status)
@@ -90,6 +100,7 @@ export function parseNewsFeed(xml: string, feed: NewsFeed, now = Date.now()) {
 }
 
 export function parseWorldBankNews(json: string, feed: NewsFeed, now = Date.now()) {
+  const scope = worldBankScope(feed)
   if (new TextEncoder().encode(json).byteLength > MAX_FEED_BYTES) throw new Error('Feed exceeds size limit')
   let parsed: unknown
   try { parsed = JSON.parse(json) } catch { throw new Error('Invalid JSON feed') }
@@ -102,8 +113,9 @@ export function parseWorldBankNews(json: string, feed: NewsFeed, now = Date.now(
     const title = typeof item.title === 'string' ? headlineText(item.title) : ''
     const url = articleUrl(typeof item.publishUrl === 'string' ? item.publishUrl : '', feed)
     const published = Date.parse(typeof item.contentDate === 'string' ? item.contentDate : '')
-    const regions = Array.isArray(item.regions) ? item.regions.filter((value): value is string => typeof value === 'string') : []
-    if (!regions.includes('Sub-Saharan Africa') || !title || title.length > 400 || !url || !Number.isFinite(published) || published > now || published < now - 90 * 86400_000) { rejected++; continue }
+    const tags = Array.isArray(item[scope.field]) ? item[scope.field] as unknown[] : []
+    // Recheck the publisher's tags; a server filter alone is not provenance.
+    if (!tags.some(value => typeof value === 'string' && scope.values.includes(value)) || !title || title.length > 400 || !url || !Number.isFinite(published) || published > now || published < now - 90 * 86400_000) { rejected++; continue }
     rows.set(url, { feed_slug: feed.slug, title, url, category: feed.category, published_at: new Date(published).toISOString(), last_seen_at: new Date(now).toISOString() })
   }
   if (!rows.size) throw new Error('No recent dated headlines passed validation')
