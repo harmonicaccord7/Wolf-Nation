@@ -246,3 +246,7 @@ Coverage is partial. Missing issuer observations remain missing; do not impute o
 - Decision Lab arithmetic QA covers fees, zero final prices, two-stage quantities, whole contracts, unaffordable options, premium loss, break-even and invalid inputs. Browser acceptance is checked in CI before merging its candidate.
 - Owner steering: usable tools, dense Africa coverage and an original readable public news edition precede activating paid checkout. Generic quotes and unfinished predictions are insufficient subscription value. Keep ordinary application increments independent of future model validation.
 - Owner states the newsletter edition was reviewed. Record that approval through the existing authenticated editorial transition, without fabricating an editor session or using service-role access to bypass it. Inbox delivery and public publication remain distinct states.
+
+## October 11 Africa workspaces
+
+See `docs/AFRICA_WORKSPACES_2026-10-11.md` for nine country routes, public World Bank provenance, the currency/inflation calculator, official market links, IPO verification and remaining market-data gaps. The new Botswana registration preserves RLS and existing provider ingestion.

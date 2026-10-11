@@ -59,8 +59,8 @@ export const deskConfigs: Record<DeskSlug, DeskConfig> = {
     summary:'Compare growth, inflation, currencies and reserves across major African economies, then follow dated official regional updates without mixing headlines with conclusions.',
     question:'How do global shocks transmit into African markets, businesses, currencies and opportunity?',
     allDeskSeries:true,
-    coverage:['Nigeria','South Africa','Egypt','Morocco','Kenya','Ghana','Côte d’Ivoire','Cameroon','WAEMU / BRVM expansion','Fintech, trade and infrastructure'],
-    sourceNote:'This desk shows stored annual World Bank indicators, World Bank Sub-Saharan Africa press releases and releases tagged Algeria, Egypt, Libya, Morocco or Tunisia. It does not provide live African market quotes or complete continental coverage. Reporting years and news dates remain visible. Local central-bank, sovereign-debt and regional-market feeds remain future coverage.'
+    coverage:['Nigeria','South Africa','Egypt','Morocco','Kenya','Ghana','Côte d’Ivoire','Cameroon','Botswana','WAEMU / BRVM expansion','Fintech, trade and infrastructure'],
+    sourceNote:'This desk shows stored annual World Bank indicators for nine economies, World Bank Sub-Saharan Africa press releases and releases tagged Algeria, Egypt, Libya, Morocco or Tunisia. It does not provide live African market quotes or complete continental coverage. Reporting years and news dates remain visible. Local central-bank, sovereign-debt and regional-market feeds remain future coverage.'
   },
   business: {
     slug:'business', eyebrow:'BUSINESS & OPPORTUNITY', title:'From market change to commercial consequence.',
