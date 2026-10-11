@@ -2,18 +2,18 @@
 import {useMemo,useState} from 'react'
 import {chartGeometry,chartRanges,selectChartPoints,defaultChartRange,type ChartPoint,type ChartRange} from '../../lib/data/chart'
 const fmt=(v:number)=>Intl.NumberFormat('en',{maximumFractionDigits:3}).format(v)
-export function HistoryChart({points,label,unit,endpoint,asOf,initialRange,frequency,truncated=false,markers=[]}:{points:ChartPoint[];label:string;unit:string|null;endpoint?:string;asOf?:string;initialRange?:ChartRange;frequency?:string|null;truncated?:boolean;markers?:{at:string;label:string}[]}){
+export function HistoryChart({points,label,unit,endpoint,asOf,initialRange,frequency,historyBasis,truncated=false,markers=[]}:{points:ChartPoint[];label:string;unit:string|null;endpoint?:string;asOf?:string;initialRange?:ChartRange;frequency?:string|null;historyBasis?:string;truncated?:boolean;markers?:{at:string;label:string}[]}){
  const annual=frequency==='annual'
  const date=(v:string)=>annual?String(new Date(v).getUTCFullYear()):new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeZone:'UTC'}).format(new Date(v))
  const stamp=(v:string)=>annual?`Reporting year ${date(v)}`:`${date(v)} ${new Date(v).toISOString().slice(11,16)} UTC`
  const [range,setRange]=useState<ChartRange>(initialRange??defaultChartRange(frequency)),[loaded,setLoaded]=useState(points),[cutoff,setCutoff]=useState(asOf??new Date().toISOString()),[limited,setLimited]=useState(truncated)
- const [busy,setBusy]=useState(false),[error,setError]=useState(''),[selected,setSelected]=useState<number|null>(null)
+ const [busy,setBusy]=useState(false),[error,setError]=useState(''),[selected,setSelected]=useState<number|null>(null),[basis,setBasis]=useState(historyBasis)
  const data=useMemo(()=>selectChartPoints(loaded,range,Date.parse(cutoff)),[loaded,range,cutoff]),coords=useMemo(()=>chartGeometry(data),[data])
  async function changeRange(next:ChartRange){
   if(busy||range===next)return
   if(!endpoint){setRange(next);setSelected(null);return}
   setBusy(true);setError('')
-  try{const res=await fetch(`${endpoint}?range=${next}`,{cache:'no-store'});const body=await res.json();if(!res.ok||!Array.isArray(body.history))throw new Error('History unavailable');setLoaded(body.history);setCutoff(body.asOf);setLimited(Boolean(body.truncated));setRange(next);setSelected(null)}catch{setError('History could not be loaded. The previous range is still displayed.')}finally{setBusy(false)}
+  try{const res=await fetch(`${endpoint}?range=${next}`,{cache:'no-store'});const body=await res.json();if(!res.ok||!Array.isArray(body.history))throw new Error('History unavailable');setLoaded(body.history);setCutoff(body.asOf);setLimited(Boolean(body.truncated));setBasis(body.historyBasis);setRange(next);setSelected(null)}catch{setError('History could not be loaded. The previous range is still displayed.')}finally{setBusy(false)}
  }
  const first=data[0],last=data.at(-1),point=selected===null?last:data[selected]
  const change=first&&last?(unit==='%'?last.value-first.value:first.value===0?null:(last.value-first.value)/Math.abs(first.value)*100):null
@@ -23,6 +23,8 @@ export function HistoryChart({points,label,unit,endpoint,asOf,initialRange,frequ
   <div className="historyControls" aria-label="Chart time range">{chartRanges.map(r=><button type="button" key={r} aria-pressed={range===r} disabled={busy} className={range===r?'active':''} onClick={()=>changeRange(r)}>{r}</button>)}</div>
   {error&&<p role="alert">{error}</p>}
   {annual&&<p className="chartCoverage">Annual data: years identify the reporting period, not a release date or a live quote. MAX shows available stored history. Shorter windows may contain no annual observations.</p>}
+  {basis==='daily-close'&&<p className="chartCoverage">Completed daily closes from Coinbase Exchange, separate from the recent market quote. Each timestamp marks the end of the UTC trading day. Available exchange history differs by asset; gaps remain missing.</p>}
+  {basis==='collected-snapshots'&&<p className="chartCoverage">Only snapshots collected since this site started are available here. This is not the asset’s full price history.</p>}
   <div className="historySummary"><span>{data.length} observations · {range==='MAX'?'available stored history':`last ${range}`}</span><b>{last?`${fmt(last.value)} ${unit??''}`:'No value in this range'}</b><em>{change==null?'Change unavailable':`${change>=0?'+':''}${change.toFixed(2)}${unit==='%'?' percentage points':'%'} over displayed observations`}</em></div>
   {data.length===0?<div className="historyEmpty">No observations in the selected period. Choose a longer range to explore earlier data.</div>:<>
    <svg className="historyChart interactiveHistory" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label={`${label} history; ${data.length} observations`} onPointerMove={e=>{const box=e.currentTarget.getBoundingClientRect();inspect((e.clientX-box.left)/box.width*100)}} onPointerDown={e=>{const box=e.currentTarget.getBoundingClientRect();inspect((e.clientX-box.left)/box.width*100)}}>
@@ -35,7 +37,7 @@ export function HistoryChart({points,label,unit,endpoint,asOf,initialRange,frequ
    <div className="chartReadout" role="status">{point&&<>{stamp(point.observedAt)} · <b>{fmt(point.value)} {unit??''}</b> · {point.provider}</>}</div>
    <div className="historyAxis"><span>{date(first.observedAt)}</span><span>{date(last!.observedAt)}</span></div>
   </>}
-  <p className="chartCoverage">Observation dates are spaced by elapsed time. Lines connect available observations; intermediate values are unknown.{limited?' Display is limited to the most recent 20,000 observations. Choose a shorter range.':''}</p>
+  <p className="chartCoverage">{first&&last?`Displayed coverage: ${date(first.observedAt)} to ${date(last.observedAt)}. `:''}MAX means all available stored observations, not a promise of ten years for every asset. Observation dates are spaced by elapsed time. Lines connect available observations; intermediate values are unknown.{limited?' Display is limited to the most recent 20,000 observations. Choose a shorter range.':''}</p>
   {data.length>0&&<details className="historyTable"><summary>Accessible recent observations</summary><table><thead><tr><th>{annual?'Reporting year':'Date (UTC)'}</th><th>Value</th><th>Provider</th></tr></thead><tbody>{data.slice(-20).reverse().map((p,i)=><tr key={p.observedAt+i}><td>{annual?date(p.observedAt):`${date(p.observedAt)} ${p.observedAt.slice(11,16)}`}</td><td>{fmt(p.value)} {unit??''}</td><td>{p.provider}</td></tr>)}</tbody></table></details>}
  </div>
 }
