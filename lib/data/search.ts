@@ -1,5 +1,6 @@
 import { createClient } from '../supabase/server'
 import { primaryNav,institutionalNav } from '../navigation'
+import {marketBackgrounds} from '../events/background'
 
 export type PublicSearchResult={
   key:string; kind:'research'|'data'|'desk'|'page'; title:string; summary:string|null; href:string; meta:string|null
@@ -25,6 +26,7 @@ export async function searchPublicIntelligence(query:string):Promise<PublicSearc
   const research=(articles??[]).map((a:any)=>({key:`article:${a.id}`,kind:'research' as const,title:a.headline,summary:a.dek,href:`/article/${a.slug}`,meta:a.confidence?`${a.confidence} confidence`:a.reader_level}))
   const data=(series??[]).map((s:any)=>({key:`data:${s.id}`,kind:'data' as const,title:s.label,summary:s.description,href:`/data/${String(s.code).toLowerCase()}`,meta:[s.code,s.frequency].filter(Boolean).join(' · ')}))
   const institutional=(pages??[]).map((p:any)=>({key:`page:${p.slug}`,kind:'page' as const,title:p.title,summary:p.summary,href:`/${p.slug}`,meta:p.eyebrow??'Policy & methodology'}))
+  const journal:PublicSearchResult[]=[{key:'journal',kind:'page' as const,title:'Capital Intelligence News',summary:'Read KAPORAL explainers, approved reporting and published newsletter editions.',href:'/news/journal',meta:'Public journal'},...marketBackgrounds.map(item=>({key:'explainer:'+item.key,kind:'page' as const,title:item.title,summary:item.description,href:`/news/explainers/${item.key}`,meta:'KAPORAL explanation'}))].filter(item=>(item.title+' '+item.summary).toLowerCase().includes(needle))
   const seen=new Set<string>()
-  return [...research,...data,...nav,...institutional].filter(r=>seen.has(r.href)?false:(seen.add(r.href),true)).slice(0,50)
+  return [...research,...journal,...data,...nav,...institutional].filter(r=>seen.has(r.href)?false:(seen.add(r.href),true)).slice(0,50)
 }
