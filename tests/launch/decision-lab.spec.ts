@@ -12,7 +12,7 @@ test('Decision Lab calculates editable outcomes, prevents invalid input and expo
   await page.getByLabel('Cash budget (USD)',{exact:true}).fill('499')
   await expect(table).toContainText('Budget cannot buy one contract')
   await page.getByLabel('Cash budget (USD)',{exact:true}).fill('')
-  await expect(page.getByRole('alert')).toContainText('Enter a number')
+  await expect(page.locator('section.liveSection').getByRole('alert')).toContainText('Enter a number')
   await expect(table).toHaveCount(0)
   await page.getByLabel('Cash budget (USD)',{exact:true}).fill('1000')
   const download=page.waitForEvent('download')
