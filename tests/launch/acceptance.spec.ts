@@ -92,7 +92,7 @@ test('public status reports safe Daily News source health', async ({ page }, tes
   await expect(table.locator('.trackRow')).toHaveCount(newsFeeds.length)
   await expect(table).toContainText('European Central Bank')
   await expect(table).toContainText('World Bank — Sub-Saharan Africa')
-  await expect(table).toContainText('African Development Bank')
+  await expect(table).toContainText('World Bank — North Africa')
   await expect(table).toContainText('Last successful source check:')
   await expect(table).toContainText('LATEST PUBLISHER ITEM')
   await expect(page.getByText('Detailed ingestion logs remain restricted to authorised editors under row-level security.')).toBeVisible()

@@ -40,17 +40,17 @@ test('Africa desk separates official updates from annual indicators and editoria
   const briefing=page.getByRole('region',{name:'What is changing across the region?',exact:true})
   await expect(briefing).toBeVisible()
   await expect(briefing).toContainText('World Bank Sub-Saharan Africa press releases')
-  await expect(briefing).toContainText('African Development Bank News & Events')
+  await expect(briefing).toContainText('North Africa releases tagged Algeria, Egypt, Libya, Morocco or Tunisia')
   await expect(briefing).toContainText('not a complete Africa newswire')
   await expect(briefing.locator('.africaNewsStatus')).toHaveCount(2)
-  await expect(briefing.getByRole('link',{name:'Open African Development Bank ↗',exact:true})).toHaveAttribute('href','https://www.afdb.org/en/news-and-events')
+  await expect(briefing.getByRole('link',{name:'Open World Bank — North Africa ↗',exact:true})).toHaveAttribute('href','https://www.worldbank.org/ext/en/region/mena')
   const cards=briefing.locator('.newsCard')
   if(await cards.count()){
     await expect(cards.first().locator('time')).toHaveAttribute('datetime',/^20/)
     for(const card of await cards.all()) {
       const href=await card.getByRole('link').first().getAttribute('href')
-      expect(href).toMatch(/^https:\/\/www\.(worldbank|afdb)\.org\//)
-      await expect(card).toContainText(href?.includes('www.afdb.org')?'African Development Bank':'World Bank — Sub-Saharan Africa')
+      expect(href).toMatch(/^https:\/\/www\.worldbank\.org\//)
+      await expect(card).toContainText(/World Bank — (Sub-Saharan Africa|North Africa)/)
     }
   }else await expect(briefing.locator('.newsEmpty')).toContainText('Missing coverage is not filled with synthetic news')
   await expect(page.getByRole('heading',{name:'Country-by-country evidence',exact:true})).toBeVisible()

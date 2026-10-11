@@ -41,17 +41,34 @@ assert.equal(fetchedWorldBank.rows.length,1)
 assert.equal(worldBankRequest.method,'POST')
 assert.match(worldBankRequest.body,/Sub-Saharan Africa/)
 for(const invalid of ['not json',JSON.stringify({}),JSON.stringify({value:[{title:'Other region',publishUrl:'https://www.worldbank.org/en/news/x',contentDate:'2026-09-12T08:00:00Z',regions:['South Asia']}]})])assert.throws(()=>parseWorldBankNews(invalid,worldBankFeed,now))
-const afdbFeed=newsFeeds.find(source=>source.slug==='afdb-africa')
-assert.ok(afdbFeed)
-const afdbParsed=parseNewsFeed(rss(item('Morocco transport financing','https://www.afdb.org/en/news-and-events/press-releases/morocco-qa','Sat, 12 Sep 2026 00:00:00 +0000')+item('Unapproved publisher','https://example.com/africa','Sat, 12 Sep 2026 00:00:00 +0000')),afdbFeed,now)
-assert.equal(afdbParsed.rows.length,1)
-assert.equal(afdbParsed.rejected,1)
-assert.equal(afdbParsed.rows[0].feed_slug,'afdb-africa')
-assert.equal(afdbParsed.rows[0].category,'africa')
-assert.equal(afdbParsed.rows[0].published_at,'2026-09-12T00:00:00.000Z')
-assert.deepEqual(Object.keys(afdbParsed.rows[0]).sort(),['category','feed_slug','last_seen_at','published_at','title','url'])
-assert.equal(parseNewsFeed(rss(item('Africa&amp;#039;s &amp;#x2014; &lt;b&gt;railway&lt;/b&gt;','https://www.afdb.org/en/news-and-events/railway-qa')),afdbFeed,now).rows[0].title,"Africa's — railway")
-assert.equal(parseNewsFeed(rss(item('Invalid &amp;#99999999; entity','https://www.afdb.org/en/news-and-events/entity-qa')),afdbFeed,now).rows[0].title,'Invalid &#99999999; entity')
+const northFeed=newsFeeds.find(source=>source.slug==='world-bank-north-africa')
+assert.ok(northFeed)
+const northItem={title:'Tunisia water update',publishUrl:'https://www.worldbank.org/en/news/press-release/2026/09/12/tunisia-water',contentDate:'2026-09-12T09:00:00Z',countries:['Tunisia'],regions:[]}
+const northFixture=JSON.stringify({value:[northItem,
+  {...northItem,title:'Egypt update',publishUrl:'https://www.worldbank.org/en/news/press-release/egypt-update',countries:['Egypt']},
+  {...northItem,publishUrl:'https://www.worldbank.org/en/news/wrong-country',countries:['Pakistan'],regions:['Middle East, North Africa, Afghanistan & Pakistan']},
+  {...northItem,publishUrl:'https://www.worldbank.org/en/news/missing-country',countries:[]},
+  {...northItem,publishUrl:'https://example.com/wrong-host'},
+  {...northItem,publishUrl:'https://www.worldbank.org/en/news/future',contentDate:'2026-09-14T09:00:00Z'},
+  {...northItem,publishUrl:'https://www.worldbank.org/en/news/old',contentDate:'2026-06-01T09:00:00Z'},
+]})
+const northParsed=parseWorldBankNews(northFixture,northFeed,now)
+assert.equal(northParsed.rows.length,2);assert.equal(northParsed.rejected,5)
+assert.equal(northParsed.rows[0].feed_slug,'world-bank-north-africa')
+assert.equal(northParsed.rows[0].published_at,'2026-09-12T09:00:00.000Z')
+assert.deepEqual(Object.keys(northParsed.rows[0]).sort(),['category','feed_slug','last_seen_at','published_at','title','url'])
+let northRequest
+const fetchedNorth=await fetchNewsSource(northFeed,async(_url,options)=>{northRequest=JSON.parse(options.body);return new Response(JSON.stringify({value:[{...northItem,contentDate:new Date(Date.now()-3600_000).toISOString()}]}))})
+assert.equal(fetchedNorth.rows.length,1)
+assert.match(northRequest.filter,/countries\/any/)
+for(const country of ['Algeria','Egypt','Libya','Morocco','Tunisia'])assert.ok(northRequest.filter.includes("s eq '"+country+"'"))
+assert.doesNotMatch(northRequest.filter,/regions\/any|Pakistan/)
+for(const scope of [undefined,{field:'countries',values:[]}]) {
+  assert.throws(()=>parseWorldBankNews(northFixture,{...northFeed,worldBankScope:scope},now),/geographic scope/)
+  await assert.rejects(()=>fetchNewsSource({...northFeed,worldBankScope:scope},async()=>{throw new Error('must not fetch')}),/geographic scope/)
+}
+assert.equal(parseNewsFeed(rss(item('Africa&amp;#039;s &amp;#x2014; &lt;b&gt;railway&lt;/b&gt;')),feed,now).rows[0].title,"Africa's — railway")
+assert.equal(parseNewsFeed(rss(item('Invalid &amp;#99999999; entity')),feed,now).rows[0].title,'Invalid &#99999999; entity')
 assert.equal(feedIsFresh({status:'healthy',last_success_at:'2026-09-13T10:00:00Z'},now),true)
 assert.equal(feedIsFresh({status:'error',last_success_at:'2026-09-13T10:00:00Z'},now),false)
 assert.equal(feedIsFresh({status:'healthy',last_success_at:'2026-09-11T10:00:00Z'},now),false)
@@ -62,16 +79,16 @@ assert.equal(safeAuthNext('/auth/reset-password'),'/auth/reset-password')
 const db=new PGlite()
 await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;grant usage on schema public to anon,authenticated,service_role;
 create table public.newsletter_subscribers(id uuid primary key default gen_random_uuid(),email text not null unique,status text not null,source text,consent_at timestamptz,unsubscribed_at timestamptz,created_at timestamptz not null default now(),confirm_token_hash text,confirm_expires_at timestamptz,confirmed_at timestamptz,unsubscribe_token_hash text,last_confirmation_sent_at timestamptz,last_delivery_status text,last_delivery_error text,last_delivery_attempt_at timestamptz);`)
-for(const suffix of ['daily_source_news.sql','add_world_bank_africa_news.sql','add_afdb_africa_news.sql','newsletter_identity_protection.sql'])await db.exec(readFileSync('supabase/migrations/'+readdirSync('supabase/migrations').find(name=>name.endsWith(suffix)),'utf8'))
-assert.equal((await db.query("select status,last_success_at,latest_published_at from public.news_feeds where slug='afdb-africa'")).rows[0].status,'pending')
-await db.exec("update public.news_feeds set status='healthy',last_success_at='2026-09-13T10:00:00Z',latest_published_at='2026-09-12T00:00:00Z' where slug='afdb-africa'")
-const before=(await db.query("select status,last_success_at,latest_published_at from public.news_feeds where slug='afdb-africa'")).rows[0]
-await db.exec(readFileSync('supabase/migrations/'+readdirSync('supabase/migrations').find(name=>name.endsWith('add_afdb_africa_news.sql')),'utf8'))
-assert.deepEqual((await db.query("select status,last_success_at,latest_published_at from public.news_feeds where slug='afdb-africa'")).rows[0],before,'Re-registration must preserve observed freshness')
+for(const suffix of ['daily_source_news.sql','add_world_bank_africa_news.sql','add_afdb_africa_news.sql','add_world_bank_north_africa_news.sql','newsletter_identity_protection.sql'])await db.exec(readFileSync('supabase/migrations/'+readdirSync('supabase/migrations').find(name=>name.endsWith(suffix)),'utf8'))
+assert.equal((await db.query("select status,last_success_at,latest_published_at from public.news_feeds where slug='world-bank-north-africa'")).rows[0].status,'pending')
+await db.exec("update public.news_feeds set status='healthy',last_success_at='2026-09-13T10:00:00Z',latest_published_at='2026-09-12T00:00:00Z' where slug='world-bank-north-africa'")
+const before=(await db.query("select status,last_success_at,latest_published_at from public.news_feeds where slug='world-bank-north-africa'")).rows[0]
+await db.exec(readFileSync('supabase/migrations/'+readdirSync('supabase/migrations').find(name=>name.endsWith('add_world_bank_north_africa_news.sql')),'utf8'))
+assert.deepEqual((await db.query("select status,last_success_at,latest_published_at from public.news_feeds where slug='world-bank-north-africa'")).rows[0],before,'Re-registration must preserve observed freshness')
 await db.exec(`insert into public.daily_news(feed_slug,title,url,category,published_at) values('ecb','Visible test','https://www.ecb.europa.eu/visible','finance',now()-interval '1 day'),('ecb','Future test','https://www.ecb.europa.eu/future','finance',now()+interval '1 day');set role anon;`)
 assert.equal((await db.query('select * from public.daily_news')).rows.length,1)
-assert.equal((await db.query("select count(*)::int as n from public.news_feeds where category='africa'")).rows[0].n,2)
-await assert.rejects(()=>db.exec("update public.news_feeds set status='healthy' where slug='afdb-africa'"))
+assert.equal((await db.query("select count(*)::int as n from public.news_feeds where slug in ('world-bank-africa','world-bank-north-africa')")).rows[0].n,2)
+await assert.rejects(()=>db.exec("update public.news_feeds set status='healthy' where slug='world-bank-north-africa'"))
 await assert.rejects(()=>db.exec("insert into public.daily_news(feed_slug,title,url,category,published_at) values('ecb','No','https://www.ecb.europa.eu/no','finance',now())"))
 await assert.rejects(()=>db.query('select public.reserve_newsletter_confirmation($1,$2,$3,$4,$5)',['test@example.com','qa','a'.repeat(64),'b'.repeat(64),false]))
 await db.exec('reset role')

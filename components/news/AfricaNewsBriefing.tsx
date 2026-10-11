@@ -25,7 +25,7 @@ function sourceStatus(feed: FeedState | undefined, unavailable: boolean, now: nu
 }
 
 export function AfricaNewsBriefing({ headlines, feeds, unavailable, viewedAt }: { headlines: NewsItem[]; feeds: FeedState[]; unavailable: boolean; viewedAt: string }) {
-  // Reserve room for both publishers; a busy feed must not hide the other source.
+  // Reserve room for both coverage feeds; a busy feed must not hide the other.
   const items = sources.flatMap(source => headlines
     .filter(item => item.category === 'africa' && item.feed_slug === source.slug)
     .sort((a, b) => b.published_at.localeCompare(a.published_at))
@@ -35,7 +35,8 @@ export function AfricaNewsBriefing({ headlines, feeds, unavailable, viewedAt }: 
 
   return <section className="shell liveSection africaNewsBriefing" aria-labelledby="africa-news-heading">
     <div className="liveSectionHead"><div><span className="eyebrow">OFFICIAL AFRICA UPDATES</span><h2 id="africa-news-heading">What is changing across the region?</h2></div><p>Dated publisher headlines stay separate from KAPORAL analysis. Read the original release before drawing a conclusion.</p></div>
-    <p>Coverage includes World Bank Sub-Saharan Africa press releases and African Development Bank News &amp; Events, including its North Africa updates. This is not a complete Africa newswire; local central banks and regional markets remain coverage gaps.</p>
+    <p>Coverage includes World Bank Sub-Saharan Africa press releases and North Africa releases tagged Algeria, Egypt, Libya, Morocco or Tunisia. This is not a complete Africa newswire; local central banks and regional markets remain coverage gaps.</p>
+    <p>African Development Bank updates are currently unavailable here. Each source's last publisher date is shown below; a successful check does not mean a new story was published today.</p>
     {sources.map(source => {
       const feed = feeds.find(item => item.slug === source.slug)
       const { status, current } = sourceStatus(feed, unavailable, now)
