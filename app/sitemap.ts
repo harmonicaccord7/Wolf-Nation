@@ -1,3 +1,4 @@
+import {africaCountries} from '../lib/africa/countries'
 import type { MetadataRoute } from 'next'
 import { createClient } from '../lib/supabase/server'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -11,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     db.from('newsletter_issues').select('issue_key,published_at').eq('status','published').lte('published_at',now).order('published_at',{ascending:false}).limit(1000),
   ])
   const entries:MetadataRoute.Sitemap=[
+    ...africaCountries.map(country=>({url:base+'/africa/'+country.slug,changeFrequency:'daily' as const,priority:0.75})),
     ...routes.map(route=>({url:base+route,changeFrequency:'daily' as const,priority:route?0.7:1})),
     ...['BTC','ETH','SOL',...(series.data??[]).map(s=>s.code)].map(code=>({url:base+'/data/'+code.toLowerCase(),changeFrequency:'daily' as const,priority:0.65})),
     ...(articles.data??[]).map(a=>({url:base+'/article/'+a.slug,lastModified:new Date(a.updated_at??a.published_at),priority:0.8})),

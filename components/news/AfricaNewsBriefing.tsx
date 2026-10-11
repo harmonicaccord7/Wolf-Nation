@@ -33,7 +33,7 @@ export function AfricaNewsBriefing({ headlines, feeds, unavailable, viewedAt }: 
     .sort((a, b) => b.published_at.localeCompare(a.published_at))
   const now = Date.parse(viewedAt)
 
-  return <section className="shell liveSection africaNewsBriefing" aria-labelledby="africa-news-heading">
+  return <section className="shell liveSection africaNewsBriefing" id="regional-news" aria-labelledby="africa-news-heading">
     <div className="liveSectionHead"><div><span className="eyebrow">OFFICIAL AFRICA UPDATES</span><h2 id="africa-news-heading">What is changing across the region?</h2></div><p>Dated publisher headlines stay separate from KAPORAL analysis. Read the original release before drawing a conclusion.</p></div>
     <p>Coverage includes World Bank Sub-Saharan Africa press releases and North Africa releases tagged Algeria, Egypt, Libya, Morocco or Tunisia. This is not a complete Africa newswire; local central banks and regional markets remain coverage gaps.</p>
     <p>African Development Bank updates are currently unavailable here. Each source's last publisher date is shown below; a successful check does not mean a new story was published today.</p>
