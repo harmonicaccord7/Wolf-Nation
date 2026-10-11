@@ -3,6 +3,7 @@ import { Header } from '../Header'
 import { Footer } from '../Footer'
 import { getDeskIntelligence } from '../../lib/data/intelligence'
 import { getDailyNews } from '../../lib/news/data'
+import { deskDestination } from '../../lib/data/desk-links'
 import type { DeskSlug } from '../../lib/data/desk-config'
 import { formatCryptoPrice, formatIntelligenceValue, formatObservationDate } from '../../lib/format-intelligence'
 import { MetricCard } from './MetricCard'
@@ -21,7 +22,7 @@ export async function DeskPage({slug}:{slug:DeskSlug}){
 
   return <main className="intelligencePage">
     <Header/>
-    <section className="deskHero"><div className="shell deskHeroGrid"><div><span className="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p>{config.summary}</p><div className="deskHeroActions"><Link className="goldButton" href="/methodology">Research methodology</Link><Link className="glassButton" href="/disclosures">Risk & disclosures</Link></div></div><aside><small>THE QUESTION</small><strong>{config.question}</strong><span>{freshest?`Latest stored observation: ${formatObservationDate(freshest,slug==='africa'?'annual':'market')}`:'This desk is connected; no provider observation is available yet.'}</span></aside></div></section>
+    <section className="deskHero"><div className="shell deskHeroGrid"><div><span className="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p>{config.summary}</p><div className="deskHeroActions"><Link className="goldButton" href="/tools/decision-lab">Try Decision Lab</Link><Link className="glassButton" href="/methodology">Research methodology</Link><Link className="glassButton" href="/disclosures">Risk & disclosures</Link></div></div><aside><small>THE QUESTION</small><strong>{config.question}</strong><span>{freshest?`Latest stored observation: ${formatObservationDate(freshest,slug==='africa'?'annual':'market')}`:'This desk is connected; no provider observation is available yet.'}</span></aside></div></section>
 
     {africaNews&&<AfricaNewsBriefing {...africaNews}/>}
 
@@ -36,7 +37,7 @@ export async function DeskPage({slug}:{slug:DeskSlug}){
     {slug==='business'&&<BusinessFramework/>}
     {slug==='technology'&&<TechnologyFramework/>}
 
-    <section className="deskCoverage"><div className="shell coverageGrid"><div><span className="eyebrow">WHAT THIS DESK COVERS</span><h2>One lens inside a connected intelligence system.</h2><p>{config.sourceNote}</p></div><div className="coverageCards">{config.coverage.map((item,i)=><div key={item}><small>{String(i+1).padStart(2,'0')}</small><b>{item}</b></div>)}</div></div></section>
+    <section className="deskCoverage"><div className="shell coverageGrid"><div><span className="eyebrow">WHAT THIS DESK COVERS</span><h2>One lens inside a connected intelligence system.</h2><p>{config.sourceNote}</p></div><div className="coverageCards">{config.coverage.map((item,i)=>{const destination=deskDestination(slug,i);return destination?<Link href={destination.href} key={item}><small>{String(i+1).padStart(2,'0')}</small><b>{item}</b><span>{destination.action} →</span></Link>:<div key={item}><small>{String(i+1).padStart(2,'0')}</small><b>{item}</b></div>})}</div></div></section>
 
     <section className="shell researchShelf"><div className="liveSectionHead"><div><span className="eyebrow">PUBLISHED RESEARCH</span><h2>Research only appears after approval.</h2></div><Link href="/research">Open research index →</Link></div>{articles.length?<div className="researchCardGrid">{articles.map(a=><Link href={`/article/${a.slug}`} className="researchCard" key={a.id}><small>{a.confidence?`${a.confidence} confidence`:a.readerLevel}</small><h3>{a.headline}</h3><p>{a.dek}</p><span>Read investigation →</span></Link>)}</div>:<div className="emptyResearch"><strong>No synthetic headlines.</strong><p>The public research shelf is currently empty because no flagship investigation has completed the full source, adversarial, standards and human-approval workflow yet. Live data above is operational; editorial publication is a separate gate.</p><Link href="/methodology">See why we separate data from conclusions →</Link></div>}</section>
     <Footer/>
