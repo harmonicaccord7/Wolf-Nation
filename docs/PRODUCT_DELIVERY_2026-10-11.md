@@ -1,5 +1,9 @@
 # KAPORAL delivery and product brief — 11 October 2026
 
+Operational refresh — **12 October 2026**: [PR #39](https://github.com/harmonicaccord7/Wolf-Nation/pull/39) is now merged at `33621e9b65b4bfbc96fce47f6cd7b5d38adf7b8a`, with both candidate CI runs, post-merge main CI and the intended Vercel production deployment successful. Capital Intelligence News is live at `/news/journal`, with ten complete existing explainers and a verified homepage entry. This supersedes the October 11 journal-candidate wording below; the remaining content/model/product gaps still apply.
+
+Fresh production observations: daily crypto history advanced through the October 12 close endpoint, representing October 11's completed UTC day. Database size is about 72.7 MB. Private BTC v0.1.0 has 31 issued forecasts, 29 resolved and two open; this is inference evidence, not retraining or validation. There are 34 private newsletter drafts, zero published editions and zero published original-reporting articles. The owner has reviewed the edition; the actual browser is signed out, so recording its approval and testing publication still require an authorised editor session. No broadcast, charge or credential change occurred.
+
 ## What the platform can credibly offer
 
 KAPORAL is a decision-research workspace: trace a market observation to its source, understand an upcoming event, and compare the consequences of alternative assumptions before committing money. Its practical value should come from readable research, documented scenarios, local-currency risk and repeatable workflows. It cannot currently sell a validated trading signal or a promise of profitable calls and puts.
@@ -25,6 +29,8 @@ The public chart pipeline had short provider ranges and a capped retained tail. 
 The production database occupies about 72.1 MB, well below the Free plan’s 500 MB allowance. Capacity was not the cause of the short history. Check database size, egress, CPU, connection pressure, API latency and failed jobs before attributing a future data problem to a subscription tier.
 
 ## Honest model status
+
+The complete **12 October forward audit** is recorded in `research/btc24/FORWARD_CHECKPOINT_2026-10-12.md`: 29 resolved calls, model and benchmark both 55.17% accurate, but model Brier/log loss worse. Every frozen probability and outcome reproduced, with no ledger gaps. The existing 0.55 simulation threshold activated on zero days. This provides an honest performance checkpoint, not a successful model, a trading recommendation or a change to the frozen historical results below.
 
 The actual trained version is **K-BTC-24H 0.1.0**, an experimental logistic baseline. Eight lagged OHLCV features cover 1/3/7/14-day returns, 7/30-day volatility, daily high/low range and relative volume. Its target is the next complete UTC day’s BTC close versus its open, rather than a price target or an immediate executable trade.
 
@@ -67,4 +73,4 @@ Use an existing authorised KAPORAL editor account to sign in to `/studio`, open 
 
 For paid sandbox work, connect the chosen provider in test mode using its secure credentials flow. For leaked-password protection, approve and perform the required Supabase plan change. Neither action blocks public history, calculator, journal or country-page improvements.
 
-Next deliverable after the journal: authenticated edition acceptance if the session is available; otherwise continue independent country news/issuer coverage and a frozen v0.2 research protocol. Report the specific merged commit and production evidence for every increment.
+Next deliverables now that the journal is live: authenticated edition acceptance if the session is available; otherwise continue independent country news/issuer coverage and a frozen v0.2 research protocol. Paid sandbox integration remains test-only and needs the chosen provider's secure test connection. Report the specific merged commit and production evidence for every increment.
