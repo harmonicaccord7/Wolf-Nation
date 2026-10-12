@@ -30,6 +30,8 @@ The production database occupies about 72.1 MB, well below the Free plan’s 500
 
 ## Honest model status
 
+The complete **12 October forward audit** is recorded in `research/btc24/FORWARD_CHECKPOINT_2026-10-12.md`: 29 resolved calls, model and benchmark both 55.17% accurate, but model Brier/log loss worse. Every frozen probability and outcome reproduced, with no ledger gaps. The existing 0.55 simulation threshold activated on zero days. This provides an honest performance checkpoint, not a successful model, a trading recommendation or a change to the frozen historical results below.
+
 The actual trained version is **K-BTC-24H 0.1.0**, an experimental logistic baseline. Eight lagged OHLCV features cover 1/3/7/14-day returns, 7/30-day volatility, daily high/low range and relative volume. Its target is the next complete UTC day’s BTC close versus its open, rather than a price target or an immediate executable trade.
 
 - Frozen historical evidence: 985 holdout targets and quarterly expanding fits. Accuracy **49.44%**, compared with **50.46%** for the benchmark. Brier loss **0.250290**, benchmark **0.250235**; lower is better. No predictive advantage was established.
