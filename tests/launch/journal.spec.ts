@@ -1,0 +1,36 @@
+import {test,expect} from '@playwright/test'
+import {marketBackgrounds} from '../../lib/events/background'
+
+test('homepage opens a readable public journal with editions and original explanations',async({page,isMobile},info)=>{
+  await page.goto('/')
+  const preview=page.locator('[aria-labelledby="home-journal-heading"]')
+  await expect(preview.getByRole('heading',{name:'Capital Intelligence News',exact:true})).toBeVisible()
+  await preview.getByRole('link',{name:'Open Capital Intelligence News →',exact:true}).click()
+  await expect(page).toHaveURL(/\/news\/journal$/)
+  await expect(page.getByRole('heading',{name:'Capital Intelligence News',exact:true})).toBeVisible()
+  await expect(page.locator('#explainers h3')).toHaveCount(10)
+  await expect(page.locator('#reporting')).toContainText('Approved investigations and analysis')
+  await expect(page.locator('#editions')).toContainText('Read published editions on the website')
+  await expect(page.locator('main')).toContainText('not rewritten or presented as KAPORAL reporting')
+  await page.getByRole('link',{name:'Read the full CPI explanation →',exact:true}).click()
+  await expect(page).toHaveURL(/\/news\/explainers\/cpi$/)
+  const article=page.locator('article').first()
+  await expect(article).toContainText('Consumer Price Index')
+  await expect(article).toContainText('Bitcoin & crypto:')
+  await expect(article).toContainText('Gold:')
+  await expect(article).toContainText('What this can mean for your pocket')
+  await expect(article).toContainText('Why it can go the other way')
+  await expect(article).toContainText('Guide content version:')
+  await expect(page.getByRole('region',{name:'Explainer sources'}).getByRole('link',{name:'BLS: CPI explained ↗',exact:true})).toHaveAttribute('href','https://www.bls.gov/cpi/questions-and-answers.htm')
+  await expect(article.getByRole('navigation',{name:'Use the explanation'}).getByRole('link',{name:'Test a scenario →',exact:true})).toHaveAttribute('href','/tools/decision-lab')
+  if(isMobile)await page.setViewportSize({width:844,height:390})
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1)
+  await info.attach('readable-kaporal-explainer',{body:await page.screenshot({scale:'css'}),contentType:'image/png'})
+})
+test('every explainer is public, canonical and discoverable without an invented publication date',async({request,page})=>{
+  const sitemap=await (await request.get('/sitemap.xml')).text()
+  for(const item of marketBackgrounds){const path='/news/explainers/'+item.key,response=await request.get(path);expect(response.status()).toBe(200);const body=await response.text();expect(body).toContain(item.title);expect(body).toContain('https://www.kaporalintelligence.com'+path);expect(body).toContain('not a news publication');expect(sitemap).toContain('https://www.kaporalintelligence.com'+path)}
+  expect((await request.get('/news/explainers/not-a-topic')).status()).toBe(404)
+  await page.goto('/search?q=CPI')
+  await expect(page.locator('.searchResults').getByRole('link',{name:/CPI — prices households pay/}).first()).toHaveAttribute('href','/news/explainers/cpi')
+})
