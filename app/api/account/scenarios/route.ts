@@ -28,9 +28,9 @@ export async function POST(request:Request){
   if(!draft)return reply({error:'Provide a name and valid scenario assumptions.'},400)
   const inserted=await db.from('decision_scenarios').insert({profile_id:user.id,save_key:draft.saveKey,name:draft.name,asset:draft.asset,inputs:draft.inputs,reference_at:draft.referenceAt,reference_price:draft.referencePrice,reference_provider:draft.referenceProvider}).select(scenarioColumns).single()
   if(inserted.error?.code==='23505'){
-    const existing=await db.from('decision_scenarios').select(scenarioColumns+',reference_at').eq('profile_id',user.id).eq('save_key',draft.saveKey).maybeSingle()
-    const row=existing.data,parsed=savedScenario(row)
-    const same=row&&parsed&&parsed.name===draft.name&&parsed.asset===draft.asset&&Object.keys(draft.inputs).every(k=>parsed.inputs[k as keyof typeof draft.inputs]===draft.inputs[k as keyof typeof draft.inputs])&&(parsed.reference?.price??null)===draft.referencePrice&&(parsed.reference?.provider??null)===draft.referenceProvider&&(row.reference_at===null?draft.referenceAt===null:draft.referenceAt!==null&&Date.parse(row.reference_at)===Date.parse(draft.referenceAt))
+    const existing=await db.from('decision_scenarios').select(scenarioColumns).eq('profile_id',user.id).eq('save_key',draft.saveKey).maybeSingle()
+    const parsed=savedScenario(existing.data)
+    const same=parsed&&parsed.name===draft.name&&parsed.asset===draft.asset&&Object.keys(draft.inputs).every(k=>parsed.inputs[k as keyof typeof draft.inputs]===draft.inputs[k as keyof typeof draft.inputs])&&(parsed.reference?.price??null)===draft.referencePrice&&(parsed.reference?.provider??null)===draft.referenceProvider&&(parsed.reference===null?draft.referenceAt===null:draft.referenceAt!==null&&Date.parse(parsed.reference.asOf)===Date.parse(draft.referenceAt))
     return same?reply({scenario:parsed}):reply({error:'This save request changed. Save a new copy.'},409)
   }
   if(inserted.error?.message?.includes('scenario_limit'))return reply({error:'You can keep '+SCENARIO_LIMIT+' saved scenarios. Delete one before saving another.'},409)
