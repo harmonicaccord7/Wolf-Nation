@@ -4,6 +4,15 @@ Last operational refresh: 2026-10-13. Read the latest checkpoint, issue #22 and 
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
 
+## October 13 newsletter editor and Agent Room cleanup
+
+- PR #44 is merged at `9d19af234e09ab8f6ea8f1efb3b695cd7f10a259`; tree `8f769b7508897bfd76995a023c6b5fdaae0d632a` matches the checked head. Main CI `38369419170` passed 134 browser cases with one intentional skip and intended Vercel production `4p9D5LL2EsmDCFuN2JsT1Gm7fQWb` succeeded. The live status page was OPERATIONAL. This supersedes the earlier pre-release wording below.
+- The owner now requests hiding the story-workspace Agent Room. This increment removes that panel/launch controls and unused client run outputs, preserving stored audit records and existing endpoint authorization. Public research now points to the journal/newsletter rather than private Studio.
+- `/studio/newsletter` reuses the existing role check and edition component on a focused, private/no-store/noindex page linked prominently from the command center. No schema, RLS, credentials, publication, email sending or model scheduling changes. Detailed scope and acceptance: `docs/EDITOR_WORKFLOW_2026-10-13.md`; read the focused PR/current main for actual release evidence.
+- Actual audit at 17:37 UTC: 36 private newsletter drafts; zero database reviews/approvals/publications. The owner's previous content review is acknowledged, but the actual live browser is signed out. An authenticated editor transition still needs the genuine session; never impersonate it through SQL or broadcast as a test.
+- Native leaked-password protection is still disabled. Supabase official docs require Pro or above (price starts US$25/month). The owner has asked which plan, not authorized purchasing it. Database size 78,941,331 bytes does not explain the missing published edition.
+- Latest frozen model result remains v0.2 accuracy 48.43% versus v0.1 49.44% and benchmark 50.46% on the identical 985 previously inspected historical targets. The owner's 99.9% aspiration is not a validated result or guarantee; keep experiments private and continue independent checked application delivery.
+
 ## October 13 frozen Bitcoin v0.2 research comparison
 
 - PR #43 is merged at `8f953a12ab371ef3f80a1f90f7dc3d4e158b5c46`; both final-head runs and main CI `38362953751` passed (134 browser cases, one intentional desktop phone-navigation skip). Intended Vercel production `5YJZ1baSUxChLVuVens7kpa2ofBp` succeeded; the live Africa share review, currency clearing and 35-row local CSV were verified. This supersedes the earlier main/PR42 checkpoint in the Africa section below.
