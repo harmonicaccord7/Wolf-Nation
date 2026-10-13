@@ -1,0 +1,67 @@
+{
+  "protocolId": "btc24-v0.2-rolling-730-penalty-100",
+  "candidateVersion": "0.2.0",
+  "status": "research-only",
+  "frozenOn": "2026-10-13",
+  "question": "Does a fixed recent training window with stronger regularization improve descriptive probability scores on the same historical targets?",
+  "source": {
+    "snapshotId": "6a097e81-bc23-4c66-bda7-ac16681ca496",
+    "snapshotHash": "b9da28a6fccde64b3fd3084e4d17ca8e351aba3c7e3360d5d43ee67a611fdc76",
+    "fetchedAt": "2026-09-12T16:28:49.705Z",
+    "provider": "Coinbase Exchange",
+    "product": "BTC-USD",
+    "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles",
+    "expectedRows": 3541,
+    "firstBucket": "2017-01-01T00:00:00.000Z",
+    "lastBucket": "2026-09-11T00:00:00.000Z",
+    "gapsAllowed": 0,
+    "vintage": "Vendor history retrieved on September 12; not point-in-time revision vintages"
+  },
+  "target": {
+    "definition": "P(next complete UTC-day close exceeds that day open)",
+    "horizonSeconds": 86400,
+    "inputGapSeconds": 86400,
+    "tieClass": 0
+  },
+  "features": ["return_1d", "return_3d", "return_7d", "return_14d", "volatility_7d", "volatility_30d", "range_1d", "relative_volume_7d"],
+  "fit": {
+    "algorithm": "Training-standardized logistic regression; existing deterministic Newton solver",
+    "trainingWindowDays": 730,
+    "labelEndStrictlyBeforeInputCutoff": true,
+    "minimumTrainingRows": 500,
+    "summedLossL2Penalty": 100,
+    "interceptPenalized": false,
+    "refit": "First historical forecast in each calendar quarter"
+  },
+  "comparison": {
+    "legacyVersion": "0.1.0",
+    "legacyArtifactHash": "ee960f66a8186d882d400f056659fbb55b6fd0b92b90ed4fa92ca9926dd8d498",
+    "testStart": "2024-01-01T00:00:00.000Z",
+    "testEndExclusive": "2026-09-12T00:00:00.000Z",
+    "expectedTargets": 985,
+    "baseline": "Same legacy fold training-set up-frequency on identical target rows",
+    "primaryMetrics": ["brier", "logLoss"],
+    "otherMetrics": ["directional accuracy", "positive-class precision", "ten calibration bins", "per-quarter metrics", "abstention", "cost sensitivity", "daily-close drawdown"],
+    "bootstrapRepetitions": 1000,
+    "bootstrapBlockDays": 14,
+    "bootstrapSeed": 241017,
+    "bootstrapMeaning": "Paired descriptive interval; exploratory and not corrected for research selection"
+  },
+  "simulation": {
+    "longProbabilityThreshold": 0.55,
+    "costBpsPerSide": [10, 25, 50],
+    "strategies": ["candidate long/cash", "legacy long/cash", "always long daily", "positive lagged one-day momentum", "continuous buy-and-hold", "cash"],
+    "execution": "Candle open/close proxies; two cost legs per daily exposure; no trades",
+    "excluded": ["intraday drawdown", "market impact", "varying spread", "tax", "funding", "cash interest", "capacity"]
+  },
+  "gates": {
+    "previousHistoricalLabelsSeen": true,
+    "historicalInterpretation": "Retrospective research comparison, not a newly unseen holdout or prospective validation",
+    "forwardCallsIssued": 0,
+    "minimumSeparateForwardOutcomesForReview": 90,
+    "automaticPromotion": false,
+    "publication": "blocked",
+    "liveSchedulerChange": false,
+    "retuning": "Archive this result; different parameters require a new frozen protocol before evaluation"
+  }
+}
