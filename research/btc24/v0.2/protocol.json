@@ -7,7 +7,7 @@
   "source": {
     "snapshotId": "6a097e81-bc23-4c66-bda7-ac16681ca496",
     "snapshotHash": "b9da28a6fccde64b3fd3084e4d17ca8e351aba3c7e3360d5d43ee67a611fdc76",
-    "fetchedAt": "2026-09-12T16:28:49.705Z",
+    "fetchedAt": "2026-09-12T16:28:52.245Z",
     "provider": "Coinbase Exchange",
     "product": "BTC-USD",
     "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles",
