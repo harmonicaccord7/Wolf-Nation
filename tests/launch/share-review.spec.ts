@@ -34,7 +34,7 @@ test('Missing accounts remain unavailable and invalid assumptions withhold expor
   await page.getByLabel('Past annual dividend per share (BWP)',{exact:true}).fill('')
   await expect(ratios.locator('article').filter({hasText:'Past dividend yield'})).toContainText('Not available')
   await page.getByLabel('Assumed share price change (%)',{exact:true}).fill('-101')
-  await expect(page.getByRole('alert')).toContainText('−100%')
+  await expect(page.getByRole('alert').filter({hasText:'Assumed price change must be'})).toContainText('−100%')
   await expect(page.getByRole('button',{name:'Download share review CSV'})).toBeDisabled()
   expect((await request.get('/africa/share-review?country=not-a-country')).status()).toBe(404)
   expect((await request.get('/africa/share-review?country=cameroon&country=botswana')).status()).toBe(404)

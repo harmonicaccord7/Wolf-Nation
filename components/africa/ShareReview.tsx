@@ -38,7 +38,7 @@ export function ShareReview({initialCountry,cutoffDate}:{initialCountry:string;c
     setMessage('Review downloaded with inputs, source notes and calculation version.')
   }
   return <div className={styles.review}>
-    <div className={styles.bar}><label>Country / currency<select value={countrySlug} onChange={event=>changeCountry(event.target.value)}>{africaCountries.map(item=><option key={item.code} value={item.slug}>{item.name+' · '+item.currency}</option>)}</select></label><Link href={'/africa/'+country.slug}>Open {country.name} evidence →</Link></div>
+    <div className={styles.bar}><div className={styles.countryPicker}><label htmlFor="share-review-country">Country / currency</label><select id="share-review-country" value={countrySlug} onChange={event=>changeCountry(event.target.value)}>{africaCountries.map(item=><option key={item.code} value={item.slug}>{item.name+' · '+item.currency}</option>)}</select></div><Link href={'/africa/'+country.slug}>Open {country.name} evidence →</Link></div>
     <p>All monetary inputs below use <b>{country.currency}</b>. Enter figures from the same company, currency and share basis. Historical company figures and assumed future outcomes are separate.</p>
     <div className={styles.actions}><button className="goldButton" onClick={example}>Load a hypothetical example</button><button className="outlineButton" onClick={()=>{setFields(blankFields());setEvidence(blankEvidence());setIllustration(false);setMessage('Figures and source notes cleared.')}}>Clear all figures</button></div>
     <p role="status" aria-live="polite">{message}</p>
