@@ -4,7 +4,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '../lib/supabase/server'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base='https://www.kaporalintelligence.com', now=new Date().toISOString()
-  const routes=['','/news','/news/journal','/learn/market-events','/tools/decision-lab','/markets','/events','/newsletter','/bitcoin','/crypto','/macro','/options','/africa','/business','/technology','/learn','/research','/track-record','/impact-map','/status','/about','/methodology','/contact','/disclosures','/corrections','/privacy','/terms']
+  const routes=['','/news','/news/journal','/learn/market-events','/tools/decision-lab','/markets','/events','/newsletter','/bitcoin','/crypto','/macro','/options','/africa','/africa/share-review','/business','/technology','/learn','/research','/track-record','/impact-map','/status','/about','/methodology','/contact','/disclosures','/corrections','/privacy','/terms']
   const db=await createClient()
   const [articles,series,events,issues]=await Promise.all([
     db.from('articles').select('slug,updated_at,published_at').eq('status','published').lte('published_at',now).order('published_at',{ascending:false}).limit(1000),

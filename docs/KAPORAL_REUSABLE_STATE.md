@@ -1,8 +1,19 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-10-12. Read the latest checkpoint, issue #22 and September 20 owner instruction before relying on historical release holds.
+Last operational refresh: 2026-10-13. Read the latest checkpoint, issue #22 and September 20 owner instruction before relying on historical release holds.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
+
+## October 13 Africa share and IPO review
+
+- Current verified main is 834cd8d377861333919ea14d790160170149009c: PR #42 merged on October 12. Its merge tree matched the checked candidate; main CI 38234189258 and intended Vercel production CeGPxkHPWgCK8u845tBwJJnbit75 are successful. Live production guest saving preserved the entered scenario and required sign-in. This supersedes the earlier October 12 failed-preview checkpoint below.
+- The focused Africa Share & IPO Review increment adds a free manual company-figure and share-cost worksheet at /africa/share-review, linked from all nine country workspaces, the Africa desk, search and sitemap. Its detailed scope and validation record are in docs/AFRICA_SHARE_REVIEW_2026-10-13.md. Read the focused PR and current head for actual check/merge/production status; this handoff is not a release claim.
+- Past EPS/dividend/book figures remain distinct from future price/dividend assumptions. Missing ratios remain unavailable; whole lots include buy fees in the affordability budget. A labelled hypothetical company is optional. No real issuer feed, IPO availability, suitability rating or forecast is implied.
+- Inputs and evidence notes remain local to the browser; CSV is a deliberate local export with formula-safe text. Switching country clears figures instead of relabelling a currency. There is no schema, RLS, credential, account-write, payment, editorial-publication or model-artifact change.
+- Actual Studio browser remains signed out on October 13. The owner's newsletter content review is already acknowledged; authenticated reader save/reopen and editor approval/publication plus consented inbox acceptance still need genuine sessions. Never simulate an editor by service-role SQL or broadcast as an acceptance test.
+- Fresh read-only audit at 2026-10-13T06:31:37Z found database 78,695,571 bytes, zero published editions and zero saved scenarios. All six active news sources were healthy/current at 06:05 UTC; the retired AfDB error row remains preserved and excluded from active reader coverage. Latest UN Geneva publication is October 12; Africa's World Bank latest dates remain October 9 (Sub-Saharan) and September 22 (North Africa).
+- BTC 0.1.0 now has 32 immutable issued calls, latest 2026-10-13T00:20:03Z, and remains experimental. This count is not a new complete performance audit, retraining or validation. Reuse the frozen October 12 forward checkpoint until producing a separately complete dated comparison. Broader local news, verified issuer data, a frozen v0.2 protocol and paid-provider sandbox acceptance remain unfinished.
+- Preserve the obsolete uncommitted journal worktree from the October 12 recovery. This increment uses a new worktree from checked current main; do not reset or publish the stale pre-recovery source. Ordinary app releases remain independent of future model performance.
 
 ## October 12 private saved Decision Lab scenarios
 
