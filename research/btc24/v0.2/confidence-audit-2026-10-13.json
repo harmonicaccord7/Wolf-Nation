@@ -1,0 +1,203 @@
+{
+  "analysis": "btc24-fixed-confidence-diagnostics-1",
+  "status": "retrospective research; no promotion",
+  "method": "Replay the frozen v0.2 source/protocol/artifacts; compare original aggregate scores; classify every same target at probability >=0.5. Confidence is max(p,1-p), not achieved accuracy.",
+  "bandRules": "Fixed half-open bands; final band includes 1. No new strategy, fitted parameters or threshold selection.",
+  "protocolHash": "83ebf4a4767288ed62241f12acca9a4b83442175230f6bfe122b8964265c11b3",
+  "snapshotHash": "b9da28a6fccde64b3fd3084e4d17ca8e351aba3c7e3360d5d43ee67a611fdc76",
+  "observations": 985,
+  "periodStart": "2024-01-01T00:00:00.000Z",
+  "periodEnd": "2026-09-12T00:00:00.000Z",
+  "models": {
+    "candidate": {
+      "observations": 985,
+      "correct": 477,
+      "wrong": 508,
+      "accuracy": 0.4842639593908629,
+      "probabilityRange": {
+        "minimum": 0.41939167326490007,
+        "maximum": 0.6248870357303019
+      },
+      "confusion": {
+        "upCorrect": 210,
+        "upWrong": 221,
+        "downCorrect": 267,
+        "downWrong": 287
+      },
+      "confidenceBands": [
+        {
+          "lower": 0.5,
+          "upper": 0.55,
+          "count": 946,
+          "correct": 461,
+          "coverage": 0.9604060913705583,
+          "accuracy": 0.48731501057082455
+        },
+        {
+          "lower": 0.55,
+          "upper": 0.6,
+          "count": 38,
+          "correct": 15,
+          "coverage": 0.03857868020304569,
+          "accuracy": 0.39473684210526316
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 1,
+          "correct": 1,
+          "coverage": 0.0010152284263959391,
+          "accuracy": 1
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.9,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        }
+      ]
+    },
+    "legacy": {
+      "observations": 985,
+      "correct": 487,
+      "wrong": 498,
+      "accuracy": 0.49441624365482234,
+      "probabilityRange": {
+        "minimum": 0.49259159815374237,
+        "maximum": 0.5575078144105816
+      },
+      "confusion": {
+        "upCorrect": 477,
+        "upWrong": 478,
+        "downCorrect": 10,
+        "downWrong": 20
+      },
+      "confidenceBands": [
+        {
+          "lower": 0.5,
+          "upper": 0.55,
+          "count": 980,
+          "correct": 482,
+          "coverage": 0.9949238578680203,
+          "accuracy": 0.49183673469387756
+        },
+        {
+          "lower": 0.55,
+          "upper": 0.6,
+          "count": 5,
+          "correct": 5,
+          "coverage": 0.005076142131979695,
+          "accuracy": 1
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.9,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        }
+      ]
+    },
+    "benchmark": {
+      "observations": 985,
+      "correct": 497,
+      "wrong": 488,
+      "accuracy": 0.5045685279187817,
+      "probabilityRange": {
+        "minimum": 0.5154338963308096,
+        "maximum": 0.5227707615767317
+      },
+      "confusion": {
+        "upCorrect": 497,
+        "upWrong": 488,
+        "downCorrect": 0,
+        "downWrong": 0
+      },
+      "confidenceBands": [
+        {
+          "lower": 0.5,
+          "upper": 0.55,
+          "count": 985,
+          "correct": 497,
+          "coverage": 1,
+          "accuracy": 0.5045685279187817
+        },
+        {
+          "lower": 0.55,
+          "upper": 0.6,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.9,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1,
+          "count": 0,
+          "correct": 0,
+          "coverage": 0,
+          "accuracy": null
+        }
+      ]
+    }
+  },
+  "accuracyAspiration": {
+    "target": 0.999,
+    "oneSidedConfidence": 0.95,
+    "requiredCorrect": 2995,
+    "allowedErrors": 0,
+    "lowerBound": 0.9990002555790989,
+    "previousSampleLowerBound": 0.9989999218301533,
+    "assumption": "Independent identically distributed Bernoulli trials; not established for these market forecasts",
+    "meaning": "Mathematical illustration, not a forecast guarantee, validation gate or time promise"
+  },
+  "limits": [
+    "Historical labels were already inspected.",
+    "Empty confidence bands have no accuracy estimate.",
+    "Tiny perfect subsets do not establish future accuracy.",
+    "No raw observations, fitted coefficients, per-target probabilities or trading outcomes are emitted."
+  ]
+}

@@ -27,3 +27,7 @@ The numerical audit must reconstruct features and labels independently, fit each
 Do not register, schedule, issue, publish or sell v0.2 forecasts from this comparison. A later research decision must explicitly freeze a fitted artifact and separately versioned future ledger before any target begins, preserve source provenance and immutable evidence, and pass independent numerical and engineering checks. At least 90 non-overlapping resolved forward calls permit a research review; they do not guarantee sufficient power or validation. Other asset/category models remain separate work.
 
 Metadata correction before any candidate evaluation: the snapshot payload records receipt at 16:28:52.245 UTC; the database run as-of value 16:28:49.705 UTC records collection start. The protocol now pins the payload timestamp. Source, target, fit and comparison rules were unchanged.
+
+## Confidence and error diagnostic
+
+`CONFIDENCE_DIAGNOSTICS_2026-10-13.md` and `confidence-audit-2026-10-13.json` account for all 985 forecast directions and fixed confidence bands. The accompanying offline replay verifies the unchanged protocol/source/artifacts and reproduces the original aggregate metrics. The 99.9% sample-size illustration has explicit independence assumptions; it is not an achievable accuracy guarantee or promotion gate. No new candidate, threshold or forward calls were introduced.
