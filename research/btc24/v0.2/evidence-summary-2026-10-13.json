@@ -1,0 +1,3312 @@
+{
+  "experiment": "K-BTC-24H 0.2.0 rolling-730 penalty-100",
+  "completedOn": "2026-10-13",
+  "freezeCommit": "92178ffa979d5ad3b3de3a84fd7c552541e1a060",
+  "snapshotId": "6a097e81-bc23-4c66-bda7-ac16681ca496",
+  "sourceFetchedAt": "2026-09-12T16:28:52.245Z",
+  "runtime": {
+    "node": "24.19.0",
+    "python": "3.12.14"
+  },
+  "independentAudit": {
+    "verified": true,
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "sklearn": "1.8.0",
+    "targets": 985,
+    "candidate_fits": 12,
+    "legacy_fits": 12,
+    "max_coefficient_absolute_error": 6.70482460829458e-07,
+    "max_probability_absolute_error": 4.5164201212255506e-08,
+    "checks": [
+      "independent features/labels",
+      "strict rolling/purged training windows",
+      "training-only scaling",
+      "scikit-learn fits",
+      "paired probability and quarter metrics",
+      "calibration",
+      "paired block bootstrap",
+      "all fixed costs/strategies",
+      "no automatic promotion"
+    ]
+  },
+  "decision": "Archive as a research-only candidate. Point probability scores are worse; paired Brier intervals include no difference. No automatic promotion, separate forward calls or public predictions.",
+  "aggregateEvidence": {
+    "protocolHash": "83ebf4a4767288ed62241f12acca9a4b83442175230f6bfe122b8964265c11b3",
+    "snapshotHash": "b9da28a6fccde64b3fd3084e4d17ca8e351aba3c7e3360d5d43ee67a611fdc76",
+    "legacyArtifactHash": "ee960f66a8186d882d400f056659fbb55b6fd0b92b90ed4fa92ca9926dd8d498",
+    "candidateArtifactHash": "ea35a721ef21da675d1ead0cdf7e6d208dc8b0f4de4b3bb027a18ec9660354ff",
+    "quality": {
+      "rows": 3541,
+      "duplicates": 0,
+      "incomplete": 0,
+      "gaps": [],
+      "first": "2017-01-01T00:00:00.000Z",
+      "last": "2026-09-11T00:00:00.000Z"
+    },
+    "version": "0.2.0",
+    "features": [
+      "return_1d",
+      "return_3d",
+      "return_7d",
+      "return_14d",
+      "volatility_7d",
+      "volatility_30d",
+      "range_1d",
+      "relative_volume_7d"
+    ],
+    "periodStart": "2024-01-01T00:00:00.000Z",
+    "periodEnd": "2026-09-12T00:00:00.000Z",
+    "observations": 985,
+    "metrics": {
+      "candidate": {
+        "observations": 985,
+        "hitRate": 0.4842639593908629,
+        "precision": 0.4872389791183295,
+        "brier": 0.25120459528250627,
+        "logLoss": 0.6955607337148288,
+        "actualUpRate": 0.5045685279187817,
+        "reliability": [
+          {
+            "lower": 0,
+            "upper": 0.1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 554,
+            "predicted": 0.48367354511363925,
+            "observed": 0.5180505415162455
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 430,
+            "predicted": 0.5151961142618537,
+            "observed": 0.48604651162790696
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 1,
+            "predicted": 0.6248870357303019,
+            "observed": 1
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          }
+        ]
+      },
+      "legacy": {
+        "observations": 985,
+        "hitRate": 0.49441624365482234,
+        "precision": 0.49947643979057593,
+        "brier": 0.25029014955097406,
+        "logLoss": 0.6937260412261552,
+        "actualUpRate": 0.5045685279187817,
+        "reliability": [
+          {
+            "lower": 0,
+            "upper": 0.1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 30,
+            "predicted": 0.49648785049896627,
+            "observed": 0.6666666666666666
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 955,
+            "predicted": 0.5171427438194708,
+            "observed": 0.49947643979057593
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          }
+        ]
+      },
+      "benchmark": {
+        "observations": 985,
+        "hitRate": 0.5045685279187817,
+        "precision": 0.5045685279187817,
+        "brier": 0.2502353096153254,
+        "logLoss": 0.6936183225774042,
+        "actualUpRate": 0.5045685279187817,
+        "reliability": [
+          {
+            "lower": 0,
+            "upper": 0.1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 985,
+            "predicted": 0.5196425193482108,
+            "observed": 0.5045685279187817
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          }
+        ]
+      },
+      "rollingPrior": {
+        "observations": 985,
+        "hitRate": 0.4842639593908629,
+        "precision": 0.4879120879120879,
+        "brier": 0.25070797942109657,
+        "logLoss": 0.6945639097234101,
+        "actualUpRate": 0.5045685279187817,
+        "reliability": [
+          {
+            "lower": 0,
+            "upper": 0.1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 530,
+            "predicted": 0.4904729904368019,
+            "observed": 0.5188679245283019
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 455,
+            "predicted": 0.5131898238747534,
+            "observed": 0.4879120879120879
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          },
+          {
+            "lower": 0.9,
+            "upper": 1,
+            "count": 0,
+            "predicted": null,
+            "observed": null
+          }
+        ]
+      }
+    },
+    "differences": {
+      "versusLegacy": {
+        "difference": 0.0009144457315323518,
+        "lower95": -0.0007363770446039752,
+        "upper95": 0.0028083828889812895,
+        "repetitions": 1000,
+        "blockDays": 14,
+        "seed": 241017,
+        "interpretation": "Negative favors model; uncertainty is exploratory and not corrected for future model searches."
+      },
+      "versusBenchmark": {
+        "difference": 0.0009692856671824701,
+        "lower95": -0.0007476294309642622,
+        "upper95": 0.002974361481725425,
+        "repetitions": 1000,
+        "blockDays": 14,
+        "seed": 241017,
+        "interpretation": "Negative favors model; uncertainty is exploratory and not corrected for future model searches."
+      }
+    },
+    "quarters": [
+      {
+        "key": "2024-Q1",
+        "start": "2024-01-01T00:00:00.000Z",
+        "end": "2024-04-01T00:00:00.000Z",
+        "observations": 91,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2021-12-31T00:00:00.000Z",
+        "trainingLastTargetEnd": "2023-12-30T00:00:00.000Z",
+        "candidate": {
+          "observations": 91,
+          "hitRate": 0.4175824175824176,
+          "precision": 0.5,
+          "brier": 0.2587123280199475,
+          "logLoss": 0.7106543807190656,
+          "actualUpRate": 0.5824175824175825,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 85,
+              "predicted": 0.4645874727404581,
+              "observed": 0.5882352941176471
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 6,
+              "predicted": 0.5054191380973729,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 91,
+          "hitRate": 0.5384615384615384,
+          "precision": 0.5662650602409639,
+          "brier": 0.24889916337737267,
+          "logLoss": 0.6909370105675162,
+          "actualUpRate": 0.5824175824175825,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 8,
+              "predicted": 0.4976513908401311,
+              "observed": 0.75
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 83,
+              "predicted": 0.5244279231901631,
+              "observed": 0.5662650602409639
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 91,
+          "hitRate": 0.5824175824175825,
+          "precision": 0.5824175824175825,
+          "brier": 0.2470756268593039,
+          "logLoss": 0.6872954654241639,
+          "actualUpRate": 0.5824175824175825,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5202220459952418,
+              "observed": 0.5824175824175825
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2024-Q2",
+        "start": "2024-04-01T00:00:00.000Z",
+        "end": "2024-07-01T00:00:00.000Z",
+        "observations": 91,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2022-04-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2024-03-30T00:00:00.000Z",
+        "candidate": {
+          "observations": 91,
+          "hitRate": 0.5164835164835165,
+          "precision": 0.47058823529411764,
+          "brier": 0.24874319043985954,
+          "logLoss": 0.6906292293816271,
+          "actualUpRate": 0.4725274725274725,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 74,
+              "predicted": 0.48173552437073275,
+              "observed": 0.47297297297297297
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 17,
+              "predicted": 0.5072394202119481,
+              "observed": 0.47058823529411764
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 91,
+          "hitRate": 0.4725274725274725,
+          "precision": 0.4725274725274725,
+          "brier": 0.2511581205288732,
+          "logLoss": 0.6954660503042379,
+          "actualUpRate": 0.4725274725274725,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5180884449717947,
+              "observed": 0.4725274725274725
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 91,
+          "hitRate": 0.4725274725274725,
+          "precision": 0.4725274725274725,
+          "brier": 0.2517696483287586,
+          "logLoss": 0.6966892861990363,
+          "actualUpRate": 0.4725274725274725,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5227707615767307,
+              "observed": 0.4725274725274725
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2024-Q3",
+        "start": "2024-07-01T00:00:00.000Z",
+        "end": "2024-10-01T00:00:00.000Z",
+        "observations": 92,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2022-07-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2024-06-29T00:00:00.000Z",
+        "candidate": {
+          "observations": 92,
+          "hitRate": 0.44565217391304346,
+          "precision": 0.4,
+          "brier": 0.2510915305621577,
+          "logLoss": 0.6953338149583252,
+          "actualUpRate": 0.5108695652173914,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 72,
+              "predicted": 0.48193832604867165,
+              "observed": 0.5416666666666666
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 20,
+              "predicted": 0.5074297809490963,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 92,
+          "hitRate": 0.5,
+          "precision": 0.5054945054945055,
+          "brier": 0.24988235807016165,
+          "logLoss": 0.6929128495395136,
+          "actualUpRate": 0.5108695652173914,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 1,
+              "predicted": 0.4987333051456068,
+              "observed": 1
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5179610489268621,
+              "observed": 0.5054945054945055
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 92,
+          "hitRate": 0.5108695652173914,
+          "precision": 0.5108695652173914,
+          "brier": 0.24997868787324756,
+          "logLoss": 0.6931047775237752,
+          "actualUpRate": 0.5108695652173914,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 92,
+              "predicted": 0.5207100591715984,
+              "observed": 0.5108695652173914
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2024-Q4",
+        "start": "2024-10-01T00:00:00.000Z",
+        "end": "2025-01-01T00:00:00.000Z",
+        "observations": 92,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2022-10-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2024-09-29T00:00:00.000Z",
+        "candidate": {
+          "observations": 92,
+          "hitRate": 0.5760869565217391,
+          "precision": 0.625,
+          "brier": 0.24881765382845272,
+          "logLoss": 0.6907820719946086,
+          "actualUpRate": 0.532608695652174,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 52,
+              "predicted": 0.4940911949873769,
+              "observed": 0.46153846153846156
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 40,
+              "predicted": 0.5050910362776964,
+              "observed": 0.625
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 92,
+          "hitRate": 0.5217391304347826,
+          "precision": 0.5274725274725275,
+          "brier": 0.24787204467279816,
+          "logLoss": 0.6888804790594777,
+          "actualUpRate": 0.532608695652174,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 1,
+              "predicted": 0.49794615456090485,
+              "observed": 1
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5231680459125543,
+              "observed": 0.5274725274725275
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 92,
+          "hitRate": 0.532608695652174,
+          "precision": 0.532608695652174,
+          "brier": 0.24906908682402265,
+          "logLoss": 0.6912845123940763,
+          "actualUpRate": 0.532608695652174,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 92,
+              "predicted": 0.521101573676681,
+              "observed": 0.532608695652174
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2025-Q1",
+        "start": "2025-01-01T00:00:00.000Z",
+        "end": "2025-04-01T00:00:00.000Z",
+        "observations": 90,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2023-01-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2024-12-30T00:00:00.000Z",
+        "candidate": {
+          "observations": 90,
+          "hitRate": 0.4888888888888889,
+          "precision": 0.4423076923076923,
+          "brier": 0.2507400142384453,
+          "logLoss": 0.694616647460012,
+          "actualUpRate": 0.4444444444444444,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 38,
+              "predicted": 0.4911089439905775,
+              "observed": 0.4473684210526316
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 52,
+              "predicted": 0.5221855657153841,
+              "observed": 0.4423076923076923
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 90,
+          "hitRate": 0.45555555555555555,
+          "precision": 0.4430379746835443,
+          "brier": 0.25216883269528145,
+          "logLoss": 0.6974850576762814,
+          "actualUpRate": 0.4444444444444444,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 11,
+              "predicted": 0.49579119590625814,
+              "observed": 0.45454545454545453
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 79,
+              "predicted": 0.518630713141709,
+              "observed": 0.4430379746835443
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 90,
+          "hitRate": 0.4444444444444444,
+          "precision": 0.4444444444444444,
+          "brier": 0.2527930099310335,
+          "logLoss": 0.6987367925620833,
+          "actualUpRate": 0.4444444444444444,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 90,
+              "predicted": 0.52112188365651,
+              "observed": 0.4444444444444444
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2025-Q2",
+        "start": "2025-04-01T00:00:00.000Z",
+        "end": "2025-07-01T00:00:00.000Z",
+        "observations": 91,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2023-04-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2025-03-30T00:00:00.000Z",
+        "candidate": {
+          "observations": 91,
+          "hitRate": 0.4945054945054945,
+          "precision": 0.5625,
+          "brier": 0.24819519624960187,
+          "logLoss": 0.6895294478588684,
+          "actualUpRate": 0.5714285714285714,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 43,
+              "predicted": 0.48921270038102177,
+              "observed": 0.5813953488372093
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 48,
+              "predicted": 0.5155398949414861,
+              "observed": 0.5625
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 91,
+          "hitRate": 0.5494505494505495,
+          "precision": 0.5632183908045977,
+          "brier": 0.24860727411070946,
+          "logLoss": 0.6903582476876085,
+          "actualUpRate": 0.5714285714285714,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 4,
+              "predicted": 0.4974862769396475,
+              "observed": 0.75
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 87,
+              "predicted": 0.514822167883332,
+              "observed": 0.5632183908045977
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 91,
+          "hitRate": 0.5714285714285714,
+          "precision": 0.5714285714285714,
+          "brier": 0.24766724504436155,
+          "logLoss": 0.6884796359851107,
+          "actualUpRate": 0.5714285714285714,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5188045668233705,
+              "observed": 0.5714285714285714
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2025-Q3",
+        "start": "2025-07-01T00:00:00.000Z",
+        "end": "2025-10-01T00:00:00.000Z",
+        "observations": 92,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2023-07-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2025-06-29T00:00:00.000Z",
+        "candidate": {
+          "observations": 92,
+          "hitRate": 0.45652173913043476,
+          "precision": 0.45,
+          "brier": 0.25100075715853853,
+          "logLoss": 0.6951519948218284,
+          "actualUpRate": 0.5,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 52,
+              "predicted": 0.4918768172242608,
+              "observed": 0.5384615384615384
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 40,
+              "predicted": 0.5096454621035033,
+              "observed": 0.45
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 92,
+          "hitRate": 0.5,
+          "precision": 0.5,
+          "brier": 0.2514086298285914,
+          "logLoss": 0.695968901940722,
+          "actualUpRate": 0.5,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 92,
+              "predicted": 0.5167148809442076,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 92,
+          "hitRate": 0.5,
+          "precision": 0.5,
+          "brier": 0.25041473076978993,
+          "logLoss": 0.6939773308678197,
+          "actualUpRate": 0.5,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 92,
+              "predicted": 0.5203649397197783,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2025-Q4",
+        "start": "2025-10-01T00:00:00.000Z",
+        "end": "2026-01-01T00:00:00.000Z",
+        "observations": 92,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2023-10-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2025-09-29T00:00:00.000Z",
+        "candidate": {
+          "observations": 92,
+          "hitRate": 0.4673913043478261,
+          "precision": 0.4666666666666667,
+          "brier": 0.252654421352943,
+          "logLoss": 0.6984612561377501,
+          "actualUpRate": 0.4782608695652174,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 17,
+              "predicted": 0.4899282138287866,
+              "observed": 0.5294117647058824
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 75,
+              "predicted": 0.5220810242129693,
+              "observed": 0.4666666666666667
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 92,
+          "hitRate": 0.4782608695652174,
+          "precision": 0.4782608695652174,
+          "brier": 0.25133767592621425,
+          "logLoss": 0.6958242399451878,
+          "actualUpRate": 0.4782608695652174,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 92,
+              "predicted": 0.515641750242306,
+              "observed": 0.4782608695652174
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 92,
+          "hitRate": 0.4782608695652174,
+          "precision": 0.4782608695652174,
+          "brier": 0.2512506027532689,
+          "logLoss": 0.695649895090537,
+          "actualUpRate": 0.4782608695652174,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 92,
+              "predicted": 0.5197722239797523,
+              "observed": 0.4782608695652174
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2026-Q1",
+        "start": "2026-01-01T00:00:00.000Z",
+        "end": "2026-04-01T00:00:00.000Z",
+        "observations": 90,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2024-01-01T00:00:00.000Z",
+        "trainingLastTargetEnd": "2025-12-30T00:00:00.000Z",
+        "candidate": {
+          "observations": 90,
+          "hitRate": 0.4888888888888889,
+          "precision": 0.45161290322580644,
+          "brier": 0.2502131167775269,
+          "logLoss": 0.6935417355412496,
+          "actualUpRate": 0.4444444444444444,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 28,
+              "predicted": 0.4859586048864498,
+              "observed": 0.42857142857142855
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 61,
+              "predicted": 0.5189414400792851,
+              "observed": 0.4426229508196721
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 1,
+              "predicted": 0.6248870357303019,
+              "observed": 1
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 90,
+          "hitRate": 0.43333333333333335,
+          "precision": 0.4367816091954023,
+          "brier": 0.25141775025113017,
+          "logLoss": 0.695980454004675,
+          "actualUpRate": 0.4444444444444444,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 3,
+              "predicted": 0.4950003982367241,
+              "observed": 0.6666666666666666
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 87,
+              "predicted": 0.5152993051373326,
+              "observed": 0.4367816091954023
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 90,
+          "hitRate": 0.4444444444444444,
+          "precision": 0.4444444444444444,
+          "brier": 0.2524123622356484,
+          "logLoss": 0.6979742917025055,
+          "actualUpRate": 0.4444444444444444,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 90,
+              "predicted": 0.5185982170304323,
+              "observed": 0.4444444444444444
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2026-Q2",
+        "start": "2026-04-01T00:00:00.000Z",
+        "end": "2026-07-01T00:00:00.000Z",
+        "observations": 91,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2024-03-31T00:00:00.000Z",
+        "trainingLastTargetEnd": "2026-03-30T00:00:00.000Z",
+        "candidate": {
+          "observations": 91,
+          "hitRate": 0.4835164835164835,
+          "precision": 0.4473684210526316,
+          "brier": 0.25269043879286257,
+          "logLoss": 0.6985410988280362,
+          "actualUpRate": 0.4725274725274725,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 53,
+              "predicted": 0.4818718855947693,
+              "observed": 0.49056603773584906
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 38,
+              "predicted": 0.5135498493222815,
+              "observed": 0.4473684210526316
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 91,
+          "hitRate": 0.45054945054945056,
+          "precision": 0.4606741573033708,
+          "brier": 0.2508718382834439,
+          "logLoss": 0.6948911508928657,
+          "actualUpRate": 0.4725274725274725,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 2,
+              "predicted": 0.4940477355519125,
+              "observed": 1
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 89,
+              "predicted": 0.5117914844209943,
+              "observed": 0.4606741573033708
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 91,
+          "hitRate": 0.4725274725274725,
+          "precision": 0.4725274725274725,
+          "brier": 0.2511615327099239,
+          "logLoss": 0.6954711639984931,
+          "actualUpRate": 0.4725274725274725,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 91,
+              "predicted": 0.5163027221058918,
+              "observed": 0.4725274725274725
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      },
+      {
+        "key": "2026-Q3",
+        "start": "2026-07-01T00:00:00.000Z",
+        "end": "2026-09-12T00:00:00.000Z",
+        "observations": 73,
+        "trainingObservations": 730,
+        "trainingFirstTargetEnd": "2024-06-30T00:00:00.000Z",
+        "trainingLastTargetEnd": "2026-06-29T00:00:00.000Z",
+        "candidate": {
+          "observations": 73,
+          "hitRate": 0.4931506849315068,
+          "precision": 0.5454545454545454,
+          "brier": 0.25018874254975465,
+          "logLoss": 0.6935172504571206,
+          "actualUpRate": 0.547945205479452,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 40,
+              "predicted": 0.4918441849903655,
+              "observed": 0.55
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 33,
+              "predicted": 0.5125674332343243,
+              "observed": 0.5454545454545454
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "legacy": {
+          "observations": 73,
+          "hitRate": 0.547945205479452,
+          "precision": 0.547945205479452,
+          "brier": 0.24944010407399486,
+          "logLoss": 0.6920263761878482,
+          "actualUpRate": 0.547945205479452,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 73,
+              "predicted": 0.5114569852927465,
+              "observed": 0.547945205479452
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        },
+        "benchmark": {
+          "observations": 73,
+          "hitRate": 0.547945205479452,
+          "precision": 0.547945205479452,
+          "brier": 0.24875824249409179,
+          "logLoss": 0.6906629520287485,
+          "actualUpRate": 0.547945205479452,
+          "reliability": [
+            {
+              "lower": 0,
+              "upper": 0.1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "count": 73,
+              "predicted": 0.5154338963308096,
+              "observed": 0.547945205479452
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            },
+            {
+              "lower": 0.9,
+              "upper": 1,
+              "count": 0,
+              "predicted": null,
+              "observed": null
+            }
+          ]
+        }
+      }
+    ],
+    "finalFit": {
+      "cutoff": "2026-09-12T00:00:00.000Z",
+      "trainingFirstTargetEnd": "2024-09-12T00:00:00.000Z",
+      "trainingLastTargetEnd": "2026-09-11T00:00:00.000Z",
+      "trainingObservations": 730
+    },
+    "gate": {
+      "status": "research-only",
+      "previousHistoricalLabelsSeen": true,
+      "forwardCallsIssued": 0,
+      "publication": "blocked",
+      "automaticPromotion": false,
+      "reason": "Retrospective comparison on an already-inspected historical sample. No separate v0.2 prospective evidence."
+    },
+    "abstention": {
+      "threshold": 0.55,
+      "candidateActiveDays": 12,
+      "legacyActiveDays": 5,
+      "candidateRate": 0.9878172588832488,
+      "legacyRate": 0.9949238578680203
+    },
+    "strategies": [
+      {
+        "costBpsPerSide": 10,
+        "candidate": {
+          "costBpsPerSide": 10,
+          "totalReturnPct": 6.463125920298407,
+          "averageDayReturnPct": 0.007241675492674967,
+          "maxDrawdownPct": 9.57695940558777,
+          "activeDays": 12,
+          "observations": 985
+        },
+        "legacy": {
+          "costBpsPerSide": 10,
+          "totalReturnPct": 9.73916380430271,
+          "averageDayReturnPct": 0.009546345315429973,
+          "maxDrawdownPct": 0,
+          "activeDays": 5,
+          "observations": 985
+        },
+        "alwaysLongDaily": {
+          "costBpsPerSide": 10,
+          "totalReturnPct": -74.55659253903526,
+          "averageDayReturnPct": -0.10801557044012715,
+          "maxDrawdownPct": 85.40183638004379,
+          "activeDays": 985,
+          "observations": 985
+        },
+        "momentum": {
+          "costBpsPerSide": 10,
+          "totalReturnPct": -50.91095669535367,
+          "averageDayReturnPct": -0.05631907445191856,
+          "maxDrawdownPct": 72.71090539112568,
+          "activeDays": 497,
+          "observations": 985
+        },
+        "buyHold": {
+          "costBpsPerSide": 10,
+          "totalReturnPct": 82.21044572447221,
+          "maxDrawdownPct": 53.075779531589504
+        },
+        "cash": {
+          "costBpsPerSide": 10,
+          "totalReturnPct": 0,
+          "averageDayReturnPct": 0,
+          "maxDrawdownPct": 0,
+          "activeDays": 0,
+          "observations": 985
+        }
+      },
+      {
+        "costBpsPerSide": 25,
+        "candidate": {
+          "costBpsPerSide": 25,
+          "totalReturnPct": 2.6921391850824428,
+          "averageDayReturnPct": 0.0035642108372080377,
+          "maxDrawdownPct": 11.45930380123784,
+          "activeDays": 12,
+          "observations": 985
+        },
+        "legacy": {
+          "costBpsPerSide": 25,
+          "totalReturnPct": 8.102517496901541,
+          "averageDayReturnPct": 0.007994476547154237,
+          "maxDrawdownPct": 0,
+          "activeDays": 5,
+          "observations": 985
+        },
+        "alwaysLongDaily": {
+          "costBpsPerSide": 25,
+          "totalReturnPct": -98.68178862598357,
+          "averageDayReturnPct": -0.40776629250394714,
+          "maxDrawdownPct": 98.98159713045908,
+          "activeDays": 985,
+          "observations": 985
+        },
+        "momentum": {
+          "costBpsPerSide": 25,
+          "totalReturnPct": -88.9765838179898,
+          "averageDayReturnPct": -0.20755840021437505,
+          "maxDrawdownPct": 91.46702521442745,
+          "activeDays": 497,
+          "observations": 985
+        },
+        "buyHold": {
+          "costBpsPerSide": 25,
+          "totalReturnPct": 81.66367800346454,
+          "maxDrawdownPct": 53.0757795315895
+        },
+        "cash": {
+          "costBpsPerSide": 25,
+          "totalReturnPct": 0,
+          "averageDayReturnPct": 0,
+          "maxDrawdownPct": 0,
+          "activeDays": 0,
+          "observations": 985
+        }
+      },
+      {
+        "costBpsPerSide": 50,
+        "candidate": {
+          "costBpsPerSide": 50,
+          "totalReturnPct": -3.3100280931339654,
+          "averageDayReturnPct": -0.0025526172169019054,
+          "maxDrawdownPct": 14.515888531534337,
+          "activeDays": 12,
+          "observations": 985
+        },
+        "legacy": {
+          "costBpsPerSide": 50,
+          "totalReturnPct": 5.423534315941958,
+          "averageDayReturnPct": 0.005413210564359711,
+          "maxDrawdownPct": 0,
+          "activeDays": 5,
+          "observations": 985
+        },
+        "alwaysLongDaily": {
+          "costBpsPerSide": 50,
+          "totalReturnPct": -99.99060206283804,
+          "averageDayReturnPct": -0.9063499085922636,
+          "maxDrawdownPct": 99.9909840106789,
+          "activeDays": 985,
+          "observations": 985
+        },
+        "momentum": {
+          "costBpsPerSide": 50,
+          "totalReturnPct": -99.09002065883055,
+          "averageDayReturnPct": -0.45911892828993317,
+          "maxDrawdownPct": 99.14637101486959,
+          "activeDays": 497,
+          "observations": 985
+        },
+        "buyHold": {
+          "costBpsPerSide": 50,
+          "totalReturnPct": 80.75422422259155,
+          "maxDrawdownPct": 53.0757795315895
+        },
+        "cash": {
+          "costBpsPerSide": 50,
+          "totalReturnPct": 0,
+          "averageDayReturnPct": 0,
+          "maxDrawdownPct": 0,
+          "activeDays": 0,
+          "observations": 985
+        }
+      }
+    ]
+  }
+}
