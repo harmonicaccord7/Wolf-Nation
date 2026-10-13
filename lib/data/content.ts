@@ -10,7 +10,7 @@ export async function getHomeContent() {
   return { articles: articles ?? [], signals: signals ?? [], desks: desks ?? [] }
 }
 
-async function getResearchIdentity(){
+export async function getResearchIdentity(){
   const supabase=await createClient()
   const {data}=await supabase.auth.getClaims()
   const claims=data?.claims
@@ -39,14 +39,13 @@ export async function getStoryWorkspace(id:string){
   const {supabase,profile}=identity
   const {data:story}=await supabase.from('story_candidates').select('id,title,thesis_seed,status,story_type,horizon,primary_region,primary_sector,detected_at,detected_by,raw_context').eq('id',id).maybeSingle()
   if(!story) return {authorized:true as const,profile,notFound:true as const}
-  const [{data:kScores},{data:sourceLinks},{data:claims},{data:runs},{data:articles}]=await Promise.all([
+  const [{data:kScores},{data:sourceLinks},{data:claims},{data:articles}]=await Promise.all([
     supabase.from('k_scores').select('*').eq('story_candidate_id',id).order('created_at',{ascending:false}).limit(5),
     supabase.from('story_sources').select('story_candidate_id,source_id,note,created_at,source:sources(id,url,title,publisher,source_type,published_at,accessed_at,reliability_score)').eq('story_candidate_id',id).order('created_at',{ascending:false}),
     supabase.from('story_claims').select('id,claim_text,claim_type,confidence,verification_status,evidence_note,created_at,updated_at').eq('story_candidate_id',id).order('created_at',{ascending:false}),
-    supabase.from('research_runs').select('id,agent_name,run_type,status,model,output_summary,structured_output,started_at,completed_at,error,prompt_version').eq('story_candidate_id',id).order('started_at',{ascending:false}).limit(30),
     supabase.from('articles').select('id,headline,slug,status,confidence,reader_level,updated_at').eq('story_candidate_id',id).order('updated_at',{ascending:false})
   ])
-  return {authorized:true as const,profile,story,kScores:kScores??[],sourceLinks:sourceLinks??[],claims:claims??[],runs:runs??[],articles:articles??[]}
+  return {authorized:true as const,profile,story,kScores:kScores??[],sourceLinks:sourceLinks??[],claims:claims??[],articles:articles??[]}
 }
 
 export async function getArticleWorkspace(id:string){
