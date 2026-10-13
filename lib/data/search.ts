@@ -28,5 +28,6 @@ export async function searchPublicIntelligence(query:string):Promise<PublicSearc
   const institutional=(pages??[]).map((p:any)=>({key:`page:${p.slug}`,kind:'page' as const,title:p.title,summary:p.summary,href:`/${p.slug}`,meta:p.eyebrow??'Policy & methodology'}))
   const journal:PublicSearchResult[]=[{key:'journal',kind:'page' as const,title:'Capital Intelligence News',summary:'Read KAPORAL explainers, approved reporting and published newsletter editions.',href:'/news/journal',meta:'Public journal'},...marketBackgrounds.map(item=>({key:'explainer:'+item.key,kind:'page' as const,title:item.title,summary:item.description,href:`/news/explainers/${item.key}`,meta:'KAPORAL explanation'}))].filter(item=>(item.title+' '+item.summary).toLowerCase().includes(needle))
   const seen=new Set<string>()
-  return [...research,...journal,...data,...nav,...institutional].filter(r=>seen.has(r.href)?false:(seen.add(r.href),true)).slice(0,50)
+  const tools:PublicSearchResult[]=[{key:'africa-share-review',kind:'page' as const,title:'Africa Share & IPO Review',summary:'Company figures, P/E, dividends, price/book, whole shares, fees and loss scenarios in local currency.',href:'/africa/share-review',meta:'Free research tool'}].filter(item=>(item.title+' '+item.summary).toLowerCase().includes(needle))
+  return [...research,...journal,...tools,...data,...nav,...institutional].filter(r=>seen.has(r.href)?false:(seen.add(r.href),true)).slice(0,50)
 }

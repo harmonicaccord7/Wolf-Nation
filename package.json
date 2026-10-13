@@ -16,7 +16,7 @@
     "qa:health": "node --experimental-strip-types scripts/health-qa.mjs",
     "qa:browser": "playwright test",
     "qa:news-accounts": "node --experimental-strip-types scripts/news-account-qa.mjs && node --experimental-strip-types scripts/homepage-briefing-qa.mjs && node --experimental-strip-types scripts/journal-qa.mjs",
-    "qa:tools": "node --experimental-strip-types scripts/decision-lab-qa.mjs && node --experimental-strip-types scripts/africa-tools-qa.mjs && node --experimental-strip-types scripts/decision-scenarios-qa.mjs"
+    "qa:tools": "node --experimental-strip-types scripts/decision-lab-qa.mjs && node --experimental-strip-types scripts/africa-tools-qa.mjs && node --experimental-strip-types scripts/decision-scenarios-qa.mjs && node --experimental-strip-types scripts/share-review-qa.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",
