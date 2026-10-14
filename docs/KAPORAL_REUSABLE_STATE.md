@@ -1,8 +1,18 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-10-13. Read the latest checkpoint, issue #22 and September 20 owner instruction before relying on historical release holds.
+Last operational refresh: 2026-10-14. Read the latest checkpoint, issue #22 and September 20 owner instruction before relying on historical release holds.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
+
+## October 14 complete annual-chart range reuse
+
+- Verified base is PR #46 merge `31bc475eb48d6a1c15115a554798db85305ede24`, tree `3505a53d753587ebac6cc6c75e443ca9fc46118b`. Main CI `38443728744` passed 137 browser cases/one intentional skip and intended Vercel production `HUBpuF5s8xjrtPbwpKNGkQmicS6R` succeeded. PR #45's dedicated newsletter editor and Agent Room removal remain deployed. This supersedes the earlier pre-release wording below.
+- This focused increment lets only initial untruncated annual MAX payloads filter ranges locally. Partial/truncated annual and daily/market histories still fetch via the existing no-store endpoint; remote failures retain the old view. Source observations, as-of dates and gaps are unchanged. Short annual ranges can be honestly empty.
+- Actual component-handler fixtures verify full-history outage resilience and partial/daily safeguards; the new assertion fails against the original component and passes with the change. The existing three-device browser case now isolates a 503 range endpoint and requires zero requests, selected 30D/empty-period display and restored MAX. No assertion or retry policy is weakened. Prior Safari failure remains recorded; its root cause is not claimed.
+- Details: `docs/ANNUAL_RANGE_REUSE_2026-10-14.md`. Read the focused PR/current main for actual check/merge/deployment state, rather than treating this source checkpoint as release proof.
+- Live public status at 06:48 UTC: OPERATIONAL, 64,220 stored observations, market snapshot four minutes old, six current checks at 06:05. World Bank Sub-Saharan/ECB now have October 13 publisher items; North Africa remains September 22. Successful fetching is not a claim of newly published reporting.
+- Read-only audit at 06:46 UTC: 39 newsletter drafts, zero published editions; only experimental K-EDGE 0.1 and K-BTC-24H 0.1.0 registered. The actual newsletter editor browser is signed out. Owner content review remains acknowledged; genuine login/publication acceptance, consented delivery and native leaked-password protection remain open. No broadcast, payment, model, RLS or credential changes.
+- Frozen model diagnostics remain PR #44/#46's complete historical evidence; no new accuracy, training or future advantage is claimed. Continue separately frozen model research and independent application increments.
 
 ## October 13 complete Bitcoin confidence diagnostic
 

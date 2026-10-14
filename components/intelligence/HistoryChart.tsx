@@ -4,6 +4,9 @@ import {chartGeometry,chartRanges,selectChartPoints,defaultChartRange,type Chart
 const fmt=(v:number)=>Intl.NumberFormat('en',{maximumFractionDigits:3}).format(v)
 export function HistoryChart({points,label,unit,endpoint,asOf,initialRange,frequency,historyBasis,truncated=false,markers=[]}:{points:ChartPoint[];label:string;unit:string|null;endpoint?:string;asOf?:string;initialRange?:ChartRange;frequency?:string|null;historyBasis?:string;truncated?:boolean;markers?:{at:string;label:string}[]}){
  const annual=frequency==='annual'
+ // Only the initial, untruncated annual MAX payload is known to contain
+ // every stored observation. Partial annual and daily payloads still fetch.
+ const completeAnnualHistory=annual&&(initialRange??defaultChartRange(frequency))==='MAX'&&!truncated
  const date=(v:string)=>annual?String(new Date(v).getUTCFullYear()):new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeZone:'UTC'}).format(new Date(v))
  const stamp=(v:string)=>annual?`Reporting year ${date(v)}`:`${date(v)} ${new Date(v).toISOString().slice(11,16)} UTC`
  const [range,setRange]=useState<ChartRange>(initialRange??defaultChartRange(frequency)),[loaded,setLoaded]=useState(points),[cutoff,setCutoff]=useState(asOf??new Date().toISOString()),[limited,setLimited]=useState(truncated)
@@ -11,7 +14,7 @@ export function HistoryChart({points,label,unit,endpoint,asOf,initialRange,frequ
  const data=useMemo(()=>selectChartPoints(loaded,range,Date.parse(cutoff)),[loaded,range,cutoff]),coords=useMemo(()=>chartGeometry(data),[data])
  async function changeRange(next:ChartRange){
   if(busy||range===next)return
-  if(!endpoint){setRange(next);setSelected(null);return}
+  if(!endpoint||completeAnnualHistory){setError('');setRange(next);setSelected(null);return}
   setBusy(true);setError('')
   try{const res=await fetch(`${endpoint}?range=${next}`,{cache:'no-store'});const body=await res.json();if(!res.ok||!Array.isArray(body.history))throw new Error('History unavailable');setLoaded(body.history);setCutoff(body.asOf);setLimited(Boolean(body.truncated));setBasis(body.historyBasis);setRange(next);setSelected(null)}catch{setError('History could not be loaded. The previous range is still displayed.')}finally{setBusy(false)}
  }

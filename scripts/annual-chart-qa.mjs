@@ -15,11 +15,11 @@ class FrozenDate extends Date {
   constructor(...args) { super(...(args.length ? args : ['2026-09-25T06:00:00Z'])) }
   static now() { return Date.parse('2026-09-25T06:00:00Z') }
 }
-function unitModule(path, imports = {}) {
+function unitModule(path, imports = {}, runtime = {}) {
   const source = readFileSync(new URL(path, import.meta.url), 'utf8')
   const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText
   const module = { exports: {} }
-  vm.runInNewContext(compiled, { exports: module.exports, module, Date: FrozenDate, console, require: name => imports[name] ?? require(name) }, { filename: path })
+  vm.runInNewContext(compiled, { exports: module.exports, module, Date: FrozenDate, console, require: name => imports[name] ?? require(name), ...runtime }, { filename: path })
   return module.exports
 }
 const rows = [2023, 2024, 2025, 2027].map((year, i) => ({ value: i, observed_at: `${year}-01-01T00:00:00Z`, provider: 'Synthetic annual provider', metadata: { year: String(year) } }))
@@ -102,6 +102,52 @@ assert.doesNotMatch(render(missing), /role="img"/)
 assert.match(render({ ...series, frequency: 'daily' }, { initialRange: 'MAX' }), /Date \(UTC\)/)
 assert.match(render({ ...series, frequency: 'daily' }, { initialRange: 'MAX' }), /00:00 UTC/)
 
+// Exercise the real component's range handlers with isolated hook state and a
+// fake endpoint. No browser credentials, provider calls or database writes.
+function interactiveFixture(props, outage = false) {
+  const state = [], requests = []; let cursor = 0
+  const hooks = { ...React, useMemo: calculate => calculate(), useState(initial) {
+    const index = cursor++
+    if (!(index in state)) state[index] = initial
+    return [state[index], value => { state[index] = typeof value === 'function' ? value(state[index]) : value }]
+  } }
+  const client = unitModule('../components/intelligence/HistoryChart.tsx', { react: hooks, '../../lib/data/chart': chart }, {
+    fetch: async (url, options) => {
+      requests.push({ url, options })
+      if (outage) throw Error('Isolated history outage')
+      return { ok: true, json: async () => ({ history: series.history, asOf: series.asOf, truncated: false, historyBasis: 'provider-observations' }) }
+    }
+  })
+  function tree() { cursor = 0; return client.HistoryChart({ points: series.history, label: 'Synthetic annual series', unit: '%', asOf: series.asOf, endpoint: '/api/intelligence/series/UNIT_ANNUAL', ...props }) }
+  return { requests, html: () => renderToStaticMarkup(tree()), async select(range) {
+    const controls = tree().props.children[0]
+    const button = controls.props.children.find(child => child.key === range)
+    await button.props.onClick()
+  } }
+}
+for (const initialRange of [undefined, 'MAX']) {
+  const complete = interactiveFixture({ frequency: 'annual', initialRange }, true)
+  await complete.select('30D')
+  assert.match(complete.html(), /aria-pressed="true"[^>]*>30D<\/button>/)
+  assert.match(complete.html(), /No observations in the selected period/)
+  assert.doesNotMatch(complete.html(), /History could not be loaded|disabled=""/)
+  await complete.select('MAX')
+  assert.match(complete.html(), /3 observations/)
+  assert.equal(complete.requests.length, 0, 'Complete annual history must work during an API outage')
+}
+for (const props of [{ frequency: 'annual', initialRange: '1Y' }, { frequency: 'annual', initialRange: 'MAX', truncated: true }, { frequency: 'daily', initialRange: '1Y' }, { frequency: 'market', initialRange: 'MAX' }]) {
+  const incomplete = interactiveFixture(props)
+  const next = props.initialRange === 'MAX' ? '30D' : '10Y'
+  await incomplete.select(next)
+  assert.equal(incomplete.requests.length, 1, 'Partial, truncated and nonannual histories still require the endpoint')
+  assert.equal(incomplete.requests[0].url, '/api/intelligence/series/UNIT_ANNUAL?range=' + next)
+  assert.equal(incomplete.requests[0].options.cache, 'no-store')
+}
+const unavailable = interactiveFixture({ frequency: 'daily', initialRange: '1Y' }, true)
+await unavailable.select('10Y')
+assert.match(unavailable.html(), /History could not be loaded/)
+assert.match(unavailable.html(), /aria-pressed="true"[^>]*>1Y<\/button>/, 'An unsuccessful remote range retains the previous view')
+
 const chartProps = []
 const page = unitModule('../app/data/[code]/page.tsx', {
   'next/link': { default: ({ children, ...props }) => React.createElement('a', props, children) },
@@ -116,4 +162,4 @@ assert.equal(chartProps[0].initialRange, 'MAX', 'Server query and client range m
 assert.equal(chartProps[0].frequency, 'annual')
 assert.match(pageHtml, /Reporting year 2025/)
 assert.match(pageHtml, /href="https:\/\/example.com\/annual"/)
-console.log('Annual-chart QA passed: frequency-aware defaults, explicit ranges, public-definition boundary, bounded queries, future exclusion, genuine zero/missing data, reporting years and synchronized server/client chart rendering.')
+console.log('Annual-chart QA passed: defaults, provenance, complete annual range reuse during outages, partial/truncated/daily remote-range safeguards, preserved failure state and synchronized rendering.')

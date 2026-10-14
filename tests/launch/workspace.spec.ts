@@ -25,10 +25,21 @@ test('Africa annual history opens with data and retains honest short-range and s
   await expect(slider).toHaveValue('0')
   await expect(page.locator('.chartReadout')).toContainText('Reporting year')
   await expect(page.locator('.chartReadout')).not.toContainText('00:00 UTC')
+  // A complete annual MAX payload already contains every stored row. Range
+  // selection must keep working if the subsequent history API is unavailable.
+  let annualRangeRequests = 0
+  await page.route('**/api/intelligence/series/CMR_GDP_GROWTH?range=*', async route => {
+    annualRangeRequests++
+    await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Isolated outage fixture' }) })
+  })
   await page.getByRole('button', { name: '30D', exact: true }).click()
   await expect(page.getByRole('button', { name: '30D', exact: true })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('.historyEmpty')).toBeVisible()
+  await expect(page.locator('.historyChartBlock [role="alert"]')).toHaveCount(0)
   await page.getByRole('button', { name: 'MAX', exact: true }).click()
   await expect(page.locator('.historyChart')).toBeVisible()
+  expect(annualRangeRequests).toBe(0)
+  await expect(page.locator('.historyControls button:disabled')).toHaveCount(0)
   await page.locator('.historyTable summary').click()
   await expect(page.getByRole('columnheader', { name: 'Reporting year', exact: true })).toBeVisible()
   if (isMobile) await page.setViewportSize({ width: 844, height: 390 })
