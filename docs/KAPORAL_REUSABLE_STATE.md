@@ -1,8 +1,17 @@
 # KAPORAL Reusable State
 
-Last operational refresh: 2026-10-14. Read the latest checkpoint, issue #22 and September 20 owner instruction before relying on historical release holds.
+Last operational refresh: 2026-10-15. Read the latest checkpoint, issue #22 and September 20 owner instruction before relying on historical release holds.
 
 This file is a non-secret, reuse-first checkpoint for future KAPORAL engineering work. It intentionally excludes passwords, API secrets, service-role credentials, SMTP passwords and private tokens.
+
+## October 15 offline subscription sandbox contract
+
+- Verified starting main is PR #47 merge `9b17f6b408421e2adea6d6596fd70ec132e15460`, exact candidate/merge tree `98c71bd8c319903626017d3c8e8cfd225016e017`. Main CI `38525878214` passed 137 browser tests/one intentional skip and intended Vercel production `FiUkBUhWGNPMTHQU5mx1dSmn6AQ8` succeeded. This supersedes the previous pre-release annual-chart checkpoint.
+- First billing groundwork is deliberately offline: normalized test snapshots, immutable in-memory receipts/reducer and owner/time-bound sandbox access. Duplicate/conflicting/stale/equal-version events, paid/unpaid/cancel/expiry/renewal boundaries, invalid/live inputs and bounded receipts have synthetic fixtures in `qa:billing`, now part of `qa:tools`. A CI source boundary forbids application/Edge integration; no real paid access, checkout or signed-webhook acceptance is implied.
+- Detailed contract and required provider/RLS/concurrency/end-to-end sequence: `docs/SUBSCRIPTION_SANDBOX_2026-10-15.md`. Read the focused PR/current main for actual checks, merge and production state. A secure owner-authorized test-provider connection and product/pricing/rights decisions are needed before genuine billing acceptance, but do not block this independent groundwork.
+- Live status at 06:48 UTC is OPERATIONAL, 64,827 stored observations, fresh market feed and six current source checks. North Africa still has the September 22 publisher item; fetch time is not publication time. Read-only audit at `2026-10-15T06:48:18.796632Z`: database 81,063,059 bytes and 41 newsletter drafts, none published.
+- Actual newsletter editorial desk is signed out. Owner content review remains acknowledged; genuine authenticated transition and consented issue-to-inbox/unsubscribe/repeat-suppression acceptance remain open. Native leaked-password protection is still disabled; owner-managed eligible-plan/Auth-setting action remains separate. No credentials, payments, publication, mail, RLS, schema, model or observation changes.
+- Frozen model results remain unchanged/private/experimental; test-only subscription infrastructure is not a claim of predictive value or 99.9% accuracy. Continue useful free country/data/tool increments and separately frozen research.
 
 ## October 14 complete annual-chart range reuse
 
